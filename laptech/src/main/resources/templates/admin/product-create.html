@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+    th:replace="~{/admin/layout/layout.html :: admin(~{::title},~{:: .content-page}) }">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product</title>
+</head>
+
+<body>
+    <div class="content-page">
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <ul class="page-info">
+                <li class=" page-title">Tạo sản phẩm</li>
+                <li class=" page-description">Thêm sản phẩm mới</li>
+            </ul>
+            <a href="#" class="btn btn-added">
+                <i class="fa-solid fa-plus"></i>
+                Thêm sản phẩm
+            </a>
+        </div>
+            <div class="card">
+                <div class="card-body page-body" > 
+                   
+                        <form action="">
+                            <div class="row">
+                                <div class="mb-3 col-lg-3 form-group">
+                                    <label for="product-name" class="form-label">Tên sản phẩm</label>
+                                    <input type="text" class="form-control" id="product-name" >
+                                </div>
+                                <div class="mb-3 col-lg-3 form-group">
+                                    <label for="" class="form-label">CPU</label>
+                                    <input type="text" class="form-control" id="" >
+                                </div>
+                                <div class="mb-3 col-lg-3 form-group">
+                                    <label for="" class="form-label">RAM</label>
+                                    <input type="text" class="form-control" id="" >
+                                </div>
+                                <div class="mb-3 col-lg-3 form-group">
+                                    <label for="" class="form-label">Bộ nhớ</label>
+                                    <input type="text" class="form-control" id="" >
+                                </div>
+                                <div class="mb-3 col-lg-3 form-group">
+                                    <label for="" class="form-label">Kích thước màn hình</label>
+                                    <input type="text" class="form-control" id="" >
+                                </div>
+                                <div class="mb-3 col-lg-3 form-group">
+                                    <label for="" class="form-label">Card đồ hoạ</label>
+                                    <input type="text" class="form-control" id="" >
+                                </div>
+                                <div class="mb-3 col-lg-3 form-group">
+                                    <label for="" class="form-label">Hệ điều hành</label>
+                                    <input type="text" class="form-control" id="" >
+                                </div>
+                                <div class="mb-3 col-lg-3 form-group">
+                                    <label for="" class="form-label">Số lượng</label>
+                                    <input type="text" class="form-control" id="" >
+                                </div>
+                                
+                                <div class="mb-3 col-lg-3 form-group">
+                                    <label for="" class="form-label">Ngày tạo</label>
+                                    <input type="text" class="form-control" id="" >
+                                </div>
+                                
+                                <div class="mb-3 col-lg-3 form-group">
+                                    <label for="" class="form-label">Danh mục</label>
+                                    <select class="form-select" aria-label="Default select example">
+                                        <option selected>Chọn danh mục</option>
+                                        <option value="1">One</option>
+                                        <option value="2">Two</option>
+                                        <option value="3">Three</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3 col-lg-3 form-group">
+                                    <label for="" class="form-label">Thương hiệu</label>
+                                    <select class="form-select" aria-label="Default select example">
+                                        <option selected>Chọn thương hiệu</option>
+                                        <option value="1">One</option>
+                                        <option value="2">Two</option>
+                                        <option value="3">Three</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3 col-lg-3 form-group">
+                                    <label for="" class="form-label">Trạng thái</label>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option2">
+                                        <label class="form-check-label" for="inlineRadio1">Còn hàng</label>
+                                      </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+                                        <label class="form-check-label" for="inlineRadio2">Hết hàng</label>
+                                      </div>
+                                </div>
+                                <div class="mb-3 col-lg-12 form-group">
+                                    <div class="mb-3">
+                                        <label for="prod-desciption" class="form-label">Mô tả</label>
+                                        <textarea class="form-control" id="prod-desciption" rows="3"></textarea>
+                                      </div>
+                                </div>
+                            </div>
+                        </form>
+                    
+                </div>
+            </div>
+    </div>
+</body>
+
+</html>
