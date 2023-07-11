@@ -275,6 +275,7 @@
 }
 .page-header .page-info  {
     list-style-type: none;
+    padding-left: 0px;
 }
 .page-header .page-info .page-title {
     font-weight: 700;
@@ -455,6 +456,14 @@
 }
 /* /pagination */
 
+/* FORM */
+
+.form-group input[type=text]:focus,.form-group textarea:focus,.form-group .form-select:focus {
+    border-color: #FF9F43;
+    background: #fff;
+    box-shadow: none;
+}
+
 .form-group .form-label {
     margin-bottom: 8px;
     color: #212B36;
@@ -493,3 +502,53 @@
     font-weight: 500;
     color: #212B36;
 }
+.btn-remove {
+    min-width: 120px;
+    background: #ff3030;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 14px 10px;
+    -webkit-transition: all 0.2s ease;
+    -ms-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+}
+.btn-remove:hover {
+    background: #dc2828;
+    color: #fff;
+}
+.btn-submit {
+    min-width: 120px;
+    background: #FF9F43;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 14px 10px;
+    -webkit-transition: all 0.2s ease;
+    -ms-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+}
+.btn-submit:hover {
+    background: #fe820e;
+    color: #fff;
+}
+.btn-cancel {
+    min-width: 120px;
+    background: #637381;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 14px 10px;
+    -webkit-transition: all 0.5s ease;
+    -ms-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+.btn-cancel:hover {
+    background: #424b52;
+    color: #fff;
+}
+
+
+
+
+/* /FORM */

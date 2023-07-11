@@ -12,13 +12,13 @@
     <div class="content-page">
         <div class="page-header d-flex justify-content-between align-items-center">
             <ul class="page-info">
-                <li class=" page-title">Tạo sản phẩm</li>
-                <li class=" page-description">Thêm sản phẩm mới</li>
+                <li class=" page-title">[[${#ctx.springRequestContext.requestUri.contains('create')} ? 'Tạo sản phẩm' :'Cập nhật sản phẩm']]</li>
+                <li class=" page-description">[[${#ctx.springRequestContext.requestUri.contains('create')} ? 'Thêm sản phẩm mới' :'Thay đổi thông tin sản phẩm']]</li>
             </ul>
-            <a href="#" class="btn btn-added">
+            <!-- <a href="#" class="btn btn-added">
                 <i class="fa-solid fa-plus"></i>
                 Thêm sản phẩm
-            </a>
+            </a> -->
         </div>
         <div class="card">
             <div class="card-body page-body">
@@ -83,6 +83,13 @@
                         </div>
                         <div class="mb-4 col-lg-3 form-group">
                             <label for="" class="form-label">Trạng thái</label>
+                            <select class="form-select" aria-label="Default select example">
+                                <option selected value="1">Còn hàng</option>
+                                <option value="2">Hết hàng</option>
+                            </select>
+                        </div>
+                        <!-- <div class="mb-4 col-lg-3 form-group">
+                            <label for="" class="form-label">Trạng thái</label>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1"
                                     value="option2">
@@ -93,7 +100,7 @@
                                     value="option2">
                                 <label class="form-check-label" for="inlineRadio2">Hết hàng</label>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="mb-4 col-lg-12 form-group">
                             <label for="prod-desciption" class="form-label">Mô tả</label>
                             <textarea class="form-control" id="prod-desciption" rows="3"></textarea>
@@ -108,6 +115,12 @@
                                 </div>
                             </div>
                             
+                        </div>
+                        <div class="mb-4 col-lg-12 ">
+                                <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('create')}" class="btn btn-submit me-2">Lưu</a>
+                                <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('update')}" class="btn btn-submit me-2">Cập nhật</a>
+                                <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('update')}" class="btn btn-remove me-2">Xoá</a>
+                                <a th:href="@{/admin/product/list}" class="btn btn-cancel" >Huỷ bỏ</a>
                         </div>
                     </div>
                 </form>

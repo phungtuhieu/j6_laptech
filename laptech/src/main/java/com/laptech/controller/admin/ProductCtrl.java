@@ -5,14 +5,19 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("/admin/product")
 public class ProductCtrl {
-    @RequestMapping("/products")
+    @RequestMapping("/list")
     public String page(Model model) {
-        return "admin/product-list";
+        return "admin/products/product-list";
     }
-    @RequestMapping("/products/create")
+    @RequestMapping("/create")
     public String create(Model model) {
-        return "admin/product-create";
+        return "admin/products/product-form";
+    }
+    @RequestMapping("/update")
+    public String update(Model model) {
+    	
+        return "admin/products/product-form";
     }
 }
