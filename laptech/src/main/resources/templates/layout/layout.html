@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="dynamic(title,view)" >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:replace="${title}">Document</title>
+    <th:block th:include="layout/library/css-links.html"></th:block>
+    
+</head>
+<body>
+
+
+    
+    
+    <nav th:insert="~{layout/_header.html:: header}"></nav>
+
+    <main th:replace="${view}"></main>
+
+    <footer th:insert="~{/layout/_footer.html:: footer}"></footer>
+
+
+    
+    
+    <th:block th:include="layout/library/script-links.html"></th:block>
+    
+
+</body>
+</html>
