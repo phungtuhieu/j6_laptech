@@ -1,0 +1,86 @@
+:root {
+    --border-header: #DEE2E6;
+}
+/* Header */
+
+#header {
+    background-color: #fff;
+    border-bottom: 1px solid var(--border-header);
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    z-index: 1;
+}   
+
+.header-left {
+    border-right: 1px solid var(--border-header);
+}
+.header-right .user-menu .nav-item{
+    margin-left: 18px;
+    height: 100%;
+}
+.header-menu {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+.header-menu .menu-user .nav-item {
+    margin-left: 18px;
+}
+.hidden-after::after {
+    display: none;
+}
+.header-menu .menu-user .nav-item .nav-link {
+    padding: 0;
+    display: flex;
+    line-height: normal;
+    color: #212B36;
+    background: #F6F7F8;
+    border-radius: 8px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.header-menu .menu-user .nav-link::after {
+    display: none;
+}
+.header-menu .menu-user .arrow-after::after {
+    display: inline-block;
+}
+.header-menu .menu-user .menu-user-info {
+    width: 160px !important;
+    background-color: #ffffff !important;
+    height: 100% !important   ;
+}
+.menu-user-info .user-avt {
+    width: 42px;
+    height: 42px;
+    background-color: #DEE2E6;
+}
+.menu-user-info .list-info {
+    list-style-type: none;
+    padding-left: 0px;
+    min-width: 102px;
+}
+
+.menu-user-info .user-info.user-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1B2950;
+    display: flex;
+    align-items: center;
+}
+.menu-user-info .user-info.user-role {
+    display: block;
+    color: #67748E;
+    font-size: 12px;
+}
+.menu-user-info .list-info {
+    list-style-type: none;
+    padding-left: 8px;
+}
