@@ -462,3 +462,34 @@
     font-size: 14px ;
     display: block;
 }
+.image-upload {
+    border: 1px solid rgba(145, 158, 171, 0.32);
+    position: relative;
+    margin-bottom: 35px;
+    border-radius: 5px;
+}
+.image-upload input[type=file] {
+    width: 100%;
+    opacity: 0;
+    height: 100px;
+    position: relative;
+    z-index: 9;
+    cursor: pointer;
+}
+.image-upload .image-uploads {
+    text-align: center;
+    width: 100%;
+    padding: 20px 0;
+    border-radius: 5px;
+    position: absolute;
+    top: 0;
+}
+.image-upload .image-uploads .icon-upload {
+    font-size: 25px;
+    color: #FE9F43;
+}
+.image-upload .image-uploads h4 {
+    font-size: 14px;
+    font-weight: 500;
+    color: #212B36;
+}
