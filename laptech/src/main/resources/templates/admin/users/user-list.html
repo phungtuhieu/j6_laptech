@@ -12,13 +12,13 @@
     <div class="content-page">
         <div class="page-header d-flex justify-content-between align-items-center">
             <ul class="page-info">
-                <li class=" page-title">Đơn hàng đã giao</li>
-                <li class=" page-description">Danh sách đơn hàng đã hoàn tất</li>
+                <li class=" page-title">Danh sách người dùng</li>
+                <li class=" page-description">Thông tin người dùng   </li>
             </ul>
-            <!-- <a th:href="@{/admin/product/create}" class="btn btn-added">
+            <a th:href="@{/admin/user/create}" class="btn btn-added">
                 <i class="fa-solid fa-plus"></i>
-                Thêm sản phẩm
-            </a> -->
+                Thêm người dùng
+            </a>
         </div>
             <div class="card">
                 <div class="card-body page-body" > 
@@ -50,13 +50,13 @@
                             <table class="table table-hover">
                               <thead>
                                 <tr class="tb-header">
-                                  <th scope="col">ID </th>
-                                  <th scope="col">Phương thức TT</th>
-                                  <th scope="col">Ngày tạo</th>
-                                  <th scope="col">Ngày giao</th>
-                                  <th scope="col">Ngày hoàn thành</th>
-                                  <th scope="col">Trạng thái</th>
-                                  <th scope="col">Thao tác</th>
+                                    <th scope="col">Họ và tên</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Số điện thoại</th>
+                                    <th scope="col">Tên người dùng</th>
+                                    <th scope="col">Mật khẩu</th>
+                                    <th scope="col">Địa chỉ</th>
+                                    <th scope="col">Thao tác</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -66,19 +66,16 @@
                                   <td>3</td>
                                   <td>4</td>
                                   <td>5</td>
-                                  <td>5</td>
+                                  <td>6</td>
                                   <td class="td-action ">
                                      <div class="wordset">
                                         <ul>
                                             <li>
-                                                <a th:href="@{/admin}" class="text-success-emphasis"><i class="fa-solid fa-eye"></i></a>
-                                            </li>
-                                            <!-- <li>
-                                                <a th:href="@{/admin}" class="text-success"><i class="fa-sharp fa-solid fa-truck-fast"></i></a>
+                                                <a th:href="@{/admin/user/update}" class="text-secondary-emphasis"><i class="fa-solid fa-pen-to-square"></i></a>
                                             </li>
                                             <li>
-                                                <a href="" class="text-danger"><i class="fa-sharp fa-solid fa-circle-xmark"></i></a>
-                                            </li> -->
+                                                <a href="" class="text-danger"><i class="fa-solid fa-trash"></i></a>
+                                            </li>
                                         </ul>
                                     </div>
                                   </td>
