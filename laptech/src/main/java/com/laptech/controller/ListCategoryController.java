@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class ListCategory {
+public class ListCategoryController {
 
         @RequestMapping("/ListCategory/{name}")
         public String index(@PathVariable("name") String name, Model model) {

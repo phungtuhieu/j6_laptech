@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" th:replace="~{/layout/layout.html :: dynamic(~{::title},~{:: main})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+
+    <main>
+    <div class="container py-5  d-flex justify-content-center align-items-center" style="height: 120vh;">
+        <div class="form-wrapper w-100 d-flex justify-content-center align-items-center">
+            <div class="card" style="width: 500px;">
+                <div class="card-header">
+                    <div class="text-center">	
+                    <nav>
+                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <button class="nav-link active" style="color: black; font-weight: 600; border: none; font-size: 14px;"  id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Login</button>
+                        </div>
+                    </nav>
+                    </div>
+                </div>
+                </nav>
+                <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12 ">
+                    <!-- Login -->
+                    <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                        <form class="form-section" action="/hieuptpc03210_ASM/account/sign-in" method="post">
+                        <div class="form-group mb-3">
+                            <input type="text" name="username" id="username1" tabindex="1" class="form-control" placeholder="Tên đăng nhập" value="">
+                        </div>
+                        <div class="form-group mb-3">
+                            <input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Mật khẩu">
+                        </div>
+                        <div class="form-group mb-3 d-flex justify-content-center">
+                            <div class="form-check">
+                            <input class="form-check-input " type="checkbox" value="" id="remember">
+                            <label class="form-check-label check-remember" for="remember">
+                                Nhớ mật khẩu ?
+                            </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <div class="row">
+                            <div class="col-sm-12 d-flex justify-content-center">
+                                <input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-login" value="Đăng nhập">
+                            </div>
+                            </div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <div class="row">
+                            <div class="col-lg-12">
+                                <div class="text-center">
+                                <a th:href="@{/forgot-password}" tabindex="5" class="forgot-password text-decoration-none text-black">Quên mật khẩu?</a>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="text-center">
+                                <span>bạn chưa có tài khoản?</span>
+                                <a th:href="@{/sign-up}" tabindex="5" class="forgot-password text-decoration-none text-black">Đăng ký</a>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        </form>
+                        <!-- /Login -->
+                    </div>
+                    <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">...</div>
+                    <div class=" d-flex justify-content-center">
+                        <a th:href="@{/index}" class="text-black btn-back-home"> <i class="fa-solid fa-arrow-left"></i></a>
+                    </div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
+    </div>
+</main>
+</body>
+</html>
