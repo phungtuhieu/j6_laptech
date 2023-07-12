@@ -1972,8 +1972,10 @@ img {
 
 
 .quickview_pro_img > img{
+ margin-top: 50px;
  width: 100%; 
- height: 100%;
+ height: 230px;
+ background-color: red;
  
 }
 
