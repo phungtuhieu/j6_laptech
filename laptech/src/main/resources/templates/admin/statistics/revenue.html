@@ -12,24 +12,31 @@
     <div class="content-page">
         <div class="page-header d-flex justify-content-between align-items-center">
             <ul class="page-info">
-                <li class=" page-title">Danh sách người dùng</li>
-                <li class=" page-description">Thông tin người dùng   </li>
+                <li class=" page-title">Doanh thu</li>
+                <li class=" page-description">Thống kê doanh thu  </li>
             </ul>
-            <a th:href="@{/admin/user/create}" class="btn btn-added">
+            <!-- <a th:href="@{/admin/product/create}" class="btn btn-added">
                 <i class="fa-solid fa-plus"></i>
-                Thêm người dùng
-            </a>
+                Thêm sản phẩm
+            </a> -->
         </div>
             <div class="card">
                 <div class="card-body page-body" > 
                     <div class="table-top d-flex justify-content-between align-items-center">
-                        <div class="search-input">
-                            <div class="btn-searchset">
-                                <i class="fa-solid fa-magnifying-glass"></i>
+                        <div class="search-set d-flex justify-content-between">
+                            <div class="search-path">
+                                <button class="btn btn-filter me-2" type="button" data-bs-toggle="collapse" data-bs-target="#filter-content" aria-expanded="false" aria-controls="collapseExample">
+                                    <i class="fa-solid fa-filter"></i>
+                                </button>
                             </div>
-                            <form class="d-flex">
-                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                            </form>
+                            <div class="search-input">
+                                <div class=" btn-searchset">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                </div>
+                                <form class="d-flex">
+                                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                                </form>
+                            </div>
                         </div>
                         <div class="wordset">
                             <ul>
@@ -45,18 +52,36 @@
                             </ul>
                         </div>
                     </div>
+                    <div class="collapse" id="filter-content">
+                        <div class="card card-body">
+                          <form action="" class="form-filter">
+                            <div class="mb-4 row " >
+                                <div class=" col-lg-4 form-group">
+                                    <label for="" class="form-label">Từ ngày</label>
+                                    <input type="date" class="form-control"  value="" >
+                                </div>
+                                <div class="col-lg-4 form-group">
+                                    <label for="" class="form-label">Đến ngày</label>
+                                    <input type="date" class="form-control"  value="" >
+                                </div>
+                                <div class="col-lg-4 form-group d-flex align-items-end">
+                                    <button class="btn btn-filter-submit " type="button" >
+                                        Tìm kiếm
+                                    </button>
+                                </div>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
                     <div class="table-center">
                         <div class="table-responsive">
                             <table class="table table-hover">
                               <thead>
                                 <tr class="tb-header">
-                                    <th scope="col">Họ và tên</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Số điện thoại</th>
-                                    <th scope="col">Tên người dùng</th>
-                                    <th scope="col">Mật khẩu</th>
-                                    <th scope="col">Địa chỉ</th>
-                                    <th scope="col">Thao tác</th>
+                                    <th scope="col" >Số lượng đơn hàng</th>
+                                    <th scope="col">Số lượng sản phẩm</th>
+                                    <th scope="col">Ngày bán</th>
+                                    <th scope="col">Tổng tiền</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -65,20 +90,18 @@
                                   <td>2</td>
                                   <td>3</td>
                                   <td>4</td>
-                                  <td>5</td>
-                                  <td>6</td>
-                                  <td class="td-action ">
+                                  <!-- <td class="td-action ">
                                      <div class="wordset">
                                         <ul>
                                             <li>
-                                                <a th:href="@{/admin/user/update}" class="text-secondary-emphasis"><i class="fa-solid fa-pen-to-square"></i></a>
+                                                <a th:href="@{/admin/product/update}" class="text-secondary-emphasis"><i class="fa-solid fa-pen-to-square"></i></a>
                                             </li>
                                             <li>
                                                 <a href="" class="text-danger"><i class="fa-solid fa-trash"></i></a>
                                             </li>
                                         </ul>
                                     </div>
-                                  </td>
+                                  </td> -->
                                 </tr>
                               </tbody>
                             </table>
