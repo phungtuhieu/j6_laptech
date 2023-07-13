@@ -13,6 +13,6 @@ public class IndexController {
         }
         @GetMapping("/about")
         public String gioithieu(Model model) {
-        	return "layout/gioithieu"; // phần giới thiệu
+        	return "layout/gioithieu"; 
         }
 }
