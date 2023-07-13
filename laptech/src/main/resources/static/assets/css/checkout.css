@@ -1,0 +1,119 @@
+  @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+  .wrapp {
+    background-color: rgb(249, 249, 249);
+    font-family: 'Quicksand', sans-serif;
+  }
+  .checkout-area  {
+    padding-top: 75px;
+    padding-bottom: 35px;
+   
+}
+
+  .woocommerce-info-top {
+    background-color: rgb(249, 249, 249);
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+}
+.woocommerce-info-top .message-container {
+    text-align: center;
+    font-size: 16px;
+   
+    font-weight: 500;
+    color: #777777;
+}
+.woocommerce-info-top .message-container   a {
+    color: #4e97fd !important;
+    text-decoration: none;
+}
+
+.form-group input[type=text]:focus,
+.form-group textarea:focus,
+.form-group .form-select:focus
+,.form-group input[list]:focus
+,.form-group input[type=date]:focus {
+    border-color: #4e97fd;
+    background: #fff;
+    box-shadow: none;
+}
+
+.form-group .form-label {
+    margin-bottom: 8px;
+    color: #212B36;
+    font-weight: 500;
+    font-size: 14px ;
+    display: block;
+}
+.page-body {
+    padding: 30px !important;
+}
+.checkout-title {
+    font-size: 18px;
+    color: #4e97fd;
+    font-weight: 700 !important;
+    margin-bottom: 15px;
+    padding-top: 0;
+}
+.shop-table .title-prod-name {
+    width: 345px;
+}
+
+.shop-table .row-table td {
+    font-weight: 600;
+    font-size: 14px;
+
+}
+
+.shop-table .row-table td {
+    padding:10px 0px;
+}
+.shop-table .title-table,.shop-table  .order-total{
+    border: 0px solid transparent;
+    border-bottom-width: 2px;
+    border-bottom-color: #4e97fd;
+}
+
+.shop-table td:last-child,
+.shop-table th:last-child  {
+    padding-left: 0px !important;
+    text-align: end;
+}
+.shop-table th:first-child,
+.shop-table td:first-child {
+    text-align: start;
+    padding-right: 0px !important;
+}
+.payment-method .list-payment-method {
+    list-style-type: none;
+    padding-left: 0px;
+}
+.payment-method .list-payment-method .wc_payment_method {
+    font-weight: 500;
+}
+.form-checkout .btn-order {
+    width: 100%;
+    font-weight: 700;
+    color: #ffffff;
+    border-radius: 10px;
+    padding: 8px 36px;
+    background-color: #4e97fd;
+}
+.form-checkout .btn-order:hover{
+    background-color: #e4573d;
+    color: white;
+}
+.form-checkout .btn-order:active{
+    background-color: #cd503a !important    ;
+    color: white !important;
+    border:  #ce4e38 1px solid !important;
+}
+.woocommerce-privacy-policy-text a {
+    text-decoration: none;
+    font-weight: 600;
+    color: #4e97fd;
+}
+.woocommerce-privacy-policy-text a:hover {
+    color: #334b6c;
+}

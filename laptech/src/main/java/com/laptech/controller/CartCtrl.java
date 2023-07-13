@@ -11,4 +11,8 @@ public class CartCtrl {
     public String page (Model model) {
         return "cart";
     }
+    @RequestMapping("/checkout")
+    public String checkout (Model model) {
+        return "checkout";
+    }
 }
