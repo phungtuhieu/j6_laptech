@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" xmlns="http://www.thymeleaf.org" th:replace="~{/layout/layout.html :: dynamic(~{::title},~{:: main})}">
+<html lang="en" xmlns="http://www.thymeleaf.org" th:replace="~{/layout/layout.html :: dynamic(~{::title},~{:: main},~{::css})}">
   <head>
   	<title>Liên hệ</title>
     <meta charset="utf-8">
@@ -13,6 +13,9 @@
 
 	</head>
 	<body>
+		<th:block th:fragment="css">
+			<link rel="stylesheet" th:href="@{/assets/css/lienhe.css}">
+		</th:block>
 <main>
 	<section class="ftco-section">
 		<div class="container">

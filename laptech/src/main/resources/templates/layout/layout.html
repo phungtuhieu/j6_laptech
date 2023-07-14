@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="dynamic(title,view)" >
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="dynamic(title,view,css)" >
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:replace="${title}">Document</title>
     <th:block th:include="layout/library/css-links.html"></th:block>
-    
+    <th:block th:replace="${css}"></th:block>
 </head>
 <body>
 
