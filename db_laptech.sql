@@ -34,7 +34,7 @@ CREATE TABLE Avartars (
     id BIGINT IDENTITY(1,1) NOT NULL,
     user_id NVARCHAR(50) NOT NULL,
     [image] NVARCHAR(100) NOT NULL,
-    is_selected BIT
+    selected BIT
 )
 GO
 
@@ -131,7 +131,7 @@ CREATE TABLE Product_Images (
     id BIGINT IDENTITY(1,1) NOT NULL,
     [name] NVARCHAR(100) NOT NULL,
     product_id BIGINT NOT NULL,
-    isMain BIT NOT NULL
+    main BIT NOT NULL
 )
 GO 
 
@@ -139,8 +139,8 @@ CREATE TABLE Price (
     id BIGINT IDENTITY(1,1) NOT NULL,
     price FLOAT NOT NULL,
     product_id BIGINT NOT NULL,
-    [start_date] DATE NOT NULL,
-    [end_date] DATE NOT NULL
+    [start_date] DATETIME NOT NULL,
+    [end_date] DATETIME NOT NULL
 )
 GO 
 
@@ -148,8 +148,8 @@ CREATE TABLE Discount (
     id NVARCHAR(20) NOT NULL,
     title NVARCHAR(200) NOT NULL,
     [percentage] INT NOT NULL,
-    [start_date] DATE NOT NULL,
-    [end_date] DATE NOT NULL,
+    [start_date] DATETIME NOT NULL,
+    [end_date] DATETIME NOT NULL,
     active BIT NOT NULL,
     [description] NVARCHAR(200) 
 )
@@ -452,7 +452,7 @@ GO
 
 -- DELETE Avartars
 -- DBCC CHECKIDENT ('Avartars', RESEED, 0);
-INSERT INTO Avartars (user_id, [image], is_selected)
+INSERT INTO Avartars (user_id, [image], selected)
 VALUES
     ('ngocanh01', 'https://example.com/avatars/ngocanh01.jpg', 1),
     ('thanhnam87', 'https://example.com/avatars/thanhnam87.jpg', 1),
@@ -577,7 +577,7 @@ GO
 
 -- DELETE Product_Images
 -- DBCC CHECKIDENT ('Product_Images', RESEED, 0);
-INSERT INTO Product_Images ([name], product_id, isMain)
+INSERT INTO Product_Images ([name], product_id, main)
 VALUES
     (N'product_1_image_1.jpg', 1000, 1),
     (N'product_1_image_2.jpg', 1000, 0),
@@ -596,11 +596,11 @@ GO
 -- DBCC CHECKIDENT ('Price', RESEED, 0);
 INSERT INTO Price (price, product_id, [start_date], [end_date])
 VALUES
-    (25000000, 1000, '2023-07-10', '2023-08-10'),
-    (18000000, 1001, '2023-07-11', '2023-08-11'),
-    (30000000, 1002, '2023-07-12', '2023-08-12'),
-    (8000000, 1003, '2023-07-13', '2023-08-13'),
-    (12000000, 1004, '2023-07-14', '2023-08-14');
+    (25000000, 1000, '2023-07-10 07:00:00', '2023-08-10 08:00:00'),
+    (18000000, 1001, '2023-07-11 07:00:00', '2023-08-11 08:00:00'),
+    (30000000, 1002, '2023-07-12 07:00:00', '2023-08-12 08:00:00'),
+    (8000000, 1003, '2023-07-13 07:00:00', '2023-08-13 08:00:00'),
+    (12000000, 1004, '2023-07-14 07:00:00', '2023-08-14 08:00:00');
 
 GO
 
@@ -609,11 +609,11 @@ GO
 
 INSERT INTO Discount (id, title, [percentage], [start_date], [end_date], active, [description])
 VALUES
-    (N'MAGIAMGIA001', N'Giảm giá mùa hè', 15, '2023-07-01', '2023-07-31', 1, N'Ưu đãi giảm giá dành cho mùa hè'),
-    (N'MAGIAMGIA002', N'Khuyến mãi đặc biệt', 20, '2023-08-10', '2023-08-20', 1, N'Khuyến mãi hấp dẫn dành cho quý khách hàng'),
-    (N'MAGIAMGIA003', N'Giảm giá sản phẩm mới', 10, '2023-09-05', '2023-09-15', 1, N'Ưu đãi giảm giá đặc biệt cho sản phẩm mới'),
-    (N'MAGIAMGIA004', N'Khuyến mãi sinh nhật', 25, '2023-10-01', '2023-10-31', 1, N'Chúc mừng sinh nhật, nhận ngay ưu đãi hấp dẫn'),
-    (N'MAGIAMGIA005', N'Giảm giá cuối năm', 30, '2023-12-20', '2023-12-31', 1, N'Ưu đãi cuối năm, cơ hội để sở hữu những sản phẩm ưng ý');
+    (N'MAGIAMGIA001', N'Giảm giá mùa hè', 15, '2023-07-01 05:00:00', '2023-07-31 08:00:00', 1, N'Ưu đãi giảm giá dành cho mùa hè'),
+    (N'MAGIAMGIA002', N'Khuyến mãi đặc biệt', 20, '2023-08-10 05:00:00', '2023-08-20 08:00:00', 1, N'Khuyến mãi hấp dẫn dành cho quý khách hàng'),
+    (N'MAGIAMGIA003', N'Giảm giá sản phẩm mới', 10, '2023-09-05 05:00:00', '2023-09-15 08:00:00', 1, N'Ưu đãi giảm giá đặc biệt cho sản phẩm mới'),
+    (N'MAGIAMGIA004', N'Khuyến mãi sinh nhật', 25, '2023-10-01 05:00:00', '2023-10-31 08:00:00', 1, N'Chúc mừng sinh nhật, nhận ngay ưu đãi hấp dẫn'),
+    (N'MAGIAMGIA005', N'Giảm giá cuối năm', 30, '2023-12-20 05:00:00', '2023-12-31 08:00:00', 1, N'Ưu đãi cuối năm, cơ hội để sở hữu những sản phẩm ưng ý');
 GO
 
 
