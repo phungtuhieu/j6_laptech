@@ -1,3 +1,5 @@
+USE [master];
+-- DROP DATABASE laptech
 CREATE DATABASE laptech
 GO 
 
@@ -28,6 +30,7 @@ CREATE TABLE Verification (
 GO
 
 CREATE TABLE Avartars (
+    id BIGINT IDENTITY(1,1) NOT NULL,
     user_id NVARCHAR(50) NOT NULL,
     [image] NVARCHAR(100) NOT NULL,
     is_selected BIT
@@ -58,9 +61,8 @@ GO
 
 CREATE TABLE Storage (
     id BIGINT IDENTITY(1,1) NOT NULL,
-    [name] NVARCHAR(100) NOT NULL,
-    capacity INT NOT NULL,
     [type] NVARCHAR(10) NOT NULL,
+    capacity INT NOT NULL,
     manufacturer NVARCHAR(200) NOT NULL
 )
 GO
@@ -142,7 +144,7 @@ CREATE TABLE Price (
 GO 
 
 CREATE TABLE Discount (
-    id BIGINT IDENTITY(1,1) NOT NULL,
+    id NVARCHAR(20) NOT NULL,
     title NVARCHAR(200) NOT NULL,
     [percentage] INT NOT NULL,
     [start_date] DATE NOT NULL,
@@ -153,7 +155,7 @@ CREATE TABLE Discount (
 GO 
 
 CREATE TABLE Discount_Price (
-    discount_id BIGINT NOT NULL,
+    discount_id NVARCHAR(20) NOT NULL,
     price_id BIGINT NOT NULL
 )
 GO 
@@ -170,11 +172,11 @@ CREATE TABLE Orders (
     id BIGINT IDENTITY(10000,1) NOT NULL,
     user_id NVARCHAR(50) NOT NULL,
     order_date DATETIME NOT NULL,
-    completion_date DATETIME NOT NULL,
-    delivery_date DATETIME NOT NULL,
-    cancellation_date DATETIME NOT NULL,
+    completion_date DATETIME ,
+    delivery_date DATETIME ,
+    cancellation_date DATETIME ,
     cancellation_reason NVARCHAR(200),
-    payment_method NVARCHAR(200),
+    payment_method BIT NOT NULL,
     [status] INT NOT NULL
 )
 GO 
@@ -395,5 +397,276 @@ ALTER TABLE Discount_Price
 ADD CONSTRAINT FK_DiscountPrice_Discount
 FOREIGN KEY (discount_id) REFERENCES Discount(id);
 GO
-
 -- /Discount_Price
+
+-- TẠO DỮ LIỆU MẪU
+
+INSERT INTO Users (username, [password], fullname, phone, email, [address], [admin], active)
+VALUES
+    ('ngocanh01', '123456', N'Ngọc Anh', '0909123456', 'ngocanh01@example.com', N'Hồ Chí Minh', 0, 1),
+    ('thanhnam87', '654321', N'Thanh Nam', '0918234567', 'nam87@example.com', N'Hà Nội', 1, 1),
+    ('minhchau02', 'abc123', N'Minh Châu', '0987123456', 'chau02@example.com', N'Đà Nẵng', 0, 1),
+    ('trungkien11', 'def456', N'Trung Kiên', '0967123456', 'kien11@example.com', N'Bình Dương', 0, 1),
+    ('thuytrang9x', 'ghj789', N'Thúy Trang', '0978123456', 'trang9x@example.com', N'Hải Phòng', 0, 1);
+
+GO
+-- DELETE Verification
+-- DBCC CHECKIDENT ('Verification', RESEED, 0);
+
+INSERT INTO Verification (user_id, code, create_at, expiration_at, [status])
+VALUES
+    ('ngocanh01', 'ABCD1234', '2023-07-15 08:00:00', '2023-07-20 08:00:00', 1),
+    ('thanhnam87', 'EFGH5678', '2023-07-16 09:00:00', '2023-07-21 09:00:00', 1),
+    ('minhchau02', 'IJKL9012', '2023-07-17 10:00:00', '2023-07-22 10:00:00', 1),
+    ('trungkien11', 'MNOP3456', '2023-07-18 11:00:00', '2023-07-23 11:00:00', 1),
+    ('thuytrang9x', 'QRST7890', '2023-07-19 12:00:00', '2023-07-24 12:00:00', 1);
+GO
+
+
+
+-- DELETE Avartars
+-- DBCC CHECKIDENT ('Avartars', RESEED, 0);
+INSERT INTO Avartars (user_id, [image], is_selected)
+VALUES
+    ('ngocanh01', 'https://example.com/avatars/ngocanh01.jpg', 1),
+    ('thanhnam87', 'https://example.com/avatars/thanhnam87.jpg', 1),
+    ('minhchau02', 'https://example.com/avatars/minhchau02.jpg', 1),
+    ('trungkien11', 'https://example.com/avatars/trungkien11.jpg', 1),
+    ('thuytrang9x', 'https://example.com/avatars/thuytrang9x.jpg', 1);
+
+GO
+
+
+
+
+-- DELETE CPU
+-- DBCC CHECKIDENT ('CPU', RESEED, 0);
+INSERT INTO CPU ([name], cores, threads, socket, clock_speed, turbo_speed, cache, manufacturer)
+VALUES
+    (N'Intel Core i5 10th Gen', 4, 8, N'LGA 1200', 2.9, 4.1, 8, N'Intel'),
+    (N'AMD Ryzen 7 5000', 8, 16, N'Socket AM4', 3.6, 4.4, 16, N'AMD'),
+    (N'Intel Core i7 11th Gen', 6, 12, N'LGA 1200', 3.1, 4.8, 12, N'Intel'),
+    (N'AMD Ryzen 5 4000', 6, 12, N'Socket AM4', 2.9, 4.2, 8, N'AMD'),
+    (N'Intel Core i9 12th Gen', 8, 16, N'LGA 1700', 3.2, 5.0, 24, N'Intel');
+
+GO
+
+
+
+-- DELETE RAM
+-- DBCC CHECKIDENT ('RAM', RESEED, 0);
+INSERT INTO RAM ([name], capacity, [type], manufacturer)
+VALUES
+    (N'Kingston DDR4 8GB', 8, N'DDR4', N'Kingston'),
+    (N'Crucial DDR4 16GB', 16, N'DDR4', N'Crucial'),
+    (N'Corsair DDR4 32GB', 32, N'DDR4', N'Corsair'),
+    (N'G.Skill DDR4 16GB', 16, N'DDR4', N'G.Skill'),
+    (N'ADATA DDR4 8GB', 8, N'DDR4', N'ADATA');
+
+GO
+
+
+-- DELETE Storage
+-- DBCC CHECKIDENT ('Storage', RESEED, 0);
+INSERT INTO Storage ([type], capacity, manufacturer)
+VALUES
+    (N'SSD', 256, N'Samsung'),
+    (N'HDD', 1000, N'Western Digital'),
+    (N'SSD', 512, N'Crucial'),
+    (N'HDD', 2000, N'Seagate'),
+    (N'SSD', 128, N'Kingston');
+
+GO
+
+-- DELETE Screen_Size
+-- DBCC CHECKIDENT ('Screen_Size', RESEED, 0);
+INSERT INTO Screen_Size (size)
+VALUES
+    (13.3),
+    (14),
+    (15.6),
+    (17.3),
+    (13);
+
+GO
+
+-- DELETE Graphics_Card
+-- DBCC CHECKIDENT ('Graphics_Card', RESEED, 0);
+INSERT INTO Graphics_Card ([name], cores, memory_size, base_clock, boost_clock, manufacturer)
+VALUES
+    (N'NVIDIA GeForce GTX 1650', 896, 4, 1485, 1665, N'NVIDIA'),
+    (N'AMD Radeon RX 6700 XT', 2560, 12, 2321, 2581, N'AMD'),
+    (N'NVIDIA GeForce RTX 3060', 3584, 6, 1320, 1777, N'NVIDIA'),
+    (N'AMD Radeon RX 5500 XT', 1408, 8, 1670, 1845, N'AMD'),
+    (N'NVIDIA GeForce RTX 3080', 8704, 10, 1440, 1710, N'NVIDIA');
+
+GO
+
+-- DELETE Operating_System
+-- DBCC CHECKIDENT ('Operating_System', RESEED, 0);
+INSERT INTO Operating_System ([name])
+VALUES
+    (N'Windows 10 Home'),
+    (N'Windows 11 Pro'),
+    (N'Ubuntu 20.04 LTS'),
+    (N'MacOS Big Sur'),
+    (N'ChromeOS');
+
+GO
+
+
+-- DELETE Categories
+-- DBCC CHECKIDENT ('Categories', RESEED, 0);
+INSERT INTO Categories ([name], [description])
+VALUES
+    (N'Laptop Gaming', N'Điện thoại di động dành cho game thủ'),
+    (N'Ultrabook', N'Laptop mỏng nhẹ, di động cao'),
+    (N'Laptop Workstation', N'Laptop chuyên dụng cho đồ họa, kỹ thuật số'),
+    (N'Chromebook', N'Laptop chạy ChromeOS'),
+    (N'Laptop Doanh Nhân', N'Laptop dành cho doanh nhân');
+
+GO
+
+
+
+
+INSERT INTO Brands ([name], logo, email, phone, website, country, [description])
+VALUES
+    (N'Dell', N'dell_logo.jpg', N'support@dell.com', '1800 1999', N'https://www.dell.com', N'USA', N'Hãng sản xuất laptop nổi tiếng'),
+    (N'Asus', N'asus_logo.jpg', N'info@asus.com', '1900 2999', N'https://www.asus.com', N'TW', N'Hãng sản xuất laptop và linh kiện điện tử'),
+    (N'Lenovo', N'lenovo_logo.jpg', N'contact@lenovo.com', '1700 3999', N'https://www.lenovo.com', N'CN', N'Hãng sản xuất laptop và thiết bị điện tử'),
+    (N'Acer', N'acer_logo.jpg', N'support@acer.com', '1600 4999', N'https://www.acer.com', N'TW', N'Hãng sản xuất laptop, máy tính, và smartphone'),
+    (N'HP', N'hp_logo.jpg', N'info@hp.com', '1500 5999', N'https://www.hp.com', N'USA', N'Hãng sản xuất laptop và máy in');
+GO
+
+-- DELETE Products
+-- DBCC CHECKIDENT ('Products', RESEED, 999);
+INSERT INTO Products ([name], create_date, quantity, [description], [status], ram_id, cpu_id, storage_id, screen_size_id, graphics_card_id, operating_system_id, category_id, brand_id)
+VALUES
+    (N'Laptop Gaming ASUS ROG Strix G15', '2023-07-10', 100, N'Laptop Gaming mạnh mẽ với CPU Intel Core i7 11th Gen và GPU NVIDIA GeForce RTX 3060', 1, 2, 3, 1, 3, 3, 1, 1, 2),
+    (N'Laptop Dell Inspiron 15 7000', '2023-07-11', 80, N'Laptop Ultrabook cao cấp với CPU Intel Core i5 10th Gen và RAM 16GB', 1, 3, 1, 2, 4, 1, 2, 1, 1),
+    (N'Laptop Lenovo ThinkPad P1', '2023-07-12', 50, N'Laptop Workstation chuyên dụng cho đồ họa và kỹ thuật số', 1, 1, 5, 1, 2, 4, 3, 3, 3),
+    (N'Chromebook Acer Chromebook 14', '2023-07-13', 30, N'Laptop Chromebook giá rẻ với màn hình 14 inch', 1, 5, 4, 3, 5, 2, 5, 4, 4),
+    (N'Laptop Doanh Nhân HP EliteBook 850 G8', '2023-07-14', 20, N'Laptop chất lượng cao dành cho doanh nhân với CPU Intel Core i9 12th Gen', 1, 4, 2, 4, 1, 5, 4, 5, 5);
+GO
+
+-- DELETE Product_Images
+-- DBCC CHECKIDENT ('Product_Images', RESEED, 0);
+INSERT INTO Product_Images ([name], product_id, isMain)
+VALUES
+    (N'product_1_image_1.jpg', 1000, 1),
+    (N'product_1_image_2.jpg', 1000, 0),
+    (N'product_1_image_3.jpg', 1000, 0),
+    (N'product_2_image_1.jpg', 1001, 0),
+    (N'product_2_image_2.jpg', 1001, 0),
+    (N'product_3_image_1.jpg', 1002, 0),
+    (N'product_3_image_2.jpg', 1002, 0),
+    (N'product_4_image_1.jpg', 1003, 0),
+    (N'product_5_image_1.jpg', 1004, 0);
+
+GO
+
+
+-- DELETE Price
+-- DBCC CHECKIDENT ('Price', RESEED, 0);
+INSERT INTO Price (price, product_id, [start_date], [end_date])
+VALUES
+    (25000000, 1000, '2023-07-10', '2023-08-10'),
+    (18000000, 1001, '2023-07-11', '2023-08-11'),
+    (30000000, 1002, '2023-07-12', '2023-08-12'),
+    (8000000, 1003, '2023-07-13', '2023-08-13'),
+    (12000000, 1004, '2023-07-14', '2023-08-14');
+
+GO
+
+
+-- DELETE Discount
+
+INSERT INTO Discount (id, title, [percentage], [start_date], [end_date], active, [description])
+VALUES
+    (N'MAGIAMGIA001', N'Giảm giá mùa hè', 15, '2023-07-01', '2023-07-31', 1, N'Ưu đãi giảm giá dành cho mùa hè'),
+    (N'MAGIAMGIA002', N'Khuyến mãi đặc biệt', 20, '2023-08-10', '2023-08-20', 1, N'Khuyến mãi hấp dẫn dành cho quý khách hàng'),
+    (N'MAGIAMGIA003', N'Giảm giá sản phẩm mới', 10, '2023-09-05', '2023-09-15', 1, N'Ưu đãi giảm giá đặc biệt cho sản phẩm mới'),
+    (N'MAGIAMGIA004', N'Khuyến mãi sinh nhật', 25, '2023-10-01', '2023-10-31', 1, N'Chúc mừng sinh nhật, nhận ngay ưu đãi hấp dẫn'),
+    (N'MAGIAMGIA005', N'Giảm giá cuối năm', 30, '2023-12-20', '2023-12-31', 1, N'Ưu đãi cuối năm, cơ hội để sở hữu những sản phẩm ưng ý');
+GO
+
+
+INSERT INTO Discount_Price (discount_id, price_id)
+VALUES
+    (N'MAGIAMGIA001', 1),
+    (N'MAGIAMGIA002', 2),
+    (N'MAGIAMGIA003', 3),
+    (N'MAGIAMGIA004', 4);
+GO
+
+
+-- DELETE Cart
+-- DBCC CHECKIDENT ('Cart', RESEED, 0);
+INSERT INTO Cart (user_id, product_id, quantity)
+VALUES
+    ('ngocanh01', 1000, 2),
+    ('ngocanh01', 1002, 1),
+    ('thanhnam87', 1001, 1),
+    ('thanhnam87', 1004, 3),
+    ('minhchau02', 1003, 2);
+
+GO
+
+-- DELETE Orders
+-- DBCC CHECKIDENT ('Orders', RESEED, 9999);
+INSERT INTO Orders (user_id, order_date, completion_date, delivery_date, cancellation_date, cancellation_reason, payment_method, [status])
+VALUES
+    (N'ngocanh01', '2023-07-21 10:00:00', '2023-07-21 15:30:00', '2023-07-24 09:00:00', '2023-07-22 11:00:00', N'Hủy đơn hàng do không có hàng', 1, 1),
+    (N'thanhnam87', '2023-07-22 13:30:00', '2023-07-22 17:45:00', '2023-07-25 11:30:00', NULL, NULL, 1, 2),
+    (N'minhchau02', '2023-07-23 09:15:00', '2023-07-23 16:00:00', '2023-07-26 08:45:00', NULL, NULL, 0, 1),
+    (N'trungkien11', '2023-07-24 14:00:00', NULL, NULL, NULL, NULL, 1, 3),
+    (N'thuytrang9x', '2023-07-25 11:45:00', NULL, NULL, NULL, NULL, 0, 1)
+GO
+
+-- DELETE Order_Details
+-- DBCC CHECKIDENT ('Order_Details', RESEED, 0);
+INSERT INTO Order_Details (order_id, product_id, quantity)
+VALUES
+    (10000, 1000, 2),
+    (10001, 1002, 1),
+    (10002, 1001, 1),
+    (10003, 1004, 3),
+    (10004, 1003, 2);
+
+GO
+
+-- DELETE Favorites
+-- DBCC CHECKIDENT ('Favorites', RESEED, 0);
+INSERT INTO Favorites (user_id, product_id, liked_date)
+VALUES
+    ('ngocanh01', 1000, '2023-07-10'),
+    ('ngocanh01', 1002, '2023-07-11'),
+    ('thanhnam87', 1001, '2023-07-12'),
+    ('thanhnam87', 1004, '2023-07-13'),
+    ('minhchau02', 1003, '2023-07-14');
+GO
+
+
+
+
+SELECT * FROM Users
+SELECT * FROM Verification;
+SELECT * FROM Avartars;
+SELECT * FROM CPU;
+SELECT * FROM RAM;
+SELECT * FROM Storage;
+SELECT * FROM Screen_Size;
+SELECT * FROM Graphics_Card;
+SELECT * FROM Operating_System;
+SELECT * FROM Categories;
+SELECT * FROM Brands;
+SELECT * FROM Products;
+SELECT * FROM Product_Images;
+SELECT * FROM Price;
+SELECT * FROM Discount;
+SELECT * FROM Discount_Price;
+SELECT * FROM Cart;
+SELECT * FROM Orders;
+SELECT * FROM Order_Details;
+SELECT * FROM Favorites;
