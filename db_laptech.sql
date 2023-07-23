@@ -1,5 +1,6 @@
 USE [master];
 -- DROP DATABASE laptech
+
 CREATE DATABASE laptech
 GO 
 
@@ -401,6 +402,30 @@ GO
 
 -- TẠO DỮ LIỆU MẪU
 
+SELECT * FROM Users
+SELECT * FROM Verification;
+SELECT * FROM Avartars;
+SELECT * FROM CPU;
+SELECT * FROM RAM;
+SELECT * FROM Storage;
+SELECT * FROM Screen_Size;
+SELECT * FROM Graphics_Card;
+SELECT * FROM Operating_System;
+SELECT * FROM Categories;
+SELECT * FROM Brands;
+SELECT * FROM Products;
+SELECT * FROM Product_Images;
+SELECT * FROM Price;
+SELECT * FROM Discount;
+SELECT * FROM Discount_Price;
+SELECT * FROM Cart;
+SELECT * FROM Orders;
+SELECT * FROM Order_Details;
+SELECT * FROM Favorites;
+
+
+
+
 INSERT INTO Users (username, [password], fullname, phone, email, [address], [admin], active)
 VALUES
     ('ngocanh01', '123456', N'Ngọc Anh', '0909123456', 'ngocanh01@example.com', N'Hồ Chí Minh', 0, 1),
@@ -410,6 +435,7 @@ VALUES
     ('thuytrang9x', 'ghj789', N'Thúy Trang', '0978123456', 'trang9x@example.com', N'Hải Phòng', 0, 1);
 
 GO
+
 -- DELETE Verification
 -- DBCC CHECKIDENT ('Verification', RESEED, 0);
 
@@ -529,7 +555,6 @@ GO
 
 
 
-
 INSERT INTO Brands ([name], logo, email, phone, website, country, [description])
 VALUES
     (N'Dell', N'dell_logo.jpg', N'support@dell.com', '1800 1999', N'https://www.dell.com', N'USA', N'Hãng sản xuất laptop nổi tiếng'),
@@ -592,27 +617,8 @@ VALUES
 GO
 
 
-INSERT INTO Discount_Price (discount_id, price_id)
-VALUES
-    (N'MAGIAMGIA001', 1),
-    (N'MAGIAMGIA002', 2),
-    (N'MAGIAMGIA003', 3),
-    (N'MAGIAMGIA004', 4);
-GO
 
-
--- DELETE Cart
--- DBCC CHECKIDENT ('Cart', RESEED, 0);
-INSERT INTO Cart (user_id, product_id, quantity)
-VALUES
-    ('ngocanh01', 1000, 2),
-    ('ngocanh01', 1002, 1),
-    ('thanhnam87', 1001, 1),
-    ('thanhnam87', 1004, 3),
-    ('minhchau02', 1003, 2);
-
-GO
-
+SELECT * FROM Cart
 -- DELETE Orders
 -- DBCC CHECKIDENT ('Orders', RESEED, 9999);
 INSERT INTO Orders (user_id, order_date, completion_date, delivery_date, cancellation_date, cancellation_reason, payment_method, [status])
@@ -623,7 +629,7 @@ VALUES
     (N'trungkien11', '2023-07-24 14:00:00', NULL, NULL, NULL, NULL, 1, 3),
     (N'thuytrang9x', '2023-07-25 11:45:00', NULL, NULL, NULL, NULL, 0, 1)
 GO
-
+SELECT * FROM Orders
 -- DELETE Order_Details
 -- DBCC CHECKIDENT ('Order_Details', RESEED, 0);
 INSERT INTO Order_Details (order_id, product_id, quantity)
@@ -634,17 +640,6 @@ VALUES
     (10003, 1004, 3),
     (10004, 1003, 2);
 
-GO
-
--- DELETE Favorites
--- DBCC CHECKIDENT ('Favorites', RESEED, 0);
-INSERT INTO Favorites (user_id, product_id, liked_date)
-VALUES
-    ('ngocanh01', 1000, '2023-07-10'),
-    ('ngocanh01', 1002, '2023-07-11'),
-    ('thanhnam87', 1001, '2023-07-12'),
-    ('thanhnam87', 1004, '2023-07-13'),
-    ('minhchau02', 1003, '2023-07-14');
 GO
 
 
