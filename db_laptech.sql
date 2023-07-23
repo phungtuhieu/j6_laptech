@@ -23,7 +23,7 @@ CREATE TABLE Verification (
     code NVARCHAR(8) NOT NULL,
     create_at DATETIME NOT NULL,
     expiration_at DATETIME NOT NULL,
-    [status] BIT NOT NULL,
+    [status] BIT NOT NULL
 ) 
 GO
 
@@ -77,13 +77,13 @@ CREATE TABLE Graphics_Card (
     memory_size INT NOT NULL,
     base_clock INT NOT NULL,
     boost_clock INT NOT NULL,
-    manufacturer INT NOT NULL
+    manufacturer NVARCHAR(200) NOT NULL
 )
 GO 
 
 CREATE TABLE Operating_System(
     id BIGINT IDENTITY(1,1) NOT NULL,
-    [name] NVARCHAR(100) NOT NULL,
+    [name] NVARCHAR(100) NOT NULL
 )
 GO
 
@@ -137,7 +137,7 @@ CREATE TABLE Price (
     price FLOAT NOT NULL,
     product_id BIGINT NOT NULL,
     [start_date] DATE NOT NULL,
-    [end_date] DATE NOT NULL,
+    [end_date] DATE NOT NULL
 )
 GO 
 
@@ -154,7 +154,7 @@ GO
 
 CREATE TABLE Discount_Price (
     discount_id BIGINT NOT NULL,
-    price_id BIGINT NOT NULL,
+    price_id BIGINT NOT NULL
 )
 GO 
 
@@ -194,3 +194,4 @@ CREATE TABLE Favorites (
     liked_date DATE NOT NULL
 )
 GO 
+
