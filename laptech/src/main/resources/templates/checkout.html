@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"xmlns="http://www.thymeleaf.org" th:replace="~{/layout/layout.html :: dynamic(~{::title},~{:: .wrapp},~{::css})}">
+<html lang="en"xmlns="http://www.thymeleaf.org" th:replace="~{/layout/layout.html :: dynamic(~{::title},~{:: .wrapp})}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,9 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-    <th:block th:fragment="css">
-        <link rel="stylesheet" th:href="@{/assets/css/checkout.css}">
-    </th:block>
+
   <div class="wrapp">
     <div class="container checkout-area ">
         <div class="row">

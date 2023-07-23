@@ -1,14 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" th:replace="~{/layout/layout.html :: dynamic(~{::title},~{:: main},~{::css})}">
+<html lang="en" th:replace="~{/layout/layout.html :: dynamic(~{::title},~{:: main})}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>sign-up</title>
 </head>
 <body>
-    <th:block th:fragment="css">
-      <link rel="stylesheet" th:href="@{/assets/css/form.css}">
-  </th:block>
+
     <main>
         <div class="container py-5  d-flex justify-content-center align-items-center" style="height: 100vh;">
             <div class="form-wrapper w-100  d-flex justify-content-center align-items-center">
@@ -57,7 +55,7 @@
                           
                          </div>
                          <div class=" d-flex justify-content-center">
-                           <a th:href="@{/login}" class="text-black btn-back-home"> <i class="fa-solid fa-arrow-left"></i></a>
+                           <a th:href="@{/account/login}" class="text-black btn-back-home"> <i class="fa-solid fa-arrow-left"></i></a>
                          </div>
                          </div>
                        </div>
