@@ -2231,3 +2231,26 @@ img {
   height: 30px;
   background-color: var(--button-icon-color, #3e3e3e);
 }
+
+/*  */
+
+
+.icon-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+
+
+.facebook-icon {
+
+  width: 40px;
+
+}
+
+.google-icon {
+  width: 40px;
+
+  
+}
