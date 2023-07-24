@@ -9,6 +9,6 @@ public class ContactController {
 
 	@RequestMapping("/contact")
 	public String contact(Model model) {
-		return "layout/lienhe"; 
+		return "layout/contact";
 	}
 }

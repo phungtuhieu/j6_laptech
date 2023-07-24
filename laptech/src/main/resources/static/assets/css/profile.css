@@ -1,29 +1,26 @@
-body{margin-top:20px;
-    background-color:#f2f6fc;
-    color:#69707a;
-    }
-    .img-account-profile {
+
+  .profile  .img-account-profile {
         height: 14rem;
     }
-    .rounded-circle {
+    .profile .rounded-circle {
         border-radius: 50% !important;
     }
-    .card {
+    .profile .card {
         box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%);
     }
-    .card .card-header {
+    .profile  .card .card-header {
         font-weight: 500;
     }
-    .card-header:first-child {
+    .profile  .card-header:first-child {
         border-radius: 0.35rem 0.35rem 0 0;
     }
-    .card-header {
+    .profile  .card-header {
         padding: 1rem 1.35rem;
         margin-bottom: 0;
         background-color: rgba(33, 40, 50, 0.03);
         border-bottom: 1px solid rgba(33, 40, 50, 0.125);
     }
-    .form-control, .dataTable-input {
+    .profile   .form-control, .dataTable-input {
         display: block;
         width: 100%;
         padding: 0.875rem 1.125rem;
@@ -40,8 +37,8 @@ body{margin-top:20px;
         border-radius: 0.35rem;
         transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
     }
-    label{
-        font-size: 30px;
+    .profile label{
+        font-size: 15px;
         color: black;
     }
     

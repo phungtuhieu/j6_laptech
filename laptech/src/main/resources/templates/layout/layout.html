@@ -7,15 +7,15 @@
     <th:block th:include="layout/library/css-links.html"></th:block>
 
     <th:block th:if="${#ctx.springRequestContext.requestUri.contains('contact')}">
-        <link rel="stylesheet" href="assets/css/lienhe.css">
+        <link rel="stylesheet" href="assets/css/contact.css">
     </th:block>
 
     <th:block th:if="${#ctx.springRequestContext.requestUri.contains('about')}">
-        <link rel="stylesheet" href="assets/css/lienhe.css">
+        <link rel="stylesheet" href="assets/css/about.css">
     </th:block>
 
     <th:block th:if="${#ctx.springRequestContext.requestUri.contains('profile')}">
-        <link rel="stylesheet" th:href="@{/assets/css/canhan.css}">
+        <link rel="stylesheet" th:href="@{/assets/css/profile.css}">
     </th:block>
 
     <th:block th:if="${#ctx.springRequestContext.requestUri.contains('account')}">
