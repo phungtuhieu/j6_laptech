@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <div class="content-page">
+    <div class="content-page" ng-app="app" ng-controller="list">
         <div class="page-header d-flex justify-content-between align-items-center">
             <ul class="page-info">
                 <li class=" page-title">Danh sách danh mục</li>
@@ -50,42 +50,43 @@
                             <table class="table table-hover">
                               <thead>
                                 <tr class="tb-header">
-                                  <th scope="col">ID </th>
-                                  <th scope="col">Tên danh mục</th>
-                                  <th scope="col">Mô tả</th>
-                                  <th scope="col">Thao tác</th>
+                                  <th ng-click="sortBy('id')" hidden scope="col">ID </th>
+                                  <th ng-click="sortBy('name')" scope="col">Tên danh mục</th>
+                                  <th ng-click="sortBy('description')" scope="col">Mô tả</th>
+                                  <th  scope="col">Thao tác</th>
                                 </tr>
                               </thead>
-                              <tbody>
-                                <tr class="">
-                                  <td scope="row">1</td>
-                                  <td>2</td>
-                                  <td>6</td>
-                                  <td class="td-action ">
-                                     <div class="wordset">
-                                        <ul>
-                                            <li>
-                                                <a th:href="@{/admin/category/update}" class="text-secondary-emphasis"><i class="fa-solid fa-pen-to-square"></i></a>
-                                            </li>
-                                            <li>
-                                                <a href="" class="text-danger"><i class="fa-solid fa-trash"></i></a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                  </td>
+                              <tbody> 
+                                
+                                <tr class="mt" ng-repeat="ca in items |  orderBy:sortColumn:reverseSort | limitTo:5:begin">
+                                    <td scope="row" hidden>{{ca.id}}</td>
+                                    <td>{{ca.name}}</td>
+                                    <td>{{ca.description}}</td>
+                                    <td class="td-action ">
+                                        <div class="wordset">
+                                            <ul>
+                                                <li>
+                                                    <a th:href="@{/admin/category/update}" ng-click="formEdit(ca.id)" class="text-secondary-emphasis"> <i class="fa-solid fa-pen-to-square"></i></a>
+                                                </li>
+                                                <li>
+                                                    <a href="" class="text-danger" ng-click="delete(ca.id)"><i class="fa-solid fa-trash"></i></a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
                                 </tr>
                               </tbody>
                             </table>
                           </div>
                     </div>
                     <div class="table-bottom d-flex justify-content-end align-items-center pt-4">
-                        <span class="pagination-info me-2">1 - 10 of <span >11</span> items</span>
+                        <span class="pagination-info me-2">{{begin / 5 + 1}}  of <span >{{pageCount}}</span></span>
                         <nav aria-label="Page navigation " >
                             <ul class="pagination mb-0">
-                              <li class="page-item"><a class="page-link" href="#"><i class="fa-solid fa-backward-step"></i></a></li>
-                              <li class="page-item"><a class="page-link" href="#"><i class="fa-solid fa-backward"></i></a></li>
-                              <li class="page-item"><a class="page-link" href="#"><i class="fa-solid fa-forward"></i></a></li>
-                              <li class="page-item"><a class="page-link" href="#"><i class="fa-solid fa-forward-step"></i></a></li>
+                              <li class="page-item"><a class="page-link" ng-click="first()" href="#"><i class="fa-solid fa-backward-step"></i></a></li>
+                              <li class="page-item"><a class="page-link" ng-click="prev()" href="#"><i class="fa-solid fa-backward"></i></a></li>
+                              <li class="page-item"><a class="page-link" ng-click="next()" href="#"><i class="fa-solid fa-forward"></i></a></li>
+                              <li class="page-item"><a class="page-link" ng-click="last()" href="#"><i class="fa-solid fa-forward-step"></i></a></li>
                             </ul>
                           </nav>
                     </div>

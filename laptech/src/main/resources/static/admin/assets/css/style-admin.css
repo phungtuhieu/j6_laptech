@@ -603,3 +603,9 @@
 
 
 /* /FORM */
+
+
+
+.tb-header th{
+    cursor: pointer;
+}
