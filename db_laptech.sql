@@ -284,42 +284,42 @@ GO
 -- PRODUCTS
 ALTER TABLE Products
 ADD CONSTRAINT FK_Products_RAM
-FOREIGN KEY (ram_id) REFERENCES RAM(id);
+FOREIGN KEY (ram_id) REFERENCES RAM(id) ON UPDATE CASCADE ON DELETE NO ACTION ;
 GO
 
 ALTER TABLE Products
 ADD CONSTRAINT FK_Products_CPU
-FOREIGN KEY (cpu_id) REFERENCES CPU(id);
+FOREIGN KEY (cpu_id) REFERENCES CPU(id) ON UPDATE CASCADE ON DELETE NO ACTION ;
 GO
 
 ALTER TABLE Products
 ADD CONSTRAINT FK_Products_Storage
-FOREIGN KEY (storage_id) REFERENCES Storage(id);
+FOREIGN KEY (storage_id) REFERENCES Storage(id) ON UPDATE CASCADE ON DELETE NO ACTION ;
 GO
 
 ALTER TABLE Products
 ADD CONSTRAINT FK_Products_Screen_Size
-FOREIGN KEY (screen_size_id) REFERENCES Screen_Size(id);
+FOREIGN KEY (screen_size_id) REFERENCES Screen_Size(id) ON UPDATE CASCADE ON DELETE NO ACTION ;
 GO
 
 ALTER TABLE Products
 ADD CONSTRAINT FK_Products_Graphics_Card
-FOREIGN KEY (graphics_card_id) REFERENCES Graphics_Card(id);
+FOREIGN KEY (graphics_card_id) REFERENCES Graphics_Card(id) ON UPDATE CASCADE ON DELETE NO ACTION ;
 GO
 
 ALTER TABLE Products
 ADD CONSTRAINT FK_Products_Operating_System
-FOREIGN KEY (operating_system_id) REFERENCES Operating_System(id);
+FOREIGN KEY (operating_system_id) REFERENCES Operating_System(id) ON UPDATE CASCADE ON DELETE NO ACTION ;
 GO
 
 ALTER TABLE Products
 ADD CONSTRAINT FK_Products_Categories
-FOREIGN KEY (category_id) REFERENCES Categories(id);
+FOREIGN KEY (category_id) REFERENCES Categories(id) ON UPDATE CASCADE ON DELETE NO ACTION ;
 GO
 
 ALTER TABLE Products
 ADD CONSTRAINT FK_Products_Brands
-FOREIGN KEY (brand_id) REFERENCES Brands(id);
+FOREIGN KEY (brand_id) REFERENCES Brands(id) ON UPDATE CASCADE ON DELETE NO ACTION ;
 GO
 
 
@@ -328,62 +328,62 @@ GO
 
 ALTER TABLE Avartars
 ADD CONSTRAINT FK_Avartars_Users
-FOREIGN KEY (user_id) REFERENCES Users(username);
+FOREIGN KEY (user_id) REFERENCES Users(username) ON UPDATE CASCADE ON DELETE NO ACTION ;
 GO
 
 ALTER TABLE Verification
 ADD CONSTRAINT FK_Verification_Users
-FOREIGN KEY (user_id) REFERENCES Users(username);
+FOREIGN KEY (user_id) REFERENCES Users(username) ON UPDATE CASCADE ON DELETE NO ACTION ;
 GO
 
 ALTER TABLE Orders
 ADD CONSTRAINT FK_Orders_Users
-FOREIGN KEY (user_id) REFERENCES Users(username);
+FOREIGN KEY (user_id) REFERENCES Users(username) ON UPDATE CASCADE ON DELETE NO ACTION ;
 GO
 
 ALTER TABLE Product_Images
 ADD CONSTRAINT FK_Product_Images_Products
-FOREIGN KEY (product_id) REFERENCES Products(id);
+FOREIGN KEY (product_id) REFERENCES Products(id) ON UPDATE CASCADE ON DELETE NO ACTION ;
 GO
 
 ALTER TABLE Price
 ADD CONSTRAINT FK_Price_Products
-FOREIGN KEY (product_id) REFERENCES Products(id);
+FOREIGN KEY (product_id) REFERENCES Products(id) ON UPDATE CASCADE ON DELETE NO ACTION ;
 GO
 
 -- Cart
 ALTER TABLE Cart
 ADD CONSTRAINT FK_Cart_Products
-FOREIGN KEY (product_id) REFERENCES Products(id);
+FOREIGN KEY (product_id) REFERENCES Products(id) ON UPDATE CASCADE ON DELETE NO ACTION ;
 GO
 -- /Cart
 
 ALTER TABLE Cart
 ADD CONSTRAINT FK_Cart_Users
-FOREIGN KEY (user_id) REFERENCES Users(username);
+FOREIGN KEY (user_id) REFERENCES Users(username) ON UPDATE CASCADE ON DELETE NO ACTION ;
 GO
 
 -- Favorites
 ALTER TABLE Favorites
 ADD CONSTRAINT FK_Favorites_Products
-FOREIGN KEY (product_id) REFERENCES Products(id);
+FOREIGN KEY (product_id) REFERENCES Products(id) ON UPDATE CASCADE ON DELETE NO ACTION ;
 GO
 
 ALTER TABLE Favorites
 ADD CONSTRAINT FK_Favorites_Users
-FOREIGN KEY (user_id) REFERENCES Users(username);
+FOREIGN KEY (user_id) REFERENCES Users(username) ON UPDATE CASCADE ON DELETE NO ACTION ;
 GO
 -- /Favorites
 
 -- Order_Details
 ALTER TABLE Order_Details
 ADD CONSTRAINT FK_OrderDetails_Products
-FOREIGN KEY (product_id) REFERENCES Products(id);
+FOREIGN KEY (product_id) REFERENCES Products(id) ON UPDATE CASCADE ON DELETE NO ACTION ;
 GO
 
 ALTER TABLE Order_Details
 ADD CONSTRAINT FK_OrderDetails_Orders
-FOREIGN KEY (order_id) REFERENCES Orders(id);
+FOREIGN KEY (order_id) REFERENCES Orders(id) ON UPDATE CASCADE ON DELETE NO ACTION ;
 GO
 
 -- /Order_Details
@@ -391,12 +391,12 @@ GO
 -- Discount_Price
 ALTER TABLE Discount_Price
 ADD CONSTRAINT FK_DiscountPrice_Price
-FOREIGN KEY (price_id) REFERENCES Price(id);
+FOREIGN KEY (price_id) REFERENCES Price(id) ON UPDATE CASCADE ON DELETE NO ACTION ;
 GO
 
 ALTER TABLE Discount_Price
 ADD CONSTRAINT FK_DiscountPrice_Discount
-FOREIGN KEY (discount_id) REFERENCES Discount(id);
+FOREIGN KEY (discount_id) REFERENCES Discount(id) ON UPDATE CASCADE ON DELETE NO ACTION ;
 GO
 -- /Discount_Price
 
