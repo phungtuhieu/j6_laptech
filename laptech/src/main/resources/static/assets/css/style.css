@@ -443,11 +443,11 @@ footer p a:hover{
 .clamp-5-lines {
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 4;
+  -webkit-line-clamp: 3;
   overflow: hidden;
   line-height: 1.2em;
   max-height: calc(1.2em * 5);
-  height: 76.8px;
+  height: 60.8px;
   color: #000;
 }
 
@@ -2230,4 +2230,27 @@ img {
   width: 30px;
   height: 30px;
   background-color: var(--button-icon-color, #3e3e3e);
+}
+
+/*  */
+
+
+.icon-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+
+
+.facebook-icon {
+
+  width: 40px;
+
+}
+
+.google-icon {
+  width: 40px;
+
+  
 }
