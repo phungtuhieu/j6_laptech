@@ -1,23 +1,21 @@
 package com.laptech.model;
 
 import java.util.Date;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-// id NVARCHAR(20) NOT NULL,
-//     title NVARCHAR(200) NOT NULL,
-//     [percentage] INT NOT NULL,
-//     [start_date] DATE NOT NULL,
-//     [end_date] DATE NOT NULL,
-//     active BIT NOT NULL,
-//     [description] NVARCHAR(200) 
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,7 +23,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "Discount")
 public class Discount {
-    @Id
+    
+    @Id 
     String id;
     String title;
     Integer percentage;
@@ -37,5 +36,9 @@ public class Discount {
 
     Boolean active;
     String description;
+   
+    @JsonIgnore
+    @OneToMany(mappedBy = "discount")
+    List<DiscountPrice> discountPrices;
 }
 

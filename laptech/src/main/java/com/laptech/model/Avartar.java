@@ -4,15 +4,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-//   id BIGINT IDENTITY(1,1) NOT NULL,
-//     user_id NVARCHAR(50) NOT NULL,
-//     [image] NVARCHAR(100) NOT NULL,
-//     is_selected BIT
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,4 +24,8 @@ public class Avartar {
     Long id;
     String image;
     Boolean selected;
+    
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    User user;
 }

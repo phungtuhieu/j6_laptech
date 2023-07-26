@@ -1,7 +1,12 @@
 package com.laptech.model;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,14 +18,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "Users")
 public class User {
-    //   username NVARCHAR(50) NOT NULL,
-    // [password] NVARCHAR(50) NOT NULL,
-    // fullname NVARCHAR(50) NOT NULL,
-    // phone NVARCHAR(15),
-    // email NVARCHAR(100) NOT NULL,
-    // [address] NVARCHAR(200) NOT NULL,
-    // [admin] BIT NOT NULL,   
-    // active BIT NOT NULL
+
     @Id
     String username ;
     String password;
@@ -31,5 +29,23 @@ public class User {
     Boolean admin;
     Boolean active;
 
-    
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    List<Order> orders;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    List<Verification> verifications;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    List<Favorite> favorites;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    List<Avartar> avartars;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    List<Cart> carts;
 }

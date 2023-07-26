@@ -1,19 +1,19 @@
 package com.laptech.model;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-    // id BIGINT IDENTITY(1,1) NOT NULL,
-    // [name] NVARCHAR(100) NOT NULL,
-    // capacity INT NOT NULL,
-    // [type] NVARCHAR(10) NOT NULL,
-    // manufacturer NVARCHAR(200) NOT NULL
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,5 +28,9 @@ public class RAM {
     Integer capacity;
     String type;
     String manufacturer;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "ram")
+    List<Product> products;
 
 }

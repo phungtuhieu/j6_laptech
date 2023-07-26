@@ -21,21 +21,22 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 
 @Entity
-@Table(name = "Price")
-public class Price {
+@Table(name = "Favorites")
+public class Favorite {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-    Double price;
+
     @Temporal(TemporalType.DATE)
-    @Column(name = "start_date")
-    Date startDate = new Date();
-    @Temporal(TemporalType.DATE)
-    @Column(name = "end_date")
-    Date enDate = new Date();
-    
+    @Column(name = "liked_date")
+    Date likedDate = new Date();
+
     @ManyToOne
     @JoinColumn(name = "product_id")
-    Product product;
-}
+    Product product;    
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    User user;
+   
+}

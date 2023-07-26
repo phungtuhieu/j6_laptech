@@ -19,15 +19,22 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 
 @Entity
-@Table(name = "Operating_System")
-public class OperatingSystem {
-    
+@Table(name = "Brands")
+public class Brand {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     String name;
+    String logo;
+    String email;
+    String phone;
+    String website;
+    String country;
+    String description;
     
     @JsonIgnore
-    @OneToMany(mappedBy = "operatingSystem")
+    @OneToMany(mappedBy = "brand")
     List<Product> products;
+
+
 }
