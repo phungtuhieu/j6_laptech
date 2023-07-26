@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,6 +26,11 @@ public class ScreenSize {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     Double size;
+    String resolution;
+    @Column(name = "panel_type")
+    String panelType;
+    @Column(name = "touch_screen")
+    String touchScreen;
 
     @JsonIgnore
     @OneToMany(mappedBy = "screenSize")

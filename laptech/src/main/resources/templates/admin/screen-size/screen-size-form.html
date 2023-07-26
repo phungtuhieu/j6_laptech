@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+    th:replace="~{/admin/layout/layout.html :: admin(~{::title},~{:: .content-page}) }">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product</title>
+</head>
+
+<body>
+    <div class="content-page">
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <ul class="page-info">
+                <li class=" page-title">[[${#ctx.springRequestContext.requestUri.contains('create')} ? 'Tạo màn hình' :'Cập nhật màn hình']]</li>
+                <li class=" page-description">[[${#ctx.springRequestContext.requestUri.contains('create')} ? 'Thêm màn hình mới' :'Thay đổi thông tin màn hình']]</li>
+            </ul>
+            <!-- <a href="#" class="btn btn-added">
+                <i class="fa-solid fa-plus"></i>
+                Thêm sản phẩm
+            </a> -->
+        </div>
+        <div class="card">
+            <div class="card-body page-body">
+
+                <form action="">
+                    <div class="row">
+                        <div class="mb-4 col-lg-4 offset-2 form-group">
+                            <label for="product-name" class="form-label">Kích thước</label>
+                            <input type="text" class="form-control" id="product-name">
+                        </div>
+                        <div class="mb-4 col-lg-4  form-group">
+                            <label for="" class="form-label">Độ phân giải</label>
+                            <input type="text" class="form-control" id="">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="mb-4 col-lg-4 offset-2 form-group">
+                            <label for="" class="form-label">Kích thước bộ nhớ</label>
+                            <input type="text" class="form-control" id="">
+                        </div>
+                        <div class="mb-4 col-lg-4  form-group">
+                            <label for="" class="form-label">Loại Panel màn hình</label>
+                            <input type="text" class="form-control" id="">
+                        </div>
+                    </div>
+                        <div class="mb-4 col-lg-12 offset-2 ">
+                                <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('create')}" class="btn btn-submit me-2">Lưu</a>
+                                <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('update')}" class="btn btn-submit me-2">Cập nhật</a>
+                                <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('update')}" class="btn btn-remove me-2">Xoá</a>
+                                <a th:href="@{/admin/screen-size/list}" class="btn btn-cancel" >Huỷ bỏ</a>
+                        </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
