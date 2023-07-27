@@ -25,19 +25,23 @@
                     <div class="table-top d-flex justify-content-between align-items-center">
                         <div class="search-input">
                             <div class="btn-searchset">
-                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <i ng-click="search(searchText)" class="fa-solid fa-magnifying-glass"></i>
                             </div>
                             <form class="d-flex">
-                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" ng-model="searchText" ng-change="search(searchText)">
                             </form>
                         </div>
-                        <div class="wordset">
+                        <div class="wordset" ng-controller="excel">
                             <ul>
                                 <li>
-                                   <a href="" class="text-danger"><i class="fa-solid fa-file-pdf"></i></a>
+                                   <a href="" class="text-danger" ng-click="exportToPDF()"><i class="fa-solid fa-file-pdf"></i></a>
                                 </li>
                                 <li>
-                                    <a href="" class="text-success"><i class="fa-solid fa-file-excel"></i></a>
+                                    <label for="file-input" class="file-label">
+                                        <i class="fa-solid fa-file-excel"></i>
+                                      </label>
+                                      <input type="file" id="file-input" class="file-input" onchange="angular.element(this).scope().import(this.files)"  accept=".xls, .xlsx"/>
+                                      
                                 </li>
                                 <li>
                                     <a href="" class="text-secondary"><i class="fa-solid fa-print"></i></a>

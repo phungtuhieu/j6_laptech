@@ -609,3 +609,20 @@
 .tb-header th{
     cursor: pointer;
 }
+
+.file-input {
+    /* Đảm bảo input bị ẩn đi */
+    display: none;
+  }
+  .file-label {
+    /* Thiết lập icon để làm label cho input */
+    cursor: pointer; /* Biến con trỏ chuột thành bàn tay khi hover vào icon */
+  }
+  .file-label i {
+    /* Thiết lập icon cho label */
+    width: 15px;
+    height: 20px;
+    color: #28a745; /* Màu của icon (vd: màu xanh lá cây) */
+    /* Có thể thay đổi mã màu để phù hợp với icon của bạn */
+  }
+  
