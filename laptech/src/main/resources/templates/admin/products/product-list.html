@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <div class="content-page">
+    <div class="content-page" ng-controller="list">
         <div class="page-header d-flex justify-content-between align-items-center">
             <ul class="page-info">
                 <li class=" page-title">Danh sách sản phẩm</li>
@@ -50,28 +50,28 @@
                             <table class="table table-hover">
                               <thead>
                                 <tr class="tb-header">
-                                  <th scope="col">ID </th>
                                   <th scope="col">Tên sản phẩm</th>
-                                  <th scope="col">Thương hiệu</th>
+                                  <th scope="col">Số lượng</th>
+                                  <th scope="col">Nhà sản xuất</th>
                                   <th scope="col">Danh mục</th>
-                                  <th scope="col">Ngày tạo</th>
                                   <th scope="col">Mô tả</th>
+                                  <th scope="col">Ngày tạo</th>
                                   <th scope="col">Thao tác</th>
                                 </tr>
                               </thead>
                               <tbody>
-                                <tr class="">
-                                  <td scope="row">1</td>
-                                  <td>2</td>
-                                  <td>3</td>
-                                  <td>4</td>
-                                  <td>5</td>
-                                  <td>6</td>
+                                <tr class="" ng-repeat="item in items">
+                                  <td>{{item.name}}</td>
+                                  <td>{{item.quantity}}</td>
+                                  <td>{{item.brand.name}}</td>
+                                  <td>{{item.category.name}}</td>
+                                  <td class="reduce-td">{{item.description}}</td>
+                                  <td>{{item.createDate}}</td>
                                   <td class="td-action ">
                                      <div class="wordset">
                                         <ul>
                                             <li>
-                                                <a th:href="@{/admin/product/update}" class="text-secondary-emphasis"><i class="fa-solid fa-pen-to-square"></i></a>
+                                                <a  ng-click="edit(item.id  )" class="text-secondary-emphasis"><i class="fa-solid fa-pen-to-square"></i></a>
                                             </li>
                                             <li>
                                                 <a href="" class="text-danger"><i class="fa-solid fa-trash"></i></a>

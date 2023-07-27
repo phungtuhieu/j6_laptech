@@ -605,7 +605,15 @@
 /* /FORM */
 
 
+.reduce-td{
+    vertical-align: middle;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 
+    min-width: 120px;
+    max-width: 120px;
+}
 .tb-header th{
     cursor: pointer;
 }

@@ -32,6 +32,9 @@
     <th:block th:if="${#ctx.springRequestContext.requestUri.contains('category')}">
         <script th:src="@{/admin/assets/js/angularjs/category.js}"></script>
     </th:block>
+    <th:block th:if="${#ctx.springRequestContext.requestUri.contains('product')}">
+        <script th:src="@{/admin/assets/js/angularjs/product.js}"></script>
+    </th:block>
 
 
     

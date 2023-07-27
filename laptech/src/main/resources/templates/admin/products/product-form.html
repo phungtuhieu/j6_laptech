@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <div class="content-page">
+    <div class="content-page"  th:attr="ng-controller=${#ctx.springRequestContext.requestUri.contains('create') ? 'create' : 'edit'}">
         <div class="page-header d-flex justify-content-between align-items-center">
             <ul class="page-info">
                 <li class=" page-title">[[${#ctx.springRequestContext.requestUri.contains('create')} ? 'Tạo sản phẩm' :'Cập nhật sản phẩm']]</li>
@@ -27,20 +27,17 @@
                     <div class="row">
                         <div class="mb-4 col-lg-3 form-group">
                             <label for="product-name" class="form-label">Tên sản phẩm</label>
-                            <input type="text" class="form-control" id="product-name">
+                            <input type="text" class="form-control" ng-model="form.name" id="product-name">
                         </div>
                         <div class="mb-4 col-lg-3 form-group">
                             <label for="" class="form-label">Số lượng</label>
-                            <input type="text" class="form-control" id="">
+                            <input type="text" class="form-control" id="" ng-model="form.quantity" >
                         </div>
                         <div class="mb-4 col-lg-3 form-group">
                             <label for="" class="form-label">Danh mục</label>
-                            <select class="form-select" aria-label="Default select example">
-                                <option selected>Chọn danh mục</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
+                            <select class="form-select"  ng-model="form.category" ng-options="cat.name for cat in optionsCat">
                             </select>
+                            
                         </div>
                         <div class="mb-4 col-lg-3 form-group">
                             <label for="" class="form-label">CPU</label>
