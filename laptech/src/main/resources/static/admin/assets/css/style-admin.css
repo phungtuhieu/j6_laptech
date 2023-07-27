@@ -626,3 +626,7 @@
     /* Có thể thay đổi mã màu để phù hợp với icon của bạn */
   }
   
+
+  .modal-body .file-label:not(:last-child) {
+    margin-right: 200px;
+}
