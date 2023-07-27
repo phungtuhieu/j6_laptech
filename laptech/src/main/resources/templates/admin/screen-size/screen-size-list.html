@@ -5,19 +5,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin</title>
+    <title>Product</title>
 </head>
 
 <body>
-    <div class="content-page" ng-controller="list">
+    <div class="content-page">
         <div class="page-header d-flex justify-content-between align-items-center">
             <ul class="page-info">
-                <li class=" page-title">Danh sách sản phẩm</li>
-                <li class=" page-description">Thông tin sản phẩm   </li>
+                <li class=" page-title">Danh sách màn hình</li>
+                <li class=" page-description">Thông tin màn hình</li>
             </ul>
-            <a th:href="@{/admin/product/create}" class="btn btn-added">
+            <a th:href="@{/admin/screen-size/create}" class="btn btn-added">
                 <i class="fa-solid fa-plus"></i>
-                Thêm sản phẩm
+                Thêm màn hình mới
             </a>
         </div>
             <div class="card">
@@ -50,28 +50,23 @@
                             <table class="table table-hover">
                               <thead>
                                 <tr class="tb-header">
-                                  <th scope="col">Tên sản phẩm</th>
-                                  <th scope="col">Số lượng</th>
-                                  <th scope="col">Nhà sản xuất</th>
-                                  <th scope="col">Danh mục</th>
-                                  <th scope="col">Mô tả</th>
-                                  <th scope="col">Ngày tạo</th>
+                                  <th scope="col">Kích thước</th>
+                                  <th scope="col">Độ phân giải</th>
+                                  <th scope="col">Loại màn hình</th>
+                                  <th scope="col">Cảm ứng</th>
                                   <th scope="col">Thao tác</th>
                                 </tr>
                               </thead>
                               <tbody>
-                                <tr class="" ng-repeat="item in items">
-                                  <td>{{item.name}}</td>
-                                  <td>{{item.quantity}}</td>
-                                  <td>{{item.brand.name}}</td>
-                                  <td>{{item.category.name}}</td>
-                                  <td class="reduce-td">{{item.description}}</td>
-                                  <td>{{item.createDate}}</td>
+                                <tr class="">
+                                  <td scope="row">1</td>
+                                  <td>3</td>
+                                  <td>4</td>
                                   <td class="td-action ">
                                      <div class="wordset">
                                         <ul>
                                             <li>
-                                                <a  ng-click="edit(item.id  )" class="text-secondary-emphasis"><i class="fa-solid fa-pen-to-square"></i></a>
+                                                <a th:href="@{/admin/screen-size/update}" class="text-secondary-emphasis"><i class="fa-solid fa-pen-to-square"></i></a>
                                             </li>
                                             <li>
                                                 <a href="" class="text-danger"><i class="fa-solid fa-trash"></i></a>
