@@ -26,12 +26,6 @@ public class ScreenSize {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     Double size;
-    String resolution;
-    @Column(name = "panel_type")
-    String panelType;
-    @Column(name = "touch_screen")
-    String touchScreen;
-
     @JsonIgnore
     @OneToMany(mappedBy = "screenSize")
     List<Product> products;

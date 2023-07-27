@@ -70,9 +70,6 @@ GO
 CREATE TABLE Screen_Size(
     id BIGINT IDENTITY(1,1) NOT NULL,
     size FLOAT NOT NULL,
-    resolution NVARCHAR(50) NOT NULL,
-    panel_type NVARCHAR(50) NOT NULL,
-    touch_screen BIT NOT NULL,
 )
 GO
 
@@ -509,13 +506,13 @@ GO
 
 -- DELETE Screen_Size
 -- DBCC CHECKIDENT ('Screen_Size', RESEED, 0);
-INSERT INTO Screen_Size (size,resolution,panel_type,touch_screen) 
+INSERT INTO Screen_Size (size) 
 VALUES
-    (13.3,'1928x1080','IPS',0),
-    (14,'2560x1440','IPS',0),
-    (15.6,'1920x1080','OLED',0),
-    (17.3,'3840x2160','IPS',1),
-    (13,'1920x1080','TN',0);
+    (13.3),
+    (14),
+    (15.6),
+    (17.3),
+    (13);
 
 GO
 

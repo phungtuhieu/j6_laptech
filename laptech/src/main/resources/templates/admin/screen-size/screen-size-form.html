@@ -25,26 +25,12 @@
 
                 <form action="">
                     <div class="row">
-                        <div class="mb-4 col-lg-4 offset-2 form-group">
+                        <div class="mb-4 col-lg-4 offset-3 form-group">
                             <label for="product-name" class="form-label">Kích thước</label>
                             <input type="text" class="form-control" id="product-name">
                         </div>
-                        <div class="mb-4 col-lg-4  form-group">
-                            <label for="" class="form-label">Độ phân giải</label>
-                            <input type="text" class="form-control" id="">
-                        </div>
                     </div>
-                    <div class="row">
-                        <div class="mb-4 col-lg-4 offset-2 form-group">
-                            <label for="" class="form-label">Kích thước bộ nhớ</label>
-                            <input type="text" class="form-control" id="">
-                        </div>
-                        <div class="mb-4 col-lg-4  form-group">
-                            <label for="" class="form-label">Loại Panel màn hình</label>
-                            <input type="text" class="form-control" id="">
-                        </div>
-                    </div>
-                        <div class="mb-4 col-lg-12 offset-2 ">
+                        <div class="mb-4 col-lg-12 offset-3 ">
                                 <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('create')}" class="btn btn-submit me-2">Lưu</a>
                                   <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('update')}" class="btn btn-submit me-2">Cập nhật</a>
                                 <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('update')}" class="btn btn-remove me-2">Xoá</a>
