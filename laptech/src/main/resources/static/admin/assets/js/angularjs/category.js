@@ -80,13 +80,13 @@ function list($scope, $http) {
       })
       .catch((error) => {
         console.log("Error", error);
-        if (error.status === 422) {
+       // if (error.status === 422) {
           alert(
             "Danh mục đã tồn tại trong sản phẩm. Cập nhật không thành công."
           );
-        } else {
-          alert("Đã xảy ra lỗi khi cập nhật danh mục.");
-        }
+       // } else {
+        //  alert("Đã xảy ra lỗi khi cập nhật danh mục.");
+       // }
       });
   };
   //
@@ -195,6 +195,9 @@ function formUpdate($scope, $http) {
       })
       .catch((error) => {
         console.log("Error", error);
+        alert(
+          "Danh mục đã tồn tại trong sản phẩm. Cập nhật không thành công."
+        );
       });
   };
   const id = window.sessionStorage.getItem("editId");
@@ -246,7 +249,7 @@ function dataFileHandler($scope, $http) {
     var confirmImport = confirm("Bạn có muốn export file Excel?");
     if (confirmImport) {
     var tableData = [];
-    var headers = ["ID", "FULLNAME", "DESCRIPTION"];
+    var headers = ["ID", "NAME", "DESCRIPTION"];
 
     // Thêm dữ liệu của từng hàng (row) trong bảng vào mảng tableData
     angular.forEach($scope.items, function (item) {
@@ -282,7 +285,7 @@ function dataFileHandler($scope, $http) {
     var confirmImport = confirm("Bạn có muốn export file PDF?");
     if (confirmImport) {
     var tableData = [];
-    var headers = ["ID", "Tên danh mục", "Mô tả"];
+    var headers = ["ID", "NAME", "DESCRIPTION"];
 
     // Thêm dữ liệu của từng hàng (row) trong bảng vào mảng tableData
     angular.forEach($scope.items, function (item) {
