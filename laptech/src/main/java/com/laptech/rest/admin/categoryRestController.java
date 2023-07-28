@@ -40,7 +40,6 @@ public class categoryRestController {
 
     @PostMapping("/api/category")
     public ResponseEntity<Category> post(@RequestBody Category category){
-    
        dao.save(category);
         return ResponseEntity.ok(category);
     }
@@ -56,7 +55,7 @@ public class categoryRestController {
 
     @DeleteMapping("/api/category/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable("id") Long id){
-        Category category = dao.findById(id).get();
+          Category category = dao.findById(id).get();
           if(category == null){
             return ResponseEntity.notFound().build();
           }
@@ -68,12 +67,9 @@ public class categoryRestController {
        
     }
 
-    @GetMapping("/api/category/search/{ten}")
-    public ResponseEntity<Category> search(@PathVariable("id") Long id){
-        if(!dao.existsById(id)){
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(dao.findById(id).get());
+    @GetMapping("/api/category/search/{name}")
+    public ResponseEntity<List<Category>> search(@PathVariable("name") String name){
+        return ResponseEntity.ok(dao.findByNameLike(name));
     }
     
 }
