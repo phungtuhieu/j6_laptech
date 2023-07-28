@@ -1,5 +1,5 @@
+import { toastMixin, confirmationDialog } from "../global/custom-sweetalert.js";
 let host = "http://localhost:8081/api";
-var i = 0;
 const app = angular.module("app", []);
 app
   .controller("list", list)
@@ -24,6 +24,7 @@ function list($scope, $http) {
     })
       .then((resp) => {
         $scope.items = resp.data;
+        window.sessionStorage.setItem("items", JSON.stringify(resp.data));
         $scope.pageCount = Math.ceil($scope.items.length / 5);
         console.log("Success1", resp);
       })
@@ -40,7 +41,6 @@ function list($scope, $http) {
       $scope.sortColumn === prop ? !$scope.reverseSort : false;
     $scope.sortColumn = prop;
   };
-
   $scope.begin = 0;
   $scope.pageCount = Math.ceil($scope.items.length / 5);
   $scope.first = function () {
@@ -65,29 +65,44 @@ function list($scope, $http) {
     window.sessionStorage.setItem("editId", id);
   };
   $scope.delete = (id) => {
-    var url = `${host}/category/${id}`;
-    //var url = host+'/students.json';
-    $http({
-      method: "delete",
-      url: url,
-    })
-      .then((resp) => {
-        var index = $scope.items.findIndex((item) => item.id == id);
-        $scope.items.splice(index, 1);
-        $scope.reset();
-        console.log("Success", resp);
-        $scope.pageCount = Math.ceil($scope.items.length / 5);
-      })
-      .catch((error) => {
-        console.log("Error", error);
-       // if (error.status === 422) {
-          alert(
-            "Danh mục đã tồn tại trong sản phẩm. Cập nhật không thành công."
-          );
-       // } else {
-        //  alert("Đã xảy ra lỗi khi cập nhật danh mục.");
-       // }
-      });
+    confirmationDialog(
+      "Xác nhận xóa?",
+      "Bạn có chắc chắn muốn xóa dữ liệu?",
+      "warning",
+      "Xóa",
+      "Hủy"
+    ).then((result) => {
+      if (result.isConfirmed) {
+        var url = `${host}/category/${id}`;
+        $http({
+          method: "delete",
+          url: url,
+        })
+          .then((resp) => {
+            var index = $scope.items.findIndex((item) => item.id == id);
+            $scope.items.splice(index, 1);
+            $scope.reset();
+            console.log("Success", resp);
+            $scope.pageCount = Math.ceil($scope.items.length / 5);
+            toastMixin.fire({
+              animation: true,
+              icon: "success",
+              title: "Xóa thành công",
+            });
+          })
+          .catch((error) => {
+            console.log("Error", error);
+            toastMixin.fire({
+              animation: true,
+              icon: "error",
+              title:
+                "Danh mục đã tồn tại trong sản phẩm. Cập nhật không thành công.",
+              position: "top",
+              width: 600,
+            });
+          });
+      }
+    });
   };
   //
   $scope.search = (name) => {
@@ -109,32 +124,88 @@ function list($scope, $http) {
         console.log("Error_edit", error);
       });
   };
+
+  $scope.check = () => {
+    const name = window.sessionStorage.getItem("name");
+
+    if (name == "create") {
+      toastMixin.fire({
+        animation: true,
+        icon: "success",
+        title: "Thêm thành công",
+      });
+      window.sessionStorage.removeItem("name");
+    } else if (name == "update") {
+      toastMixin.fire({
+        animation: true,
+        icon: "success",
+        title: "Sửa thành công",
+      });
+      window.sessionStorage.removeItem("name");
+    } else if (name == "delete") {
+      toastMixin.fire({
+        animation: true,
+        icon: "success",
+        title: "Xóa thành công",
+      });
+      window.sessionStorage.removeItem("name");
+    }
+  };
+
   // thực hiện
   $scope.reset();
   $scope.load_all();
+  $scope.check();
 }
 function formCreate($scope, $http) {
   //
+
   $scope.form = {};
   $scope.items = [];
   $scope.create = () => {
-    var item = angular.copy($scope.form);
-    var url = `${host}/category`;
-    $http({
-      method: "post",
-      url: url,
-      data: item,
-    })
-      .then((resp) => {
-        $scope.items.push(item);
-        console.log("Success", resp);
-        window.location.href = "/admin/category/list";
-      })
-      .catch((error) => {
-        console.log("Error", error);
+    if (validation($scope.form)) {
+      confirmationDialog(
+        "Xác nhận thêm?",
+        "Bạn có chắc chắn muốn thêm dữ liệu?",
+        "question",
+        "Thêm",
+        "Hủy"
+      ).then((result) => {
+        if (result.isConfirmed) {
+          var item = angular.copy($scope.form);
+          var url = `${host}/category`;
+          $http({
+            method: "post",
+            url: url,
+            data: item,
+          })
+            .then((resp) => {
+              $scope.items.push(item);
+              console.log("Success", resp);
+              window.location.href = "/admin/category/list";
+              window.sessionStorage.setItem("name", "create");
+            })
+            .catch((error) => {
+              console.log("Error", error);
+            });
+        }
       });
+    }
   };
 }
+
+function validation(item) {
+  const items = JSON.parse(window.sessionStorage.getItem("items"));
+  var index = items.findIndex((items) => items.name === item.name);
+
+  if (index !== -1) {
+    alert("không nhập trùng tên danh muc");
+    return false;
+  }
+
+  return true;
+}
+
 function formUpdate($scope, $http) {
   //
   $scope.form = {};
@@ -154,51 +225,78 @@ function formUpdate($scope, $http) {
       });
     window.sessionStorage.removeItem("editId");
   };
+
   $scope.update = () => {
-    var item = angular.copy($scope.form);
-    var url = `${host}/category/${$scope.form.id}`;
-    $http({
-      method: "put",
-      url: url,
-      data: item,
-    })
-      .then((resp) => {
-        var index = $scope.items.findIndex((item) => item.id == $scope.form.id);
-        $scope.items[index] = resp.data;
-        console.log("Success", resp);
-        window.location.href = "/admin/category/list";
-      })
-      .catch((error) => {
-        console.log("Error", error);
-        if (error.status === 422) {
-          alert(
-            "Danh mục đã tồn tại trong sản phẩm. Cập nhật không thành công."
-          );
-        } else {
-          alert("Đã xảy ra lỗi khi cập nhật danh mục.");
-        }
-      });
+    // if (validation($scope.form)) {
+    confirmationDialog(
+      "Xác nhận sửa?",
+      "Bạn có chắc chắn muốn sửa dữ liệu?",
+      "question",
+      "Sửa",
+      "Hủy"
+    ).then((result) => {
+      if (result.isConfirmed) {
+        var item = angular.copy($scope.form);
+        var url = `${host}/category/${$scope.form.id}`;
+        $http({
+          method: "put",
+          url: url,
+          data: item,
+        })
+          .then((resp) => {
+            var index = $scope.items.findIndex(
+              (item) => item.id == $scope.form.id
+            );
+            $scope.items[index] = resp.data;
+            console.log("Success", resp);
+            window.location.href = "/admin/category/list";
+            window.sessionStorage.setItem("name", "update");
+          })
+          .catch((error) => {
+            console.log("Error", error);
+          });
+      }
+    });
+    //  }
   };
   $scope.delete = (id) => {
-    var url = `${host}/category/${id}`;
-    //var url = host+'/students.json';
-    $http({
-      method: "delete",
-      url: url,
-    })
-      .then((resp) => {
-        var index = $scope.items.findIndex((item) => item.id == $scope.form.id);
-        $scope.items.splice(index, 1);
-        $scope.form = {};
-        console.log("Success", resp);
-        window.location.href = "/admin/category/list";
-      })
-      .catch((error) => {
-        console.log("Error", error);
-        alert(
-          "Danh mục đã tồn tại trong sản phẩm. Cập nhật không thành công."
-        );
-      });
+    confirmationDialog(
+      "Xác nhận xóa?",
+      "Bạn có chắc chắn muốn xóa dữ liệu?",
+      "warning",
+      "Xóa",
+      "Hủy"
+    ).then((result) => {
+      if (result.isConfirmed) {
+        var url = `${host}/category/${id}`;
+        //var url = host+'/students.json';
+        $http({
+          method: "delete",
+          url: url,
+        })
+          .then((resp) => {
+            var index = $scope.items.findIndex(
+              (item) => item.id == $scope.form.id
+            );
+            $scope.items.splice(index, 1);
+            $scope.form = {};
+            console.log("Success", resp);
+            window.location.href = "/admin/category/list";
+            window.sessionStorage.setItem("name", "delete");
+          })
+          .catch((error) => {
+            console.log("Error", error);
+            toastMixin.fire({
+              animation: true,
+              icon: "error",
+              title:
+                "Danh mục đã tồn tại trong sản phẩm. Cập nhật không thành công.",
+              position: "top",
+              width: 600,
+            });
+          });
+      }
+    });
   };
   const id = window.sessionStorage.getItem("editId");
   $scope.edit(id);
@@ -207,47 +305,42 @@ function dataFileHandler($scope, $http) {
   //
   // Excel
   $scope.import = (files) => {
-    var confirmImport = confirm("Bạn có muốn import file Excel?");
-    if (confirmImport) {
-      var reader = new FileReader();
-      reader.onloadend = async () => {
-        var workbook = new ExcelJS.Workbook();
-        await workbook.xlsx.load(reader.result);
-        const worksheet = workbook.getWorksheet("category_data");
-        if (!worksheet) {
-          alert("Tên worksheet không đúng. Vui lòng sửa lại tên worksheet.");
-          return;
+    var reader = new FileReader();
+    reader.onloadend = async () => {
+      var workbook = new ExcelJS.Workbook();
+      await workbook.xlsx.load(reader.result);
+      const worksheet = workbook.getWorksheet("category_data");
+      if (!worksheet) {
+        alert("Tên worksheet không đúng. Vui lòng sửa lại tên worksheet.");
+        return;
+      }
+      worksheet.eachRow((row, index) => {
+        if (index > 1) {
+          let student = {
+            id: row.getCell(1).value,
+            name: row.getCell(2).value,
+            description: row.getCell(3).value,
+          };
+          let url = `${host}/category`;
+          $http
+            .post(url, student)
+            .then((resp) => {
+              console.log("Success", resp.data);
+            })
+            .catch((error) => {
+              console.log("Error", error);
+            });
+
+          $scope.load_all();
         }
-        worksheet.eachRow((row, index) => {
-          if (index > 1) {
-            let student = {
-              id: row.getCell(1).value,
-              name: row.getCell(2).value,
-              description: row.getCell(3).value,
-            };
-            let url = `${host}/category`;
-            $http
-              .post(url, student)
-              .then((resp) => {
-                console.log("Success", resp.data);
-              })
-              .catch((error) => {
-                console.log("Error", error);
-              });
+      });
+    };
 
-            $scope.load_all();
-          }
-        });
-      };
-
-      reader.readAsArrayBuffer(files[0]);
-    }
+    reader.readAsArrayBuffer(files[0]);
   };
 
   // Hàm xuất dữ liệu ra tập tin Excel
   $scope.export = () => {
-    var confirmImport = confirm("Bạn có muốn export file Excel?");
-    if (confirmImport) {
     var tableData = [];
     var headers = ["ID", "NAME", "DESCRIPTION"];
 
@@ -267,9 +360,11 @@ function dataFileHandler($scope, $http) {
     XLSX.utils.book_append_sheet(workbook, worksheet, "category_data");
 
     // Xuất file Excel
-    var excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+    var excelBuffer = XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "array",
+    });
     saveAsExcel(excelBuffer, "danh_muc.xlsx");
-  }
   };
 
   // Hàm hỗ trợ lưu file Excel
@@ -282,8 +377,6 @@ function dataFileHandler($scope, $http) {
 
   // PDF
   $scope.exportToPDF = function () {
-    var confirmImport = confirm("Bạn có muốn export file PDF?");
-    if (confirmImport) {
     var tableData = [];
     var headers = ["ID", "NAME", "DESCRIPTION"];
 
@@ -315,7 +408,6 @@ function dataFileHandler($scope, $http) {
 
     // Xuất PDF
     pdfMake.createPdf(docDefinition).download("danh_muc.pdf");
-  }
   };
   // /PDF
 }

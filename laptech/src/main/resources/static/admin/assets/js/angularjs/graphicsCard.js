@@ -67,17 +67,15 @@ function list($scope, $http) {
     window.sessionStorage.setItem("editId", id);
   };
   $scope.delete = (id) => {
-    var url = `${host}/graphics-card/${id}`;
-
     confirmationDialog(
       "Xác nhận xóa?",
       "Bạn có chắc chắn muốn xóa dữ liệu?",
       "warning",
       "Xóa",
       "Hủy"
-
     ).then((result) => {
       if (result.isConfirmed) {
+        var url = `${host}/graphics-card/${id}`;
         $http({
           method: "delete",
           url: url,
@@ -88,11 +86,9 @@ function list($scope, $http) {
             $scope.reset();
             console.log("Success", resp);
             $scope.pageCount = Math.ceil($scope.items.length / 5);
-
-            // Áp dụng lớp CSS tùy chỉnh cho hộp thoại toast
             toastMixin.fire({
               animation: true,
-              icon: "error",
+              icon: "success",
               title: "Xóa thành công",
             });
           })
@@ -102,7 +98,7 @@ function list($scope, $http) {
               animation: true,
               icon: "error",
               title:
-                "Danh mục đã tồn tại trong sản phẩm. Cập nhật không thành công.",
+                "Card đồ họa đã tồn tại trong sản phẩm. Cập nhật không thành công.",
               position: "top",
               width: 600,
             });
@@ -177,7 +173,6 @@ function formCreate($scope, $http) {
         "question",
         "Thêm",
         "Hủy"
-        
       ).then((result) => {
         if (result.isConfirmed) {
           // Thực hiện thêm dữ liệu sau khi xác nhận
@@ -205,6 +200,7 @@ function formCreate($scope, $http) {
 }
 
 function validation(item) {
+    
   if (
     !item.name ||
     !item.cores ||
@@ -274,8 +270,6 @@ function formUpdate($scope, $http) {
   };
 
   $scope.update = () => {
-    var item = angular.copy($scope.form);
-    var url = `${host}/graphics-card/${$scope.form.id}`;
     if (validation($scope.form)) {
       confirmationDialog(
         "Xác nhận sửa?",
@@ -283,9 +277,10 @@ function formUpdate($scope, $http) {
         "question",
         "Sửa",
         "Hủy"
-        
       ).then((result) => {
         if (result.isConfirmed) {
+          var item = angular.copy($scope.form);
+          var url = `${host}/graphics-card/${$scope.form.id}`;
           $http({
             method: "put",
             url: url,
@@ -309,17 +304,15 @@ function formUpdate($scope, $http) {
   };
 
   $scope.delete = (id) => {
-    var url = `${host}/graphics-card/${id}`;
-    //var url = host+'/students.json';
     confirmationDialog(
       "Xác nhận xóa?",
       "Bạn có chắc chắn muốn xóa dữ liệu?",
       "warning",
       "Xóa",
       "Hủy"
-     
     ).then((result) => {
       if (result.isConfirmed) {
+        var url = `${host}/graphics-card/${id}`;
         $http({
           method: "delete",
           url: url,
@@ -337,13 +330,13 @@ function formUpdate($scope, $http) {
           .catch((error) => {
             console.log("Error", error);
             toastMixin.fire({
-                animation: true,
-                icon: "error",
-                title:
-                  "Danh mục đã tồn tại trong sản phẩm. Cập nhật không thành công.",
-                position: "top",
-                width: 600,
-              });
+              animation: true,
+              icon: "error",
+              title:
+                "Card đồ họa đã tồn tại trong sản phẩm. Cập nhật không thành công.",
+              position: "top",
+              width: 600,
+            });
           });
       }
     });
@@ -356,90 +349,86 @@ function dataFileHandler($scope, $http) {
   //
   // Excel
   $scope.import = (files) => {
-    
-      var reader = new FileReader();
-      reader.onloadend = async () => {
-        var workbook = new ExcelJS.Workbook();
-        await workbook.xlsx.load(reader.result);
-        const worksheet = workbook.getWorksheet("graphicsCard_data");
-        if (!worksheet) {
-          alert("Tên worksheet không đúng. Vui lòng sửa lại tên worksheet.");
-          return;
+    var reader = new FileReader();
+    reader.onloadend = async () => {
+      var workbook = new ExcelJS.Workbook();
+      await workbook.xlsx.load(reader.result);
+      const worksheet = workbook.getWorksheet("graphicsCard_data");
+      if (!worksheet) {
+        alert("Tên worksheet không đúng. Vui lòng sửa lại tên worksheet.");
+        return;
+      }
+      worksheet.eachRow((row, index) => {
+        if (index > 1) {
+          let student = {
+            id: row.getCell(1).value,
+            name: row.getCell(2).value,
+            cores: +row.getCell(3).value,
+            memorySize: +row.getCell(4).value,
+            baseClock: +row.getCell(5).value,
+            boostClock: +row.getCell(6).value,
+            manufacturer: row.getCell(7).value,
+          };
+          let url = `${host}/graphics-card`;
+          $http
+            .post(url, student)
+            .then((resp) => {
+              console.log("Success", resp.data);
+            })
+            .catch((error) => {
+              console.log("Error", error);
+            });
+
+          $scope.load_all();
         }
-        worksheet.eachRow((row, index) => {
-          if (index > 1) {
-            let student = {
-              id: row.getCell(1).value,
-              name: row.getCell(2).value,
-              cores: +row.getCell(3).value,
-              memorySize: +row.getCell(4).value,
-              baseClock: +row.getCell(5).value,
-              boostClock: +row.getCell(6).value,
-              manufacturer: row.getCell(7).value,
-            };
-            let url = `${host}/graphics-card`;
-            $http
-              .post(url, student)
-              .then((resp) => {
-                console.log("Success", resp.data);
-              })
-              .catch((error) => {
-                console.log("Error", error);
-              });
+      });
+    };
 
-            $scope.load_all();
-          }
-        });
-      };
-
-      reader.readAsArrayBuffer(files[0]);
-    
+    reader.readAsArrayBuffer(files[0]);
   };
 
   // Hàm xuất dữ liệu ra tập tin Excel
   $scope.export = () => {
-   
-      var tableData = [];
-      var headers = [
-        "ID",
-        "NAME",
-        "CORES",
-        "MEMORYSIZE",
-        "BASECLOCK",
-        "BOOSTCLOCK",
-        "MANUFACTURER",
+    var tableData = [];
+    var headers = [
+      "ID",
+      "NAME",
+      "CORES",
+      "MEMORYSIZE",
+      "BASECLOCK",
+      "BOOSTCLOCK",
+      "MANUFACTURER",
+    ];
+
+    // Thêm dữ liệu của từng hàng (row) trong bảng vào mảng tableData
+    angular.forEach($scope.items, function (item) {
+      var rowData = [
+        item.id,
+        item.name,
+        item.cores,
+        item.memorySize,
+        item.baseClock,
+        item.boostClock,
+        item.manufacturer,
       ];
+      tableData.push(rowData);
+    });
 
-      // Thêm dữ liệu của từng hàng (row) trong bảng vào mảng tableData
-      angular.forEach($scope.items, function (item) {
-        var rowData = [
-          item.id,
-          item.name,
-          item.cores,
-          item.memorySize,
-          item.baseClock,
-          item.boostClock,
-          item.manufacturer,
-        ];
-        tableData.push(rowData);
-      });
+    // Tạo một đối tượng workbook mới
+    var workbook = XLSX.utils.book_new();
 
-      // Tạo một đối tượng workbook mới
-      var workbook = XLSX.utils.book_new();
+    // Tạo một trang tính mới và gắn dữ liệu vào đó
+    var worksheet = XLSX.utils.aoa_to_sheet([headers].concat(tableData));
 
-      // Tạo một trang tính mới và gắn dữ liệu vào đó
-      var worksheet = XLSX.utils.aoa_to_sheet([headers].concat(tableData));
+    // Thêm trang tính vào workbook
+    XLSX.utils.book_append_sheet(workbook, worksheet, "graphicsCard_data");
 
-      // Thêm trang tính vào workbook
-      XLSX.utils.book_append_sheet(workbook, worksheet, "graphicsCard_data");
-
-      // Xuất file Excel
-      var excelBuffer = XLSX.write(workbook, {
-        bookType: "xlsx",
-        type: "array",
-      });
-      saveAsExcel(excelBuffer, "graphicsCard_data.xlsx");
-    
+    // Xuất file Excel
+    var excelBuffer = XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "array",
+    });
+    saveAsExcel(excelBuffer, "graphicsCard_data.xlsx");
   };
 
   // Hàm hỗ trợ lưu file Excel
@@ -452,55 +441,53 @@ function dataFileHandler($scope, $http) {
 
   // PDF
   $scope.exportToPDF = function () {
-    
-      var tableData = [];
-      var headers = [
-        "ID",
-        "NAME",
-        "CORES",
-        "MEMORYSIZE",
-        "BASECLOCK",
-        "BOOSTCLOCK",
-        "MANUFACTURER",
+    var tableData = [];
+    var headers = [
+      "ID",
+      "NAME",
+      "CORES",
+      "MEMORYSIZE",
+      "BASECLOCK",
+      "BOOSTCLOCK",
+      "MANUFACTURER",
+    ];
+
+    // Thêm dữ liệu của từng hàng (row) trong bảng vào mảng tableData
+    angular.forEach($scope.items, function (item) {
+      var rowData = [
+        item.id,
+        item.name,
+        item.cores,
+        item.memorySize,
+        item.baseClock,
+        item.boostClock,
+        item.manufacturer,
       ];
+      tableData.push(rowData);
+    });
 
-      // Thêm dữ liệu của từng hàng (row) trong bảng vào mảng tableData
-      angular.forEach($scope.items, function (item) {
-        var rowData = [
-          item.id,
-          item.name,
-          item.cores,
-          item.memorySize,
-          item.baseClock,
-          item.boostClock,
-          item.manufacturer,
-        ];
-        tableData.push(rowData);
-      });
-
-      //
-      var docDefinition = {
-        content: [
-          { text: "Danh sách card đồ họa", style: "header" },
-          {
-            table: {
-              headerRows: 1,
-              widths: ["auto", "auto", "auto", "auto", "auto", "auto", "auto"],
-              body: [headers].concat(tableData),
-            },
-            style: "table",
+    //
+    var docDefinition = {
+      content: [
+        { text: "Danh sách card đồ họa", style: "header" },
+        {
+          table: {
+            headerRows: 1,
+            widths: ["auto", "auto", "auto", "auto", "auto", "auto", "auto"],
+            body: [headers].concat(tableData),
           },
-        ],
-        styles: {
-          header: { fontSize: 20, bold: true, margin: [0, 0, 0, 10] },
-          table: { margin: [0, 5, 0, 15], fontSize: 12 },
-          tableHeader: { fillColor: "#FF0000", bold: true }, // In đậm tiêu đề
+          style: "table",
         },
-      };
+      ],
+      styles: {
+        header: { fontSize: 20, bold: true, margin: [0, 0, 0, 10] },
+        table: { margin: [0, 5, 0, 15], fontSize: 12 },
+        tableHeader: { fillColor: "#FF0000", bold: true }, // In đậm tiêu đề
+      },
+    };
 
-      // Xuất PDF
-      pdfMake.createPdf(docDefinition).download("graphics_card.pdf");
-    
+    // Xuất PDF
+    pdfMake.createPdf(docDefinition).download("graphics_card.pdf");
   };
   // /PDF
 }
