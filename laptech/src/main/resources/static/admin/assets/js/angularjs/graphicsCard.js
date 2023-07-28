@@ -1,7 +1,7 @@
+import { toastMixin, confirmationDialog } from "../global/custom-sweetalert.js";
 
 let host = "http://localhost:8081/api";
 
-var i = 0;
 const app = angular.module("app", []);
 app
   .controller("list", list)
@@ -68,23 +68,49 @@ function list($scope, $http) {
   };
   $scope.delete = (id) => {
     var url = `${host}/graphics-card/${id}`;
-    //var url = host+'/students.json';
-    $http({
-      method: "delete",
-      url: url,
-    })
-      .then((resp) => {
-        var index = $scope.items.findIndex((item) => item.id == id);
-        $scope.items.splice(index, 1);
-        $scope.reset();
-        console.log("Success", resp);
-        $scope.pageCount = Math.ceil($scope.items.length / 5);
-      })
-      .catch((error) => {
-        console.log("Error", error);
-        alert("Danh mục đã tồn tại trong sản phẩm. Cập nhật không thành công.");
-      });
+
+    confirmationDialog(
+      "Xác nhận xóa?",
+      "Bạn có chắc chắn muốn xóa dữ liệu?",
+      "warning",
+      "Xóa",
+      "Hủy"
+
+    ).then((result) => {
+      if (result.isConfirmed) {
+        $http({
+          method: "delete",
+          url: url,
+        })
+          .then((resp) => {
+            var index = $scope.items.findIndex((item) => item.id == id);
+            $scope.items.splice(index, 1);
+            $scope.reset();
+            console.log("Success", resp);
+            $scope.pageCount = Math.ceil($scope.items.length / 5);
+
+            // Áp dụng lớp CSS tùy chỉnh cho hộp thoại toast
+            toastMixin.fire({
+              animation: true,
+              icon: "error",
+              title: "Xóa thành công",
+            });
+          })
+          .catch((error) => {
+            console.log("Error", error);
+            toastMixin.fire({
+              animation: true,
+              icon: "error",
+              title:
+                "Danh mục đã tồn tại trong sản phẩm. Cập nhật không thành công.",
+              position: "top",
+              width: 600,
+            });
+          });
+      }
+    });
   };
+
   //
   $scope.search = (name) => {
     if (name != "") {
@@ -105,9 +131,38 @@ function list($scope, $http) {
         console.log("Error_edit", error);
       });
   };
+
+  $scope.check = () => {
+    const name = window.sessionStorage.getItem("name");
+
+    if (name == "create") {
+      toastMixin.fire({
+        animation: true,
+        icon: "success",
+        title: "Thêm thành công",
+      });
+      window.sessionStorage.removeItem("name");
+    } else if (name == "update") {
+      toastMixin.fire({
+        animation: true,
+        icon: "success",
+        title: "Sửa thành công",
+      });
+      window.sessionStorage.removeItem("name");
+    } else if (name == "delete") {
+      toastMixin.fire({
+        animation: true,
+        icon: "success",
+        title: "Xóa thành công",
+      });
+      window.sessionStorage.removeItem("name");
+    }
+  };
+
   // thực hiện
   $scope.reset();
   $scope.load_all();
+  $scope.check();
 }
 
 function formCreate($scope, $http) {
@@ -116,21 +171,35 @@ function formCreate($scope, $http) {
   $scope.items = [];
   $scope.create = () => {
     if (validation($scope.form)) {
-      var item = angular.copy($scope.form);
-      var url = `${host}/graphics-card`;
-      $http({
-        method: "post",
-        url: url,
-        data: item,
-      })
-        .then((resp) => {
-          $scope.items.push(item);
-          console.log("Success", resp);
-          window.location.href = "/admin/graphics-card/list";
-        })
-        .catch((error) => {
-          console.log("Error", error);
-        });
+      confirmationDialog(
+        "Xác nhận thêm?",
+        "Bạn có chắc chắn muốn thêm dữ liệu?",
+        "question",
+        "Thêm",
+        "Hủy"
+        
+      ).then((result) => {
+        if (result.isConfirmed) {
+          // Thực hiện thêm dữ liệu sau khi xác nhận
+          var item = angular.copy($scope.form);
+          var url = `${host}/graphics-card`;
+          $http({
+            method: "post",
+            url: url,
+            data: item,
+          })
+            .then((resp) => {
+              $scope.items.push(item);
+              console.log("Success", resp);
+              window.location.href = "/admin/graphics-card/list";
+
+              window.sessionStorage.setItem("name", "create");
+            })
+            .catch((error) => {
+              console.log("Error", error);
+            });
+        }
+      });
     }
   };
 }
@@ -145,16 +214,16 @@ function validation(item) {
     !item.manufacturer
   ) {
     alert("Vui lòng nhập đầy đủ thông tin cho các trường.");
-    return; // Dừng hàm update nếu có trường bị bỏ trống
+    return;
   }
 
   var chuVaSo = /^[a-zA-Z0-9]*$/;
   var chu = /^[a-zA-Z]*$/;
 
-  if (!chuVaSo.test(item.name)) {
-    alert("Please enter letters and numbers only1.");
-    return;
-  }
+  //   if (!chuVaSo.test(item.name)) {
+  //     swal("Any fool can use a computer");
+  //     return;
+  //   }
 
   if (isNaN(item.cores)) {
     alert("Vui lòng nhập số cores.");
@@ -203,46 +272,81 @@ function formUpdate($scope, $http) {
       });
     window.sessionStorage.removeItem("editId");
   };
+
   $scope.update = () => {
     var item = angular.copy($scope.form);
     var url = `${host}/graphics-card/${$scope.form.id}`;
     if (validation($scope.form)) {
-      $http({
-        method: "put",
-        url: url,
-        data: item,
-      })
-        .then((resp) => {
-          var index = $scope.items.findIndex(
-            (item) => item.id == $scope.form.id
-          );
-          $scope.items[index] = resp.data;
-          console.log("Success", resp);
-          window.location.href = "/admin/graphics-card/list";
-        })
-        .catch((error) => {
-          console.log("Error", error);
-        });
+      confirmationDialog(
+        "Xác nhận sửa?",
+        "Bạn có chắc chắn muốn sửa dữ liệu?",
+        "question",
+        "Sửa",
+        "Hủy"
+        
+      ).then((result) => {
+        if (result.isConfirmed) {
+          $http({
+            method: "put",
+            url: url,
+            data: item,
+          })
+            .then((resp) => {
+              var index = $scope.items.findIndex(
+                (item) => item.id == $scope.form.id
+              );
+              $scope.items[index] = resp.data;
+              console.log("Success", resp);
+              window.location.href = "/admin/graphics-card/list";
+              window.sessionStorage.setItem("name", "update");
+            })
+            .catch((error) => {
+              console.log("Error", error);
+            });
+        }
+      });
     }
   };
+
   $scope.delete = (id) => {
     var url = `${host}/graphics-card/${id}`;
     //var url = host+'/students.json';
-    $http({
-      method: "delete",
-      url: url,
-    })
-      .then((resp) => {
-        var index = $scope.items.findIndex((item) => item.id == $scope.form.id);
-        $scope.items.splice(index, 1);
-        $scope.form = {};
-        console.log("Success", resp);
-        window.location.href = "/admin/graphics-card/list";
-      })
-      .catch((error) => {
-        console.log("Error", error);
-        alert("Danh mục đã tồn tại trong sản phẩm. Cập nhật không thành công.");
-      });
+    confirmationDialog(
+      "Xác nhận xóa?",
+      "Bạn có chắc chắn muốn xóa dữ liệu?",
+      "warning",
+      "Xóa",
+      "Hủy"
+     
+    ).then((result) => {
+      if (result.isConfirmed) {
+        $http({
+          method: "delete",
+          url: url,
+        })
+          .then((resp) => {
+            var index = $scope.items.findIndex(
+              (item) => item.id == $scope.form.id
+            );
+            $scope.items.splice(index, 1);
+            $scope.form = {};
+            console.log("Success", resp);
+            window.location.href = "/admin/graphics-card/list";
+            window.sessionStorage.setItem("name", "delete");
+          })
+          .catch((error) => {
+            console.log("Error", error);
+            toastMixin.fire({
+                animation: true,
+                icon: "error",
+                title:
+                  "Danh mục đã tồn tại trong sản phẩm. Cập nhật không thành công.",
+                position: "top",
+                width: 600,
+              });
+          });
+      }
+    });
   };
   const id = window.sessionStorage.getItem("editId");
   $scope.edit(id);
