@@ -356,8 +356,7 @@ function dataFileHandler($scope, $http) {
   //
   // Excel
   $scope.import = (files) => {
-    var confirmImport = confirm("Bạn có muốn import file Excel?");
-    if (confirmImport) {
+    
       var reader = new FileReader();
       reader.onloadend = async () => {
         var workbook = new ExcelJS.Workbook();
@@ -394,13 +393,12 @@ function dataFileHandler($scope, $http) {
       };
 
       reader.readAsArrayBuffer(files[0]);
-    }
+    
   };
 
   // Hàm xuất dữ liệu ra tập tin Excel
   $scope.export = () => {
-    var confirmImport = confirm("Bạn có muốn export file Excel?");
-    if (confirmImport) {
+   
       var tableData = [];
       var headers = [
         "ID",
@@ -441,7 +439,7 @@ function dataFileHandler($scope, $http) {
         type: "array",
       });
       saveAsExcel(excelBuffer, "graphicsCard_data.xlsx");
-    }
+    
   };
 
   // Hàm hỗ trợ lưu file Excel
@@ -454,8 +452,7 @@ function dataFileHandler($scope, $http) {
 
   // PDF
   $scope.exportToPDF = function () {
-    var confirmImport = confirm("Bạn có muốn export file PDF?");
-    if (confirmImport) {
+    
       var tableData = [];
       var headers = [
         "ID",
@@ -503,7 +500,7 @@ function dataFileHandler($scope, $http) {
 
       // Xuất PDF
       pdfMake.createPdf(docDefinition).download("graphics_card.pdf");
-    }
+    
   };
   // /PDF
 }
