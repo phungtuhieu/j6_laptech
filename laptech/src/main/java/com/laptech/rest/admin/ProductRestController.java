@@ -7,29 +7,31 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.laptech.dao.ProductDAO;
 import com.laptech.model.Product;
 
 @RestController
+@RequestMapping("/api/product")
 public class ProductRestController {
     @Autowired
     ProductDAO dao;
 
-    @GetMapping("/api/product")
+    @GetMapping
     public ResponseEntity<List<Product>> getAll(Model model){
         return ResponseEntity.ok( dao.findAll());
     }
 
-    @GetMapping("/api/product/{id}")
+    @GetMapping("{id}")
     public ResponseEntity<Product> getOne(@PathVariable("id") Long id){
        if(!dao.existsById(id)){
             return ResponseEntity.badRequest().build();
        }
         return ResponseEntity.ok(dao.findById(id).get());
     }
-   
+ 
 
     // @PostMapping("/api/product")
     // public ResponseEntity<Product> post(@RequestBody Product Product){

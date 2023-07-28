@@ -46,7 +46,12 @@
                         </div>
                     </div>
                     <div class="table-center">
-                        <div class="table-responsive">
+                        <div class="loading-page"  ng-if="isLoading">
+                            <div class="spinner-border text-warning "  role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                        <div class="table-responsive" ng-if="!isLoading">
                             <table class="table table-hover">
                               <thead>
                                 <tr class="tb-header">
@@ -83,6 +88,7 @@
                               </tbody>
                             </table>
                           </div>
+                          
                     </div>
                     <div class="table-bottom d-flex justify-content-end align-items-center pt-4">
                         <span class="pagination-info me-2">1 - 10 of <span >11</span> items</span>
