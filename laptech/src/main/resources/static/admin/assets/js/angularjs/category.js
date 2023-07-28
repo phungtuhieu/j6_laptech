@@ -5,7 +5,7 @@ app
   .controller("list", list)
   .controller("create", formCreate)
   .controller("update", formUpdate)
-  .controller("excel", excel);
+  .controller("dataFileHandler", dataFileHandler);
 
 function list($scope, $http) {
   //
@@ -200,7 +200,7 @@ function formUpdate($scope, $http) {
   const id = window.sessionStorage.getItem("editId");
   $scope.edit(id);
 }
-function excel($scope, $http) {
+function dataFileHandler($scope, $http) {
   //
   // Excel
   $scope.import = (files) => {
@@ -220,7 +220,7 @@ function excel($scope, $http) {
             let student = {
               id: row.getCell(1).value,
               name: row.getCell(2).value,
-              description: +row.getCell(3).value,
+              description: row.getCell(3).value,
             };
             let url = `${host}/category`;
             $http
@@ -243,8 +243,10 @@ function excel($scope, $http) {
 
   // Hàm xuất dữ liệu ra tập tin Excel
   $scope.export = () => {
+    var confirmImport = confirm("Bạn có muốn export file Excel?");
+    if (confirmImport) {
     var tableData = [];
-    var headers = ["ID", "Tên danh mục", "Mô tả"];
+    var headers = ["ID", "FULLNAME", "DESCRIPTION"];
 
     // Thêm dữ liệu của từng hàng (row) trong bảng vào mảng tableData
     angular.forEach($scope.items, function (item) {
@@ -259,11 +261,12 @@ function excel($scope, $http) {
     var worksheet = XLSX.utils.aoa_to_sheet([headers].concat(tableData));
 
     // Thêm trang tính vào workbook
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Danh sách danh mục");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "category_data");
 
     // Xuất file Excel
     var excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
     saveAsExcel(excelBuffer, "danh_muc.xlsx");
+  }
   };
 
   // Hàm hỗ trợ lưu file Excel
@@ -276,6 +279,8 @@ function excel($scope, $http) {
 
   // PDF
   $scope.exportToPDF = function () {
+    var confirmImport = confirm("Bạn có muốn export file PDF?");
+    if (confirmImport) {
     var tableData = [];
     var headers = ["ID", "Tên danh mục", "Mô tả"];
 
@@ -307,6 +312,7 @@ function excel($scope, $http) {
 
     // Xuất PDF
     pdfMake.createPdf(docDefinition).download("danh_muc.pdf");
+  }
   };
   // /PDF
 }

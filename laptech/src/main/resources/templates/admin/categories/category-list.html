@@ -16,15 +16,8 @@
         <div class="modal" id="myModal">
             <div class="modal-dialog">
                 <div class="modal-content">
-
                     <!-- Modal Header -->
-                    <div class="modal-header">
-                        <h4 class="modal-title">Modal Heading</h4>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-
-                    <!-- Modal body -->
-                    <div class="modal-body" ng-controller="excel">
+                    <div class="modal-header" ng-controller="dataFileHandler">
                         <div class="container d-flex justify-content-center">
                             <!-- import -->
                             <label for="file-input-import" class="file-label">
@@ -41,10 +34,8 @@
                             
                             <!-- export -->
                         </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
-                    
-                    
-
                 </div>
             </div>
         </div>
@@ -71,7 +62,7 @@
                                 ng-model="searchText" ng-change="search(searchText)">
                         </form>
                     </div>
-                    <div class="wordset" ng-controller="excel" >
+                    <div class="wordset" ng-controller="dataFileHandler" >
                         <ul>
                             <li>
                                 <a href="" class="text-danger" ng-click="exportToPDF()"><i

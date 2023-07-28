@@ -627,6 +627,6 @@
   }
   
 
-  .modal-body .file-label:not(:last-child) {
-    margin-right: 200px;
+  .modal-header .file-label:not(:last-child) {
+    margin-right: 90px;
 }
