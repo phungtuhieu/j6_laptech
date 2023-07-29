@@ -49,6 +49,9 @@
     <th:block th:if="${#ctx.springRequestContext.requestUri.contains('graphics-card')}">
         <script type="module" th:src="@{/admin/assets/js/angularjs/graphicsCard.js}"></script>
     </th:block>
+    <th:block th:if="${#ctx.springRequestContext.requestUri.contains('ram')}">
+        <script type="module" th:src="@{/admin/assets/js/angularjs/ram.js}"></script>
+    </th:block>
     <th:block th:if="${#ctx.springRequestContext.requestUri.contains('product')}">
         <script th:src="@{/admin/assets/js/angularjs/product.js}"></script>
     </th:block>

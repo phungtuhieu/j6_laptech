@@ -164,6 +164,7 @@ function formCreate($scope, $http) {
   $scope.items = [];
   $scope.create = () => {
     if (validation($scope, $scope.form)) {
+      if(validationCreate($scope.form)){
       confirmationDialog(
         "Xác nhận thêm?",
         "Bạn có chắc chắn muốn thêm dữ liệu?",
@@ -191,56 +192,10 @@ function formCreate($scope, $http) {
         }
       });
     }
+    }
   };
 }
-function validation($scope, item) {
-  var chu = /^[a-zA-Z\s]*$/;
-  var kyTuDacBietTen = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
-  var valid = true;
 
-  if (!item.name) {
-    $scope.MessageName = "Không để rỗng tên danh mục";
-    $scope.showName = true;
-    valid = false;
-  } else if (kyTuDacBietTen.test(item.name)) {
-    $scope.MessageName = "Không được chứa ký tự đặc biệt trong tên danh mục";
-    $scope.showName = true;
-    valid = false;
-  } else if (!chu.test(item.name)) {
-    $scope.MessageName = "Không để số tên danh mục";
-    $scope.showName = true;
-    valid = false;
-  } else {
-    $scope.MessageName = "";
-    $scope.showName = false;
-  }
-
-
-  if (kyTuDacBietTen.test(item.description)) {
-    $scope.MessageDescription = "Không được chứa ký tự đặc biệt trong mô tả";
-    $scope.showDescription = true;
-    valid = false;
-  }  else {
-    $scope.MessageDescription = "";
-    $scope.showDescription = false;
-  }
-
-  if (valid) {
-    const items = JSON.parse(window.sessionStorage.getItem("items"));
-    var index = items.findIndex(
-      (items) =>
-        items.name.toLowerCase().replace(/\s+/g, "") ===
-        item.name.trim().toLowerCase().replace(/\s+/g, "")
-    );
-    if (index !== -1) {
-      $scope.MessageName = "Tên danh mục đã tồn tại";
-      $scope.show = true;
-      valid = false;
-    }
-  }
-
-  return valid;
-}
 function formUpdate($scope, $http) {
   //
   $scope.form = {};
@@ -263,6 +218,7 @@ function formUpdate($scope, $http) {
 
   $scope.update = () => {
     if (validation($scope, $scope.form)) {
+     
       confirmationDialog(
         "Xác nhận sửa?",
         "Bạn có chắc chắn muốn sửa dữ liệu?",
@@ -292,6 +248,7 @@ function formUpdate($scope, $http) {
             });
         }
       });
+    
     }
   };
   $scope.delete = (id) => {
@@ -346,9 +303,16 @@ function dataFileHandler($scope, $http) {
       await workbook.xlsx.load(reader.result);
       const worksheet = workbook.getWorksheet("category_data");
       if (!worksheet) {
-        alert("Tên worksheet không đúng. Vui lòng sửa lại tên worksheet.");
+        toastMixin.fire({
+          animation: true,
+          icon: "error",
+          title: "Tên worksheet không đúng. Vui lòng sửa lại tên worksheet.",
+          position: "top",
+          width: 600,
+        });
         return;
       }
+      let importSuccess = true;
       worksheet.eachRow((row, index) => {
         if (index > 1) {
           let student = {
@@ -364,11 +328,26 @@ function dataFileHandler($scope, $http) {
             })
             .catch((error) => {
               console.log("Error", error);
+              let importSuccess = files;
             });
 
           $scope.load_all();
         }
       });
+      if (importSuccess) {
+        $scope.load_all();
+        toastMixin.fire({
+          animation: true,
+          icon: "success",
+          title: "Import Excel thành công",
+        });
+      } else {
+        toastMixin.fire({
+          animation: true,
+          icon: "error",
+          title: "Import Excel thất bại. Vui lòng kiểm tra lại.",
+        });
+      }
     };
 
     reader.readAsArrayBuffer(files[0]);
@@ -400,6 +379,11 @@ function dataFileHandler($scope, $http) {
       type: "array",
     });
     saveAsExcel(excelBuffer, "danh_muc.xlsx");
+    toastMixin.fire({
+      animation: true,
+      icon: "success",
+      title: "Import Excel thành công",
+    });
   };
 
   // Hàm hỗ trợ lưu file Excel
@@ -441,8 +425,68 @@ function dataFileHandler($scope, $http) {
       },
     };
 
+    toastMixin.fire({
+      animation: true,
+      icon: "success",
+      title: "Import PDF thành công",
+    });
     // Xuất PDF
     pdfMake.createPdf(docDefinition).download("danh_muc.pdf");
   };
   // /PDF
+}
+function validation($scope, item) {
+  var chu = /^[a-zA-Z\s]*$/;
+  var kyTuDacBietTen = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+  var valid = true;
+
+  if (!item.name) {
+    $scope.MessageName = "Không để rỗng tên danh mục";
+    $scope.showName = true;
+    valid = false;
+  } else if (kyTuDacBietTen.test(item.name)) {
+    $scope.MessageName = "Không được chứa ký tự đặc biệt trong tên danh mục";
+    $scope.showName = true;
+    valid = false;
+  } else if (!chu.test(item.name)) {
+    $scope.MessageName = "Không để số tên danh mục";
+    $scope.showName = true;
+    valid = false;
+  } else {
+    $scope.MessageName = "";
+    $scope.showName = false;
+  }
+
+  if (kyTuDacBietTen.test(item.description)) {
+    $scope.MessageDescription = "Không được chứa ký tự đặc biệt trong mô tả";
+    $scope.showDescription = true;
+    valid = false;
+  } else {
+    $scope.MessageDescription = "";
+    $scope.showDescription = false;
+  }
+
+    
+
+  return valid;
+}
+
+function validationCreate(item){
+  const items = JSON.parse(window.sessionStorage.getItem("items"));
+    var index = items.findIndex(
+      (items) =>
+        items.name.toLowerCase().replace(/\s+/g, "") ===
+        item.name.toLowerCase().replace(/\s+/g, "")
+    );
+    if (index !== -1) {
+      toastMixin.fire({
+        animation: true,
+        icon: "error",
+        title: "Tên danh mục đã tồn tại",
+        position: "top",
+        width: 600,
+      });
+      return false;
+    }
+    return true;
 }

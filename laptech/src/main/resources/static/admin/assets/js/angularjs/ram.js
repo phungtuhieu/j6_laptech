@@ -16,7 +16,7 @@ function list($scope, $http) {
     $scope.form = {};
   };
   $scope.load_all = () => {
-    var url = `${host}/graphics-card`;
+    var url = `${host}/ram`;
     //var url = host+'/students.json';
     $http({
       method: "GET",
@@ -24,8 +24,8 @@ function list($scope, $http) {
     })
       .then((resp) => {
         $scope.items = resp.data;
-        $scope.pageCount = Math.ceil($scope.items.length / 5);
         window.sessionStorage.setItem("items", JSON.stringify(resp.data));
+        $scope.pageCount = Math.ceil($scope.items.length / 5);
         console.log("Success1", resp);
       })
       .catch((error) => {
@@ -41,7 +41,6 @@ function list($scope, $http) {
       $scope.sortColumn === prop ? !$scope.reverseSort : false;
     $scope.sortColumn = prop;
   };
-
   $scope.begin = 0;
   $scope.pageCount = Math.ceil($scope.items.length / 5);
   $scope.first = function () {
@@ -74,7 +73,7 @@ function list($scope, $http) {
       "Hủy"
     ).then((result) => {
       if (result.isConfirmed) {
-        var url = `${host}/graphics-card/${id}`;
+        var url = `${host}/ram/${id}`;
         $http({
           method: "delete",
           url: url,
@@ -97,7 +96,7 @@ function list($scope, $http) {
               animation: true,
               icon: "error",
               title:
-                "Card đồ họa đã tồn tại trong sản phẩm. Cập nhật không thành công.",
+                "Danh mục đã tồn tại trong sản phẩm. Cập nhật không thành công.",
               position: "top",
               width: 600,
             });
@@ -105,13 +104,12 @@ function list($scope, $http) {
       }
     });
   };
-
   //
   $scope.search = (name) => {
     if (name != "") {
-      var url = `${host}/graphics-card/search/${name}`;
+      var url = `${host}/ram/search/${name}`;
     } else {
-      var url = `${host}/graphics-card`;
+      var url = `${host}/ram`;
     }
     $http({
       method: "GET",
@@ -161,7 +159,26 @@ function list($scope, $http) {
 }
 function formCreate($scope, $http) {
   //
-  $scope.form = {};
+  $scope.optionCapacity =[
+    {
+      id: 8,
+      value: "8"
+    },
+    {
+      id: 16,
+      value: "16"
+    },
+    {
+      id: 32,
+      value: "32"
+    },
+    {
+      id: 64,
+      value: "64"
+    },
+  ]
+
+  $scope.form = { capacity:8 };
   $scope.items = [];
   $scope.create = () => {
     if (validation($scope, $scope.form)) {
@@ -174,9 +191,8 @@ function formCreate($scope, $http) {
         "Hủy"
       ).then((result) => {
         if (result.isConfirmed) {
-          // Thực hiện thêm dữ liệu sau khi xác nhận
           var item = angular.copy($scope.form);
-          var url = `${host}/graphics-card`;
+          var url = `${host}/ram`;
           $http({
             method: "post",
             url: url,
@@ -185,8 +201,7 @@ function formCreate($scope, $http) {
             .then((resp) => {
               $scope.items.push(item);
               console.log("Success", resp);
-              window.location.href = "/admin/graphics-card/list";
-
+              window.location.href = "/admin/ram/list";
               window.sessionStorage.setItem("name", "create");
             })
             .catch((error) => {
@@ -195,17 +210,34 @@ function formCreate($scope, $http) {
         }
       });
     }
-  }
+    }
   };
 }
 
 function formUpdate($scope, $http) {
   //
-  $scope.isLoading = true;
+  $scope.optionCapacity =[
+    {
+      id: 8,
+      value: "8"
+    },
+    {
+      id: 16,
+      value: "16"
+    },
+    {
+      id: 32,
+      value: "32"
+    },
+    {
+      id: 64,
+      value: "64"
+    },
+  ]
   $scope.form = {};
   $scope.items = [];
   $scope.edit = (id) => {
-    var url = `${host}/graphics-card/${id}`;
+    var url = `${host}/ram/${id}`;
     $http({
       method: "GET",
       url: url,
@@ -213,7 +245,6 @@ function formUpdate($scope, $http) {
       .then((resp) => {
         $scope.form = resp.data;
         console.log("Success_edit", resp);
-        $scope.isLoading = false;
       })
       .catch((error) => {
         console.log("Error_edit", error);
@@ -232,7 +263,7 @@ function formUpdate($scope, $http) {
       ).then((result) => {
         if (result.isConfirmed) {
           var item = angular.copy($scope.form);
-          var url = `${host}/graphics-card/${$scope.form.id}`;
+          var url = `${host}/ram/${$scope.form.id}`;
           $http({
             method: "put",
             url: url,
@@ -244,7 +275,7 @@ function formUpdate($scope, $http) {
               );
               $scope.items[index] = resp.data;
               console.log("Success", resp);
-              window.location.href = "/admin/graphics-card/list";
+              window.location.href = "/admin/ram/list";
               window.sessionStorage.setItem("name", "update");
             })
             .catch((error) => {
@@ -254,7 +285,6 @@ function formUpdate($scope, $http) {
       });
     }
   };
-
   $scope.delete = (id) => {
     confirmationDialog(
       "Xác nhận xóa?",
@@ -264,7 +294,8 @@ function formUpdate($scope, $http) {
       "Hủy"
     ).then((result) => {
       if (result.isConfirmed) {
-        var url = `${host}/graphics-card/${id}`;
+        var url = `${host}/ram/${id}`;
+        //var url = host+'/students.json';
         $http({
           method: "delete",
           url: url,
@@ -276,7 +307,7 @@ function formUpdate($scope, $http) {
             $scope.items.splice(index, 1);
             $scope.form = {};
             console.log("Success", resp);
-            window.location.href = "/admin/graphics-card/list";
+            window.location.href = "/admin/ram/list";
             window.sessionStorage.setItem("name", "delete");
           })
           .catch((error) => {
@@ -285,7 +316,7 @@ function formUpdate($scope, $http) {
               animation: true,
               icon: "error",
               title:
-                "Card đồ họa đã tồn tại trong sản phẩm. Cập nhật không thành công.",
+                "Danh mục đã tồn tại trong sản phẩm. Cập nhật không thành công.",
               position: "top",
               width: 600,
             });
@@ -304,7 +335,7 @@ function dataFileHandler($scope, $http) {
     reader.onloadend = async () => {
       var workbook = new ExcelJS.Workbook();
       await workbook.xlsx.load(reader.result);
-      const worksheet = workbook.getWorksheet("graphicsCard_data");
+      const worksheet = workbook.getWorksheet("ram_data");
       if (!worksheet) {
         toastMixin.fire({
           animation: true,
@@ -322,13 +353,11 @@ function dataFileHandler($scope, $http) {
           let student = {
             id: row.getCell(1).value,
             name: row.getCell(2).value,
-            cores: +row.getCell(3).value,
-            memorySize: +row.getCell(4).value,
-            baseClock: +row.getCell(5).value,
-            boostClock: +row.getCell(6).value,
-            manufacturer: row.getCell(7).value,
+            capacity: +row.getCell(3).value,
+            type: row.getCell(4).value,
+            manufacturer: row.getCell(5).value,
           };
-          let url = `${host}/graphics-card`;
+          let url = `${host}/ram`;
           $http
             .post(url, student)
             .then((resp) => {
@@ -336,29 +365,30 @@ function dataFileHandler($scope, $http) {
             })
             .catch((error) => {
               console.log("Error", error);
-              let importSuccess = files;
-            });
-            
+              importSuccess = false;
+            });         
+        }  
+      });
+      
+      if (importSuccess) {
+        $scope.load_all();
+        toastMixin.fire({
+          animation: true,
+          icon: "success",
+          title: "Import Excel thành công",
+        });
+      } else {
+        toastMixin.fire({
+          animation: true,
+          icon: "error",
+          title: "Import Excel thất bại. Vui lòng kiểm tra lại.",
+        });
+      }
+    };
 
-          $scope.load_all();
-        }
-      });
     
-    if (importSuccess) {
-      $scope.load_all();
-      toastMixin.fire({
-        animation: true,
-        icon: "success",
-        title: "Import Excel thành công",
-      });
-    } else {
-      toastMixin.fire({
-        animation: true,
-        icon: "error",
-        title: "Import Excel thất bại. Vui lòng kiểm tra lại.",
-      });
-    }
-  };
+    
+    
 
     reader.readAsArrayBuffer(files[0]);
   };
@@ -366,27 +396,11 @@ function dataFileHandler($scope, $http) {
   // Hàm xuất dữ liệu ra tập tin Excel
   $scope.export = () => {
     var tableData = [];
-    var headers = [
-      "ID",
-      "NAME",
-      "CORES",
-      "MEMORYSIZE",
-      "BASECLOCK",
-      "BOOSTCLOCK",
-      "MANUFACTURER",
-    ];
+    var headers = ["ID", "NAME", "CAPACITY","TYPE","MANUFACTURER"];
 
     // Thêm dữ liệu của từng hàng (row) trong bảng vào mảng tableData
     angular.forEach($scope.items, function (item) {
-      var rowData = [
-        item.id,
-        item.name,
-        item.cores,
-        item.memorySize,
-        item.baseClock,
-        item.boostClock,
-        item.manufacturer,
-      ];
+      var rowData = [item.id, item.name, item.capacity,item.type,item.manufacturer];
       tableData.push(rowData);
     });
 
@@ -397,7 +411,7 @@ function dataFileHandler($scope, $http) {
     var worksheet = XLSX.utils.aoa_to_sheet([headers].concat(tableData));
 
     // Thêm trang tính vào workbook
-    XLSX.utils.book_append_sheet(workbook, worksheet, "graphicsCard_data");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "ram_data");
 
     // Xuất file Excel
     var excelBuffer = XLSX.write(workbook, {
@@ -407,9 +421,9 @@ function dataFileHandler($scope, $http) {
     toastMixin.fire({
       animation: true,
       icon: "success",
-      title: "Import Excel thành công",
+      title: "Export Excel thành công",
     });
-    saveAsExcel(excelBuffer, "graphicsCard_data.xlsx");
+    saveAsExcel(excelBuffer, "ram.xlsx");
   };
 
   // Hàm hỗ trợ lưu file Excel
@@ -423,38 +437,22 @@ function dataFileHandler($scope, $http) {
   // PDF
   $scope.exportToPDF = function () {
     var tableData = [];
-    var headers = [
-      "ID",
-      "NAME",
-      "CORES",
-      "MEMORYSIZE",
-      "BASECLOCK",
-      "BOOSTCLOCK",
-      "MANUFACTURER",
-    ];
+    var headers = ["ID", "NAME", "CAPACITY","TYPE","MANUFACTURER"];
 
     // Thêm dữ liệu của từng hàng (row) trong bảng vào mảng tableData
     angular.forEach($scope.items, function (item) {
-      var rowData = [
-        item.id,
-        item.name,
-        item.cores,
-        item.memorySize,
-        item.baseClock,
-        item.boostClock,
-        item.manufacturer,
-      ];
+      var rowData = [item.id, item.name, item.capacity,item.type,item.manufacturer];
       tableData.push(rowData);
     });
 
     //
     var docDefinition = {
       content: [
-        { text: "Danh sách card đồ họa", style: "header" },
+        { text: "Danh sách danh mục", style: "header" },
         {
           table: {
             headerRows: 1,
-            widths: ["auto", "auto", "auto", "auto", "auto", "auto", "auto"],
+            widths: ["auto","auto","auto","auto","auto"],
             body: [headers].concat(tableData),
           },
           style: "table",
@@ -466,171 +464,104 @@ function dataFileHandler($scope, $http) {
         tableHeader: { fillColor: "#FF0000", bold: true }, // In đậm tiêu đề
       },
     };
+
     toastMixin.fire({
       animation: true,
       icon: "success",
       title: "Import PDF thành công",
     });
     // Xuất PDF
-    pdfMake.createPdf(docDefinition).download("graphics_card.pdf");
+    pdfMake.createPdf(docDefinition).download("ram.pdf");
   };
   // /PDF
 }
-function validation($scope, item) {
-  var chu = /^[a-zA-Z\s]*$/;
-  var soNguyenDuong = /^[1-9]\d*$/;
-  var valid = true;
-  var kyTuDacBiet = /[!@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?]/;
-  var kyTuDacBietTen = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
 
-  if (!item.name) {
-    $scope.MessageName = "Không để rỗng tên danh mục";
-    $scope.showName = true;
-    valid = false;
-  } else if (kyTuDacBietTen.test(item.name)) {
-    $scope.MessageName = "Không được chứa ký tự đặc biệt trong tên card đồ họa";
-    $scope.showName = true;
-    valid = false;
-  } else {
-    $scope.MessageName = "";
-    $scope.showName = false;
-  }
-  
-  // cores
-  if (!item.cores) {
-    $scope.MessageCores = "Không để rỗng hệ số nhân";
-    $scope.showCores = true;
-    valid = false;
-  } else if (kyTuDacBiet.test(item.cores)) {
-    $scope.MessageCores = "Không được chứa ký tự đặc biệt trong hệ số nhân";
-    $scope.showCores = true;
-    valid = false;
-  } else if (isNaN(item.cores)) {
-    $scope.MessageCores = "Nhập số cho hệ số nhân";
-    $scope.showCores = true;
-    valid = false;
-  } else if (!soNguyenDuong.test(item.cores)) {
-    $scope.MessageCores = "Nhập số nguyên dương cho hệ số nhân";
-    $scope.showCores = true;
-    valid = false;
-  } else {
-    $scope.MessageCores = "";
-    $scope.showCores = false;
-  }
-  
-  // memorySize
-  if (!item.memorySize) {
-    $scope.MessageMemorySize = "Không để rỗng kích thước bộ nhớ";
-    $scope.showMemorySize = true;
-    valid = false;
-  } else if (kyTuDacBiet.test(item.memorySize)) {
-    $scope.MessageMemorySize =
-      "Không được chứa ký tự đặc biệt trong kích thước bộ nhớ";
-    $scope.showMemorySize = true;
-    valid = false;
-  } else if (isNaN(item.memorySize)) {
-    $scope.MessageMemorySize = "Nhập số cho kích thước bộ nhớ";
-    $scope.showMemorySize = true;
-    valid = false;
-  } else if (!soNguyenDuong.test(item.memorySize)) {
-    $scope.MessageMemorySize = "Nhập số nguyên dương cho kích thước bộ nhớ";
-    $scope.showMemorySize = true;
-    valid = false;
-  } else {
-    $scope.MessageMemorySize = "";
-    $scope.showMemorySize = false;
-  }
-  
-  // baseClock
-  if (!item.baseClock) {
-    $scope.MessageBaseClock = "Không để rỗng base clock";
-    $scope.showBaseClock = true;
-    valid = false;
-  } else if (kyTuDacBiet.test(item.baseClock)) {
-    $scope.MessageBaseClock = "Không được chứa ký tự đặc biệt trong base clock";
-    $scope.showBaseClock = true;
-    valid = false;
-  } else if (isNaN(item.baseClock)) {
-    $scope.MessageBaseClock = "Nhập số cho base clock";
-    $scope.showBaseClock = true;
-    valid = false;
-  } else if (!soNguyenDuong.test(item.baseClock)) {
-    $scope.MessageBaseClock = "Nhập số nguyên dương cho base clock";
-    $scope.showBaseClock = true;
-    valid = false;
-  } else {
-    $scope.MessageBaseClock = "";
-    $scope.showBaseClock = false;
-  }
-  
-  // boostClock
-  if (!item.boostClock) {
-    $scope.MessageBoostClock = "Không để rỗng boost clock";
-    $scope.showBoostClock = true;
-    valid = false;
-  } else if (kyTuDacBiet.test(item.boostClock)) {
-    $scope.MessageBoostClock =
-      "Không được chứa ký tự đặc biệt trong boost clock";
-    $scope.showBoostClock = true;
-    valid = false;
-  } else if (isNaN(item.boostClock)) {
-    $scope.MessageBoostClock = "Nhập số cho boost clock";
-    $scope.showBoostClock = true;
-    valid = false;
-  } else if (!soNguyenDuong.test(item.boostClock)) {
-    $scope.MessageBoostClock = "Nhập số nguyên dương cho base clock";
-    $scope.showBoostClock = true;
-    valid = false;
-  } else {
-    $scope.MessageBoostClock = "";
-    $scope.showBoostClock = false;
-  }
-  
-  // manufacturer
-  if (!item.manufacturer) {
-    $scope.MessageManufacturer = "Không để rỗng nhà sản xuất";
-    $scope.showManufacturer = true;
-    valid = false;
-  } else if (kyTuDacBietTen.test(item.manufacturer)) {
-    $scope.MessageManufacturer =
-      "Không được chứa ký tự đặc biệt trong nhà sản xuất";
-    $scope.showManufacturer = true;
-    valid = false;
-  } else if (!chu.test(item.manufacturer)) {
-    $scope.MessageManufacturer = "Nhà sản xuất không nhập số";
-    $scope.showManufacturer = true;
-    valid = false;
-  } else {
-    $scope.MessageManufacturer = "";
-    $scope.showManufacturer = false;
-  }
-  
-  return valid;
+
+function validation($scope, item) {
+  var chu = /^[a-zA-Z.\s]*$/;
+  var kyTuDacBietTen = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+  var kyTuDacBietManufacturer = /[!@#$%^&*()_+\-=\[\]{};':"\\|,<>\/?]/;
+  var valid = true;
+
+ if (!item.name) {
+   $scope.MessageName = "Không để rỗng tên danh mục";
+   $scope.showName = true;
+   valid = false;
+ } else if (kyTuDacBietTen.test(item.name)) {
+   $scope.MessageName = "Không được chứa ký tự đặc biệt trong tên danh mục";
+   $scope.showName = true;
+   valid = false;
+ }  else {
+   $scope.MessageName = "";
+   $scope.showName = false;
+ }
+ //capacity
+ if (!item.capacity) {
+   $scope.MessageCapacity = "Không để rỗng tên danh mục";
+   $scope.showCapacity = true;
+   valid = false;
+ }  else {
+   $scope.MessageCapacity = "";
+   $scope.showCapacity = false;
+ }
+
+ //type
+ if (!item.type) {
+   $scope.MessageType = "Không để rỗng tên danh mục";
+   $scope.showType = true;
+   valid = false;
+ } else if (kyTuDacBietTen.test(item.type)) {
+   $scope.MessageType = "Không được chứa ký tự đặc biệt trong tên danh mục";
+   $scope.showType = true;
+   valid = false;
+ }  else {
+   $scope.MessageType = "";
+   $scope.showType = false;
+ }
+
+// manufacturer
+if (!item.manufacturer) {
+ $scope.MessageManufacturer = "Không để rỗng nhà sản xuất";
+ $scope.showManufacturer = true;
+ valid = false;
+} else if (kyTuDacBietManufacturer.test(item.manufacturer)) {
+ $scope.MessageManufacturer =
+   "Không được chứa ký tự đặc biệt trong nhà sản xuất";
+ $scope.showManufacturer = true;
+ valid = false;
+} else if (!chu.test(item.manufacturer)) {
+ $scope.MessageManufacturer = "Nhà sản xuất không nhập số";
+ $scope.showManufacturer = true;
+ valid = false;
+} else {
+ $scope.MessageManufacturer = "";
+ $scope.showManufacturer = false;
+}
+
+ return valid;
 }
 
 
 function validationCreate(item){
-    const items = JSON.parse(window.sessionStorage.getItem("items"));
-    var index = items.findIndex(
-      (items) =>
-        items.name.toLowerCase().replace(/\s+/g, "") ===
-          item.name.toLowerCase().replace(/\s+/g, "") &&
-        +items.cores === +item.cores &&
-        +items.memorySize === +item.memorySize &&
-        +items.baseClock === +item.baseClock &&
-        items.manufacturer === item.manufacturer
-    );
 
-    if (index !== -1) {
-      toastMixin.fire({
-        animation: true,
-        icon: "error",
-        title: "Card đồ họa đã tồn tại trong danh sách",
-        position: "top",
-        width: 600,
-      });
-      return  false;
-    }
-  
-  return true
+   const items = JSON.parse(window.sessionStorage.getItem("items"));
+   var index = items.findIndex(
+     (items) =>
+       items.name.toLowerCase().replace(/\s+/g, "") === item.name.toLowerCase().replace(/\s+/g, "")
+        && items.capacity === item.capacity
+        && items.type == item.type
+        && items.manufacturer == item.manufacturer
+   );
+   if (index !== -1) {
+    toastMixin.fire({
+      animation: true,
+      icon: "error",
+      title: "Card đồ họa đã tồn tại trong danh sách",
+      position: "top",
+      width: 600,
+    });
+    return  false;
+   }
+
+   return true;
 }
