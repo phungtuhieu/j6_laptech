@@ -35,6 +35,9 @@
     <th:block th:if="${#ctx.springRequestContext.requestUri.contains('product')}">
         <script th:src="@{/admin/assets/js/angularjs/product.js}"></script>
     </th:block>
+    <th:block th:if="${#ctx.springRequestContext.requestUri.contains('user')}">
+        <script th:src="@{/admin/assets/js/angularjs/user-ctrl.js}"></script>
+    </th:block>
 
 
     
