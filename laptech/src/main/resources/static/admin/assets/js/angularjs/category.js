@@ -163,7 +163,7 @@ function formCreate($scope, $http) {
   $scope.form = {};
   $scope.items = [];
   $scope.create = () => {
-    if (validation($scope.form)) {
+    if (validation($scope, $scope.form)) {
       confirmationDialog(
         "Xác nhận thêm?",
         "Bạn có chắc chắn muốn thêm dữ liệu?",
@@ -193,19 +193,54 @@ function formCreate($scope, $http) {
     }
   };
 }
+function validation($scope, item) {
+  var chu = /^[a-zA-Z\s]*$/;
+  var kyTuDacBietTen = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+  var valid = true;
 
-function validation(item) {
-  const items = JSON.parse(window.sessionStorage.getItem("items"));
-  var index = items.findIndex((items) => items.name === item.name);
-
-  if (index !== -1) {
-    alert("không nhập trùng tên danh muc");
-    return false;
+  if (!item.name) {
+    $scope.MessageName = "Không để rỗng tên danh mục";
+    $scope.showName = true;
+    valid = false;
+  } else if (kyTuDacBietTen.test(item.name)) {
+    $scope.MessageName = "Không được chứa ký tự đặc biệt trong tên danh mục";
+    $scope.showName = true;
+    valid = false;
+  } else if (!chu.test(item.name)) {
+    $scope.MessageName = "Không để số tên danh mục";
+    $scope.showName = true;
+    valid = false;
+  } else {
+    $scope.MessageName = "";
+    $scope.showName = false;
   }
 
-  return true;
-}
 
+  if (kyTuDacBietTen.test(item.description)) {
+    $scope.MessageDescription = "Không được chứa ký tự đặc biệt trong mô tả";
+    $scope.showDescription = true;
+    valid = false;
+  }  else {
+    $scope.MessageDescription = "";
+    $scope.showDescription = false;
+  }
+
+  if (valid) {
+    const items = JSON.parse(window.sessionStorage.getItem("items"));
+    var index = items.findIndex(
+      (items) =>
+        items.name.toLowerCase().replace(/\s+/g, "") ===
+        item.name.trim().toLowerCase().replace(/\s+/g, "")
+    );
+    if (index !== -1) {
+      $scope.MessageName = "Tên danh mục đã tồn tại";
+      $scope.show = true;
+      valid = false;
+    }
+  }
+
+  return valid;
+}
 function formUpdate($scope, $http) {
   //
   $scope.form = {};
@@ -227,37 +262,37 @@ function formUpdate($scope, $http) {
   };
 
   $scope.update = () => {
-    // if (validation($scope.form)) {
-    confirmationDialog(
-      "Xác nhận sửa?",
-      "Bạn có chắc chắn muốn sửa dữ liệu?",
-      "question",
-      "Sửa",
-      "Hủy"
-    ).then((result) => {
-      if (result.isConfirmed) {
-        var item = angular.copy($scope.form);
-        var url = `${host}/category/${$scope.form.id}`;
-        $http({
-          method: "put",
-          url: url,
-          data: item,
-        })
-          .then((resp) => {
-            var index = $scope.items.findIndex(
-              (item) => item.id == $scope.form.id
-            );
-            $scope.items[index] = resp.data;
-            console.log("Success", resp);
-            window.location.href = "/admin/category/list";
-            window.sessionStorage.setItem("name", "update");
+    if (validation($scope, $scope.form)) {
+      confirmationDialog(
+        "Xác nhận sửa?",
+        "Bạn có chắc chắn muốn sửa dữ liệu?",
+        "question",
+        "Sửa",
+        "Hủy"
+      ).then((result) => {
+        if (result.isConfirmed) {
+          var item = angular.copy($scope.form);
+          var url = `${host}/category/${$scope.form.id}`;
+          $http({
+            method: "put",
+            url: url,
+            data: item,
           })
-          .catch((error) => {
-            console.log("Error", error);
-          });
-      }
-    });
-    //  }
+            .then((resp) => {
+              var index = $scope.items.findIndex(
+                (item) => item.id == $scope.form.id
+              );
+              $scope.items[index] = resp.data;
+              console.log("Success", resp);
+              window.location.href = "/admin/category/list";
+              window.sessionStorage.setItem("name", "update");
+            })
+            .catch((error) => {
+              console.log("Error", error);
+            });
+        }
+      });
+    }
   };
   $scope.delete = (id) => {
     confirmationDialog(

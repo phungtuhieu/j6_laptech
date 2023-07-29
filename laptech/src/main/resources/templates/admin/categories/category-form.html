@@ -29,13 +29,15 @@
                         <div class="mb-4 col-lg-4 form-group">
                             <label for="product-name" class="form-label">Tên danh mục</label>
                             <input type="text" ng-model="form.name"  class="form-control" id="product-name">
+                            <span ng-show="showName"  class="text-danger">{{MessageName}}</span>
                         </div>
                         <div class="mb-4 col-lg-12 form-group">
                             <label for="prod-desciption" class="form-label">Mô tả</label>
                             <textarea ng-model="form.description"  class="form-control" id="prod-desciption" rows="3"></textarea>
+                            <span ng-show="showDescription"  class="text-danger">{{MessageDescription}}</span>
                         </div>
                         <div class="mb-4 col-lg-12 ">
-                                <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('create')}" class="btn btn-submit me-2" ng-click="create()">Lưu</a>
+                                <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('create')}" class="btn btn-submit me-2" type="submit" ng-click="create()">Lưu</a>
                                 <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('update')}" class="btn btn-submit me-2" ng-click="update(form.id)">Cập nhật</a>
                                 <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('update')}" class="btn btn-remove me-2" ng-click="delete(form.id)">Xoá</a>
                                 <a th:href="@{/admin/category/list}" class="btn btn-cancel" >Huỷ bỏ</a>

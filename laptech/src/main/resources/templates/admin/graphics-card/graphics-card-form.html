@@ -32,6 +32,7 @@
                         <div class="mb-4 col-lg-4  form-group">
                             <label for="product-name" class="form-label">Tên card đồ hoạ</label>
                             <input type="text" ng-model="form.name" class="form-control" list="tencard" id="product-name">
+                            <span ng-show="showName"  class="text-danger">{{MessageName}}</span>
                             <datalist id="tencard">
                                 <option value="a">
                             </datalist>
@@ -39,6 +40,7 @@
                         <div class="mb-4 col-lg-4  form-group">
                             <label for="" class="form-label">Số nhân</label>
                             <input type="text" ng-model="form.cores" class="form-control" list="sonhan" id="">
+                            <span ng-show="showCores"  class="text-danger">{{MessageCores}}</span>
                             <datalist id="sonhan">
                                 <option value="896">
                                     <option value="2560">
@@ -50,6 +52,7 @@
                         <div class="mb-4 col-lg-4  form-group">
                             <label for="" class="form-label">Kích thức bộ nhớ</label>
                             <input type="text" ng-model="form.memorySize" class="form-control" list="bonho" id="">
+                            <span ng-show="showMemorySize"  class="text-danger">{{MessageMemorySize}}</span>
                             <datalist id="bonho">
                                 <option value="4">
                                     <option value="6">
@@ -61,6 +64,7 @@
                         <div class="mb-4 col-lg-4  form-group">
                             <label for="" class="form-label">Base Clock</label>
                             <input type="text" ng-model="form.baseClock" class="form-control" list="baseClock" id="">
+                            <span ng-show="showBaseClock"  class="text-danger">{{MessageBaseClock}}</span>
                             <datalist id="baseClock">
                                 <option value="1320">
                                     <option value="1440">
@@ -72,6 +76,7 @@
                         <div class="mb-4 col-lg-4  form-group">
                             <label for="" class="form-label">Boots Clock</label>
                             <input type="text" ng-model="form.boostClock" class="form-control" list="bootsClock" id="">
+                            <span ng-show="showBoostClock"  class="text-danger">{{MessageBoostClock}}</span>
                             <datalist id="bootsClock">
                                 <option value="1665">
                                     <option value="1710">
@@ -83,6 +88,7 @@
                         <div class="mb-4 col-lg-4  form-group">
                             <label for="" class="form-label">Nhà sản xuất</label>
                             <input type="text" ng-model="form.manufacturer" class="form-control" list="nhasanxuat" >
+                            <span ng-show="showManufacturer"  class="text-danger">{{MessageManufacturer}}</span>
                             <datalist id="nhasanxuat">
                                 <option value="NVIDIA">
                                 <option value="AMD">

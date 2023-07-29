@@ -1,7 +1,5 @@
 import { toastMixin, confirmationDialog } from "../global/custom-sweetalert.js";
-
 let host = "http://localhost:8081/api";
-
 const app = angular.module("app", []);
 app
   .controller("list", list)
@@ -27,6 +25,7 @@ function list($scope, $http) {
       .then((resp) => {
         $scope.items = resp.data;
         $scope.pageCount = Math.ceil($scope.items.length / 5);
+        window.sessionStorage.setItem("items", JSON.stringify(resp.data));
         console.log("Success1", resp);
       })
       .catch((error) => {
@@ -160,13 +159,12 @@ function list($scope, $http) {
   $scope.load_all();
   $scope.check();
 }
-
 function formCreate($scope, $http) {
   //
   $scope.form = {};
   $scope.items = [];
   $scope.create = () => {
-    if (validation($scope.form)) {
+    if (validation($scope, $scope.form)) {
       confirmationDialog(
         "Xác nhận thêm?",
         "Bạn có chắc chắn muốn thêm dữ liệu?",
@@ -198,54 +196,164 @@ function formCreate($scope, $http) {
     }
   };
 }
+function validation($scope, item) {
+  var chu = /^[a-zA-Z\s]*$/;
+  var soNguyenDuong = /^[1-9]\d*$/;
+  var valid = true;
+  var kyTuDacBiet = /[!@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?]/;
+  var kyTuDacBietTen = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
 
-function validation(item) {
-    
-  if (
-    !item.name ||
-    !item.cores ||
-    !item.memorySize ||
-    !item.baseClock ||
-    !item.boostClock ||
-    !item.manufacturer
-  ) {
-    alert("Vui lòng nhập đầy đủ thông tin cho các trường.");
-    return;
+  if (!item.name) {
+    $scope.MessageName = "Không để rỗng tên danh mục";
+    $scope.showName = true;
+    valid = false;
+  } else if (kyTuDacBietTen.test(item.name)) {
+    $scope.MessageName = "Không được chứa ký tự đặc biệt trong tên card đồ họa";
+    $scope.showName = true;
+    valid = false;
+  } else {
+    $scope.MessageName = "";
+    $scope.showName = false;
+  }
+  
+  // cores
+  if (!item.cores) {
+    $scope.MessageCores = "Không để rỗng hệ số nhân";
+    $scope.showCores = true;
+    valid = false;
+  } else if (kyTuDacBiet.test(item.cores)) {
+    $scope.MessageCores = "Không được chứa ký tự đặc biệt trong hệ số nhân";
+    $scope.showCores = true;
+    valid = false;
+  } else if (isNaN(item.cores)) {
+    $scope.MessageCores = "Nhập số cho hệ số nhân";
+    $scope.showCores = true;
+    valid = false;
+  } else if (!soNguyenDuong.test(item.cores)) {
+    $scope.MessageCores = "Nhập số nguyên dương cho hệ số nhân";
+    $scope.showCores = true;
+    valid = false;
+  } else {
+    $scope.MessageCores = "";
+    $scope.showCores = false;
+  }
+  
+  // memorySize
+  if (!item.memorySize) {
+    $scope.MessageMemorySize = "Không để rỗng kích thước bộ nhớ";
+    $scope.showMemorySize = true;
+    valid = false;
+  } else if (kyTuDacBiet.test(item.memorySize)) {
+    $scope.MessageMemorySize =
+      "Không được chứa ký tự đặc biệt trong kích thước bộ nhớ";
+    $scope.showMemorySize = true;
+    valid = false;
+  } else if (isNaN(item.memorySize)) {
+    $scope.MessageMemorySize = "Nhập số cho kích thước bộ nhớ";
+    $scope.showMemorySize = true;
+    valid = false;
+  } else if (!soNguyenDuong.test(item.memorySize)) {
+    $scope.MessageMemorySize = "Nhập số nguyên dương cho kích thước bộ nhớ";
+    $scope.showMemorySize = true;
+    valid = false;
+  } else {
+    $scope.MessageMemorySize = "";
+    $scope.showMemorySize = false;
+  }
+  
+  // baseClock
+  if (!item.baseClock) {
+    $scope.MessageBaseClock = "Không để rỗng base clock";
+    $scope.showBaseClock = true;
+    valid = false;
+  } else if (kyTuDacBiet.test(item.baseClock)) {
+    $scope.MessageBaseClock = "Không được chứa ký tự đặc biệt trong base clock";
+    $scope.showBaseClock = true;
+    valid = false;
+  } else if (isNaN(item.baseClock)) {
+    $scope.MessageBaseClock = "Nhập số cho base clock";
+    $scope.showBaseClock = true;
+    valid = false;
+  } else if (!soNguyenDuong.test(item.baseClock)) {
+    $scope.MessageBaseClock = "Nhập số nguyên dương cho base clock";
+    $scope.showBaseClock = true;
+    valid = false;
+  } else {
+    $scope.MessageBaseClock = "";
+    $scope.showBaseClock = false;
+  }
+  
+  // boostClock
+  if (!item.boostClock) {
+    $scope.MessageBoostClock = "Không để rỗng boost clock";
+    $scope.showBoostClock = true;
+    valid = false;
+  } else if (kyTuDacBiet.test(item.boostClock)) {
+    $scope.MessageBoostClock =
+      "Không được chứa ký tự đặc biệt trong boost clock";
+    $scope.showBoostClock = true;
+    valid = false;
+  } else if (isNaN(item.boostClock)) {
+    $scope.MessageBoostClock = "Nhập số cho boost clock";
+    $scope.showBoostClock = true;
+    valid = false;
+  } else if (!soNguyenDuong.test(item.boostClock)) {
+    $scope.MessageBoostClock = "Nhập số nguyên dương cho base clock";
+    $scope.showBoostClock = true;
+    valid = false;
+  } else {
+    $scope.MessageBoostClock = "";
+    $scope.showBoostClock = false;
+  }
+  
+  // manufacturer
+  if (!item.manufacturer) {
+    $scope.MessageManufacturer = "Không để rỗng nhà sản xuất";
+    $scope.showManufacturer = true;
+    valid = false;
+  } else if (kyTuDacBietTen.test(item.manufacturer)) {
+    $scope.MessageManufacturer =
+      "Không được chứa ký tự đặc biệt trong nhà sản xuất";
+    $scope.showManufacturer = true;
+    valid = false;
+  } else if (!chu.test(item.manufacturer)) {
+    $scope.MessageManufacturer = "Nhà sản xuất không nhập số";
+    $scope.showManufacturer = true;
+    valid = false;
+  } else {
+    $scope.MessageManufacturer = "";
+    $scope.showManufacturer = false;
+  }
+  
+
+
+
+  if (valid) {
+    const items = JSON.parse(window.sessionStorage.getItem("items"));
+    var index = items.findIndex(
+      (items) =>
+        items.name.toLowerCase().replace(/\s+/g, "") ===
+          item.name.toLowerCase().replace(/\s+/g, "") &&
+        +items.cores === +item.cores &&
+        +items.memorySize === +item.memorySize &&
+        +items.baseClock === +item.baseClock &&
+        items.manufacturer.toLowerCase().replace(/\s+/g, "") ===
+          item.manufacturer.toLowerCase().replace(/\s+/g, "")
+    );
+
+    if (index !== -1) {
+      toastMixin.fire({
+        animation: true,
+        icon: "error",
+        title: "Card đồ họa đã tồn tại trong danh sách",
+        position: "top",
+        width: 600,
+      });
+      valid = false;
+    }
   }
 
-  var chuVaSo = /^[a-zA-Z0-9]*$/;
-  var chu = /^[a-zA-Z]*$/;
-
-  //   if (!chuVaSo.test(item.name)) {
-  //     swal("Any fool can use a computer");
-  //     return;
-  //   }
-
-  if (isNaN(item.cores)) {
-    alert("Vui lòng nhập số cores.");
-    return;
-  }
-  if (isNaN(item.memorySize)) {
-    alert("");
-    return;
-  }
-
-  if (isNaN(item.baseClock)) {
-    alert("Vui lòng nhập số cores.");
-    return;
-  }
-
-  if (isNaN(item.boostClock)) {
-    alert("Vui lòng nhập số cores.");
-    return;
-  }
-
-  if (!chu.test(item.manufacturer)) {
-    alert("Please enter letters and numbers only2.");
-    return;
-  }
-
-  return true;
+  return valid;
 }
 function formUpdate($scope, $http) {
   //
@@ -270,7 +378,7 @@ function formUpdate($scope, $http) {
   };
 
   $scope.update = () => {
-    if (validation($scope.form)) {
+    if (validation($scope, $scope.form)) {
       confirmationDialog(
         "Xác nhận sửa?",
         "Bạn có chắc chắn muốn sửa dữ liệu?",
@@ -344,7 +452,6 @@ function formUpdate($scope, $http) {
   const id = window.sessionStorage.getItem("editId");
   $scope.edit(id);
 }
-
 function dataFileHandler($scope, $http) {
   //
   // Excel
