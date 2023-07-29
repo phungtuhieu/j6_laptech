@@ -37,7 +37,7 @@ public class Product {
     Date createDate = new Date();
     Integer quantity;
     String description;
-    Boolean status;
+    Integer status;
 
     @JoinColumn(name = "ram_id")
     @ManyToOne

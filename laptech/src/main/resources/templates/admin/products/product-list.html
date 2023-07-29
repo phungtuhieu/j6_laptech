@@ -61,6 +61,7 @@
                                   <th scope="col">Danh mục</th>
                                   <th scope="col">Mô tả</th>
                                   <th scope="col">Ngày tạo</th>
+                                  <th scope="col">Ngày tạo</th>
                                   <th scope="col">Thao tác</th>
                                 </tr>
                               </thead>
@@ -71,6 +72,9 @@
                                   <td>{{item.brand.name}}</td>
                                   <td>{{item.category.name}}</td>
                                   <td class="reduce-td">{{item.description}}</td>
+                                  <td  ng-if="item.status == 1">Còn hàng</td>
+                                  <td  ng-if="item.status == 2">Hết hàng</td>
+                                  <td  ng-if="item.status == 3">Ngừng kinh doành</td>
                                   <td>{{item.createDate}}</td>
                                   <td class="td-action ">
                                      <div class="wordset">
@@ -79,7 +83,7 @@
                                                 <a  ng-click="edit(item.id  )" class="text-secondary-emphasis"><i class="fa-solid fa-pen-to-square"></i></a>
                                             </li>
                                             <li>
-                                                <a href="" class="text-danger"><i class="fa-solid fa-trash"></i></a>
+                                                <a href="" ng-click="delete(item.id)" class="text-danger"><i class="fa-solid fa-trash"></i></a>
                                             </li>
                                         </ul>
                                     </div>
