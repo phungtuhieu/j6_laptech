@@ -61,7 +61,7 @@
                                   <th scope="col">Danh mục</th>
                                   <th scope="col">Mô tả</th>
                                   <th scope="col">Ngày tạo</th>
-                                  <th scope="col">Ngày tạo</th>
+                                  <th scope="col">Trạng thái</th>
                                   <th scope="col">Thao tác</th>
                                 </tr>
                               </thead>
@@ -72,10 +72,10 @@
                                   <td>{{item.brand.name}}</td>
                                   <td>{{item.category.name}}</td>
                                   <td class="reduce-td">{{item.description}}</td>
+                                  <td>{{ item.createDate  | date:'dd/MM/yyyy' }}</td>
                                   <td  ng-if="item.status == 1">Còn hàng</td>
                                   <td  ng-if="item.status == 2">Hết hàng</td>
                                   <td  ng-if="item.status == 3">Ngừng kinh doành</td>
-                                  <td>{{item.createDate}}</td>
                                   <td class="td-action ">
                                      <div class="wordset">
                                         <ul>

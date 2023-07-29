@@ -72,10 +72,10 @@ public class ProductRestController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/files/{folder}/{file}")
-    public byte[] download(@PathVariable("folder") String folder, @PathVariable("file") String file){
-        return fileService.read(folder, file);
-    }
+    // @GetMapping("/files/{folder}/{file}")
+    // public byte[] download(@PathVariable("folder") String folder, @PathVariable("file") String file){
+    //     return fileService.read(folder, file);
+    // }
     @PostMapping("/files/{folder}")
     public List<String> upload(@PathVariable("folder") String folder,@RequestPart("files") MultipartFile[] files) {
         return fileService.save(folder, files);

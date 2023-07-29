@@ -538,6 +538,11 @@ body {
     max-height: 400px; 
 }
 
+.table-responsive table thead th {
+    position: sticky;
+    top: 0px;
+}
+
 
 .table .td-action .btn:before {
     position: absolute;
