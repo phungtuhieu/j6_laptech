@@ -25,7 +25,11 @@
         </div>
         <div class="card">
             <div class="card-body page-body">
-
+                <div class="loading-page" ng-show="isLoading">
+                    <div class="spinner-border" role=" status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
                 <form action="">
                     <div class="row">
                         <div class="mb-4 col-lg-4 offset-2 form-group">

@@ -1,5 +1,23 @@
 import { toastMixin, confirmationDialog } from "../global/custom-sweetalert.js";
 let host = "http://localhost:8081/api";
+
+function APICountry1($http) {
+  var url = `${host}/brand/countries`;
+  return $http({
+    method: "GET",
+    url: url,
+  })
+    .then((resp) => {
+      return resp.data;
+    })
+    .catch((error) => {
+      console.log("Error", error);
+    });
+}
+
+
+
+
 const app = angular.module("app", []);
 app
   .controller("list", list)
@@ -16,7 +34,7 @@ function list($scope, $http) {
     $scope.form = {};
   };
   $scope.load_all = () => {
-    var url = `${host}/ram`;
+    var url = `${host}/brand`;
     //var url = host+'/students.json';
     $http({
       method: "GET",
@@ -73,7 +91,7 @@ function list($scope, $http) {
       "Hủy"
     ).then((result) => {
       if (result.isConfirmed) {
-        var url = `${host}/ram/${id}`;
+        var url = `${host}/brand/${id}`;
         $http({
           method: "delete",
           url: url,
@@ -107,9 +125,9 @@ function list($scope, $http) {
   //
   $scope.search = (name) => {
     if (name != "") {
-      var url = `${host}/ram/search/${name}`;
+      var url = `${host}/brand/search/${name}`;
     } else {
-      var url = `${host}/ram`;
+      var url = `${host}/brand`;
     }
     $http({
       method: "GET",
@@ -158,27 +176,14 @@ function list($scope, $http) {
   $scope.check();
 }
 function formCreate($scope, $http) {
-  //
-  $scope.optionCapacity =[
-    {
-      id: 8,
-      value: "8"
-    },
-    {
-      id: 16,
-      value: "16"
-    },
-    {
-      id: 32,
-      value: "32"
-    },
-    {
-      id: 64,
-      value: "64"
-    },
-  ]
 
-  $scope.form = { capacity:8 };
+  APICountry1($http)
+  .then((data) => {
+    $scope.optionCountry = data;
+    console.log("Dữ liệu từ API:", data);
+  })
+//
+  $scope.form = {country:"VN"};
   $scope.items = [];
   $scope.create = () => {
     if (validation($scope, $scope.form)) {
@@ -190,9 +195,10 @@ function formCreate($scope, $http) {
         "Thêm",
         "Hủy"
       ).then((result) => {
+        console.log($scope.form)
         if (result.isConfirmed) {
           var item = angular.copy($scope.form);
-          var url = `${host}/ram`;
+          var url = `${host}/brand`;
           $http({
             method: "post",
             url: url,
@@ -201,7 +207,7 @@ function formCreate($scope, $http) {
             .then((resp) => {
               $scope.items.push(item);
               console.log("Success", resp);
-              window.location.href = "/admin/ram/list";
+              window.location.href = "/admin/brand/list";
               window.sessionStorage.setItem("name", "create");
             })
             .catch((error) => {
@@ -215,30 +221,17 @@ function formCreate($scope, $http) {
 }
 
 function formUpdate($scope, $http) {
+  APICountry1($http)
+  .then((data) => {
+    $scope.optionCountry = data;
+    console.log("Dữ liệu từ API:", data);
+  })
   //
-  $scope.optionCapacity =[
-    {
-      id: 8,
-      value: "8"
-    },
-    {
-      id: 16,
-      value: "16"
-    },
-    {
-      id: 32,
-      value: "32"
-    },
-    {
-      id: 64,
-      value: "64"
-    },
-  ]
   $scope.isLoading = true;
   $scope.form = {};
   $scope.items = [];
   $scope.edit = (id) => {
-    var url = `${host}/ram/${id}`;
+    var url = `${host}/brand/${id}`;
     $http({
       method: "GET",
       url: url,
@@ -256,6 +249,7 @@ function formUpdate($scope, $http) {
 
   $scope.update = () => {
     if (validation($scope, $scope.form)) {
+     
       confirmationDialog(
         "Xác nhận sửa?",
         "Bạn có chắc chắn muốn sửa dữ liệu?",
@@ -265,7 +259,7 @@ function formUpdate($scope, $http) {
       ).then((result) => {
         if (result.isConfirmed) {
           var item = angular.copy($scope.form);
-          var url = `${host}/ram/${$scope.form.id}`;
+          var url = `${host}/brand/${$scope.form.id}`;
           $http({
             method: "put",
             url: url,
@@ -277,7 +271,7 @@ function formUpdate($scope, $http) {
               );
               $scope.items[index] = resp.data;
               console.log("Success", resp);
-              window.location.href = "/admin/ram/list";
+              window.location.href = "/admin/brand/list";
               window.sessionStorage.setItem("name", "update");
             })
             .catch((error) => {
@@ -285,6 +279,7 @@ function formUpdate($scope, $http) {
             });
         }
       });
+    
     }
   };
   $scope.delete = (id) => {
@@ -296,7 +291,7 @@ function formUpdate($scope, $http) {
       "Hủy"
     ).then((result) => {
       if (result.isConfirmed) {
-        var url = `${host}/ram/${id}`;
+        var url = `${host}/brand/${id}`;
         //var url = host+'/students.json';
         $http({
           method: "delete",
@@ -309,7 +304,7 @@ function formUpdate($scope, $http) {
             $scope.items.splice(index, 1);
             $scope.form = {};
             console.log("Success", resp);
-            window.location.href = "/admin/ram/list";
+            window.location.href = "/admin/brand/list";
             window.sessionStorage.setItem("name", "delete");
           })
           .catch((error) => {
@@ -337,13 +332,12 @@ function dataFileHandler($scope, $http) {
     reader.onloadend = async () => {
       var workbook = new ExcelJS.Workbook();
       await workbook.xlsx.load(reader.result);
-      const worksheet = workbook.getWorksheet("ram_data");
+      const worksheet = workbook.getWorksheet("brand_data");
       if (!worksheet) {
         toastMixin.fire({
           animation: true,
           icon: "error",
-          title:
-            "Tên worksheet không đúng. Vui lòng sửa lại tên worksheet.",
+          title: "Tên worksheet không đúng. Vui lòng sửa lại tên worksheet.",
           position: "top",
           width: 600,
         });
@@ -355,11 +349,9 @@ function dataFileHandler($scope, $http) {
           let student = {
             id: row.getCell(1).value,
             name: row.getCell(2).value,
-            capacity: +row.getCell(3).value,
-            type: row.getCell(4).value,
-            manufacturer: row.getCell(5).value,
+            description: row.getCell(3).value,
           };
-          let url = `${host}/ram`;
+          let url = `${host}/brand`;
           $http
             .post(url, student)
             .then((resp) => {
@@ -367,11 +359,12 @@ function dataFileHandler($scope, $http) {
             })
             .catch((error) => {
               console.log("Error", error);
-              importSuccess = false;
-            });         
-        }  
+              let importSuccess = files;
+            });
+
+          $scope.load_all();
+        }
       });
-      
       if (importSuccess) {
         $scope.load_all();
         toastMixin.fire({
@@ -388,21 +381,17 @@ function dataFileHandler($scope, $http) {
       }
     };
 
-    
-    
-    
-
     reader.readAsArrayBuffer(files[0]);
   };
 
   // Hàm xuất dữ liệu ra tập tin Excel
   $scope.export = () => {
     var tableData = [];
-    var headers = ["ID", "NAME", "CAPACITY","TYPE","MANUFACTURER"];
+    var headers = ["ID", "NAME", "DESCRIPTION"];
 
     // Thêm dữ liệu của từng hàng (row) trong bảng vào mảng tableData
     angular.forEach($scope.items, function (item) {
-      var rowData = [item.id, item.name, item.capacity,item.type,item.manufacturer];
+      var rowData = [item.id, item.name, item.description];
       tableData.push(rowData);
     });
 
@@ -413,19 +402,19 @@ function dataFileHandler($scope, $http) {
     var worksheet = XLSX.utils.aoa_to_sheet([headers].concat(tableData));
 
     // Thêm trang tính vào workbook
-    XLSX.utils.book_append_sheet(workbook, worksheet, "ram_data");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "brand_data");
 
     // Xuất file Excel
     var excelBuffer = XLSX.write(workbook, {
       bookType: "xlsx",
       type: "array",
     });
+    saveAsExcel(excelBuffer, "danh_muc.xlsx");
     toastMixin.fire({
       animation: true,
       icon: "success",
-      title: "Export Excel thành công",
+      title: "Import Excel thành công",
     });
-    saveAsExcel(excelBuffer, "ram.xlsx");
   };
 
   // Hàm hỗ trợ lưu file Excel
@@ -439,11 +428,11 @@ function dataFileHandler($scope, $http) {
   // PDF
   $scope.exportToPDF = function () {
     var tableData = [];
-    var headers = ["ID", "NAME", "CAPACITY","TYPE","MANUFACTURER"];
+    var headers = ["ID", "NAME", "DESCRIPTION"];
 
     // Thêm dữ liệu của từng hàng (row) trong bảng vào mảng tableData
     angular.forEach($scope.items, function (item) {
-      var rowData = [item.id, item.name, item.capacity,item.type,item.manufacturer];
+      var rowData = [item.id, item.name, item.description];
       tableData.push(rowData);
     });
 
@@ -454,7 +443,7 @@ function dataFileHandler($scope, $http) {
         {
           table: {
             headerRows: 1,
-            widths: ["auto","auto","auto","auto","auto"],
+            widths: ["auto", "*", "*"],
             body: [headers].concat(tableData),
           },
           style: "table",
@@ -473,97 +462,62 @@ function dataFileHandler($scope, $http) {
       title: "Import PDF thành công",
     });
     // Xuất PDF
-    pdfMake.createPdf(docDefinition).download("ram.pdf");
+    pdfMake.createPdf(docDefinition).download("danh_muc.pdf");
   };
   // /PDF
 }
-
-
 function validation($scope, item) {
-  var chu = /^[a-zA-Z.\s]*$/;
+  var chu = /^[a-zA-Z\s]*$/;
   var kyTuDacBietTen = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
-  var kyTuDacBietManufacturer = /[!@#$%^&*()_+\-=\[\]{};':"\\|,<>\/?]/;
   var valid = true;
 
- if (!item.name) {
-   $scope.MessageName = "Không để rỗng tên danh mục";
-   $scope.showName = true;
-   valid = false;
- } else if (kyTuDacBietTen.test(item.name)) {
-   $scope.MessageName = "Không được chứa ký tự đặc biệt trong tên danh mục";
-   $scope.showName = true;
-   valid = false;
- }  else {
-   $scope.MessageName = "";
-   $scope.showName = false;
- }
- //capacity
- if (!item.capacity) {
-   $scope.MessageCapacity = "Không để rỗng tên danh mục";
-   $scope.showCapacity = true;
-   valid = false;
- }  else {
-   $scope.MessageCapacity = "";
-   $scope.showCapacity = false;
- }
+  if (!item.name) {
+    $scope.MessageName = "Không để rỗng tên danh mục";
+    $scope.showName = true;
+    valid = false;
+  } else if (kyTuDacBietTen.test(item.name)) {
+    $scope.MessageName = "Không được chứa ký tự đặc biệt trong tên danh mục";
+    $scope.showName = true;
+    valid = false;
+  } else if (!chu.test(item.name)) {
+    $scope.MessageName = "Không để số tên danh mục";
+    $scope.showName = true;
+    valid = false;
+  } else {
+    $scope.MessageName = "";
+    $scope.showName = false;
+  }
 
- //type
- if (!item.type) {
-   $scope.MessageType = "Không để rỗng tên danh mục";
-   $scope.showType = true;
-   valid = false;
- } else if (kyTuDacBietTen.test(item.type)) {
-   $scope.MessageType = "Không được chứa ký tự đặc biệt trong tên danh mục";
-   $scope.showType = true;
-   valid = false;
- }  else {
-   $scope.MessageType = "";
-   $scope.showType = false;
- }
+  // if (kyTuDacBietTen.test(item.description)) {
+  //   $scope.MessageDescription = "Không được chứa ký tự đặc biệt trong mô tả";
+  //   $scope.showDescription = true;
+  //   valid = false;
+  // } else {
+  //   $scope.MessageDescription = "";
+  //   $scope.showDescription = false;
+  // }
 
-// manufacturer
-if (!item.manufacturer) {
- $scope.MessageManufacturer = "Không để rỗng nhà sản xuất";
- $scope.showManufacturer = true;
- valid = false;
-} else if (kyTuDacBietManufacturer.test(item.manufacturer)) {
- $scope.MessageManufacturer =
-   "Không được chứa ký tự đặc biệt trong nhà sản xuất";
- $scope.showManufacturer = true;
- valid = false;
-} else if (!chu.test(item.manufacturer)) {
- $scope.MessageManufacturer = "Nhà sản xuất không nhập số";
- $scope.showManufacturer = true;
- valid = false;
-} else {
- $scope.MessageManufacturer = "";
- $scope.showManufacturer = false;
+    
+
+  return valid;
 }
-
- return valid;
-}
-
 
 function validationCreate(item){
-
-   const items = JSON.parse(window.sessionStorage.getItem("items"));
-   var index = items.findIndex(
-     (items) =>
-       items.name.toLowerCase().replace(/\s+/g, "") === item.name.toLowerCase().replace(/\s+/g, "")
-        && items.capacity === item.capacity
-        && items.type == item.type
-        && items.manufacturer == item.manufacturer
-   );
-   if (index !== -1) {
-    toastMixin.fire({
-      animation: true,
-      icon: "error",
-      title: "Card đồ họa đã tồn tại trong danh sách",
-      position: "top",
-      width: 600,
-    });
-    return  false;
-   }
-
-   return true;
+  const items = JSON.parse(window.sessionStorage.getItem("items"));
+    var index = items.findIndex(
+      (items) =>
+        items.name.toLowerCase().replace(/\s+/g, "") ===
+        item.name.toLowerCase().replace(/\s+/g, "")
+    );
+    if (index !== -1) {
+      toastMixin.fire({
+        animation: true,
+        icon: "error",
+        title: "Tên danh mục đã tồn tại",
+        position: "top",
+        width: 600,
+      });
+      return false;
+    }
+    return true;
 }

@@ -198,6 +198,7 @@ function formCreate($scope, $http) {
 
 function formUpdate($scope, $http) {
   //
+  $scope.isLoading = true;
   $scope.form = {};
   $scope.items = [];
   $scope.edit = (id) => {
@@ -209,6 +210,7 @@ function formUpdate($scope, $http) {
       .then((resp) => {
         $scope.form = resp.data;
         console.log("Success_edit", resp);
+        $scope.isLoading = false;
       })
       .catch((error) => {
         console.log("Error_edit", error);
