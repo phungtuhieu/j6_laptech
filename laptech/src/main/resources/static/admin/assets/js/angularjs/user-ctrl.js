@@ -1,9 +1,10 @@
 let host = "http://localhost:8081/api";
 var i = 0;
 const app = angular.module("app", []);
-app.controller("list", list).
-    controller("create", formCreate).
-    controller("update", formUpdate);
+app.controller("list", list)
+    .controller("create", formCreate)
+   . controller("update", formUpdate)
+   .controller("dataFileHandler", dataFileHandler);
 
 
 //bảng danh sáchh
@@ -11,7 +12,6 @@ function list($scope, $http){
 $scope.form = {};
 $scope.items = [];
 $scope.pageCount;
-
 $scope.reset = () => {
     $scope.form = {};
 };
@@ -31,21 +31,6 @@ $scope.load_all = () => {
         console.log("Error", error);
       });
 };
-// $scope.edit = (username) => {
-//   var url = `${host}/user/${username}`;
-// $http({
-//   method: "GET",
-//   url: url,
-// })
-//   .then((resp) => {
-//     $scope.form = resp.data;
-//     console.log("Success_edit_User", resp);
-//   })
-//   .catch((error) => {
-//     console.log("Error_edit_User", error);
-//   });
-//   window.sessionStorage.removeItem("editUs");
-// };
  // sap xep
  $scope.reverseSort = false;
  $scope.sortColumn = 'username';
@@ -69,15 +54,13 @@ $scope.delete = (username) => {
       method: "delete",
       url: url,
     })
-      .then((resp) => {
-        var index = $scope.items.findIndex(
-          (item) => item.id == $scope.form.username
-        );
-        $scope.items.splice(index, 1);
-        $scope.reset();
-        console.log("Success", resp);
-      
-      })
+    .then((resp) => {
+      var index = $scope.items.findIndex((item) => item.username == username);
+      $scope.items.splice(index, 1);
+      $scope.reset();
+      console.log("Success", resp);
+      $scope.pageCount = Math.ceil($scope.items.length / 5);
+    })
       .catch((error) => {
         console.log("Error", error);
       });
@@ -107,12 +90,43 @@ $scope.next = function () {
 $scope.last = function () {
     $scope.begin = ($scope.pageCount - 1) * 5;
 }
-
+$scope.search = (keyword) => {
+  if (keyword != "") {
+    var url = `${host}/user/search/${keyword}`;
+  } else {
+    var url = `${host}/user`;
+  }
+  $http({
+    method: "GET",
+    url: url,
+  })
+    .then((resp) => {
+      $scope.items = resp.data;
+      $scope.pageCount = Math.ceil($scope.items.length / 5);
+      console.log("Search result", resp);
+    })
+    .catch((error) => {
+      console.log("Error", error);
+    });
+};
 }
 function formCreate($scope, $http){
-  $scope.form = {};
+  $scope.optionActive = [
+    {
+      value: true,
+      name: "Hoạt động"
+    },
+    {
+      value: false,
+      name: "Ngừng hoạt động"
+    }
+  ]
+  $scope.form = {
+    active: true
+  };
   $scope.items = [];
   $scope.create = () => {
+   $scope.form.admin = false; // 
     var item = angular.copy($scope.form);
     var url = `${host}/user`;
     $http({
@@ -121,6 +135,7 @@ function formCreate($scope, $http){
       data: item,
     })
       .then((resp) => {
+        $scope.form = resp.data;
         $scope.items.push(item);
         console.log("Success", resp);
         window.location.href = "/admin/user/list";
@@ -131,7 +146,19 @@ function formCreate($scope, $http){
   };
 }
 function formUpdate($scope, $http){ 
-  $scope.form = {};
+  $scope.optionActive = [
+    {
+      value: true,
+      name: "Hoạt động"
+    },
+    {
+      value: false,
+      name: "Ngừng hoạt động"
+    }
+  ]
+  $scope.form = {
+    active:true
+  };
   $scope.items = [];
   
   $scope.edit = (username) => {
@@ -199,5 +226,127 @@ $scope.delete = (username) => {
   const username = window.sessionStorage.getItem("editUs");
   $scope.edit(username)
 }
+function dataFileHandler($scope, $http) {
+  //
+  // Excel
+  $scope.import = (files) => {
+    var confirmImport = confirm("Bạn có muốn import file Excel?");
+    if (confirmImport) {
+      var reader = new FileReader();
+      reader.onloadend = async () => {
+        var workbook = new ExcelJS.Workbook();
+        await workbook.xlsx.load(reader.result);
+        const worksheet = workbook.getWorksheet("user_data");
+        if (!worksheet) {
+          alert("Tên worksheet không đúng. Vui lòng sửa lại tên worksheet.");
+          return;
+        }
+        worksheet.eachRow((row, index) => {
+          if (index > 1) {
+            let student = {
+              username: row.getCell(1).value, // 1
+              password: row.getCell(2).value,
+              fullname: row.getCell(3).value, // 2
+              phone: row.getCell(4).value,
+              email: row.getCell(5).value,
+              address: row.getCell(6).value,
+              admin: row.getCell(7).value,
+              active: row.getCell(8).value,
+            };
+            let url = `${host}/user`;
+            $http
+              .post(url, student)
+              .then((resp) => {
+                console.log("Success", resp.data);
+              })
+              .catch((error) => {
+                console.log("Error", error);
+              });
+
+            $scope.load_all();
+          }
+        });
+      };
+
+      reader.readAsArrayBuffer(files[0]);
+    }
+  };
+
+  // Hàm xuất dữ liệu ra tập tin Excel
+  $scope.export = () => {
+    var confirmImport = confirm("Bạn có muốn export file Excel?");
+    if (confirmImport) {
+    var tableData = [];
+    var headers = ["USERNAME", "PASSWORD", "FULLNAME","PHONE","EMAIL","ADDRESS","ADMIN","ACTIVE"]; //1
+
+    // Thêm dữ liệu của từng hàng (row) trong bảng vào mảng tableData
+    angular.forEach($scope.items, function (item) {
+      var rowData = [item.username, item.password, item.fullname, item.phone, item.email, item.address, item.admin, item.active]; //2
+      tableData.push(rowData);
+    });
+
+    // Tạo một đối tượng workbook mới
+    var workbook = XLSX.utils.book_new();
+
+    // Tạo một trang tính mới và gắn dữ liệu vào đó
+    var worksheet = XLSX.utils.aoa_to_sheet([headers].concat(tableData));
+
+    // Thêm trang tính vào workbook
+    XLSX.utils.book_append_sheet(workbook, worksheet, "user_data"); // 3
+
+    // Xuất file Excel
+    var excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+    saveAsExcel(excelBuffer, "NguoiDung.xlsx");
+  }
+  };
+
+  // Hàm hỗ trợ lưu file Excel
+  function saveAsExcel(buffer, filename) {
+    var blob = new Blob([buffer], { type: "application/octet-stream" });
+    saveAs(blob, filename);
+  }
+
+  // /Excel
+
+  // PDF
+  $scope.exportToPDF = function () {
+    var confirmImport = confirm("Bạn có muốn export file PDF?");
+    if (confirmImport) {
+    var tableData = [];
+    var headers = ["Tên người dùng", "Mật khẩu", "Họ và tên", "Số điện thoại", "Email", "Địa chỉ", "Chức vụ", "Hoạt động"]; //1
+
+    // Thêm dữ liệu của từng hàng (row) trong bảng vào mảng tableData
+    angular.forEach($scope.items, function (item) {
+      var rowData = [item.username, item.password, item.fullname, item.phone, item.email, item.address, item.admin, item.active]; //2
+      tableData.push(rowData);
+    });
+
+    //
+    var docDefinition = {
+      content: [
+        { text: "Danh sách người dùng", style: "header" },
+        {
+          table: {
+            headerRows: 1,
+            widths: ["auto", "auto", "auto", "auto", "auto", "auto", "auto", "auto"], //3 "auto", "auto",....
+            body: [headers].concat(tableData),
+          },
+          style: "table",
+        },
+      ],
+      styles: {
+        header: { fontSize: 20, bold: true, margin: [0, 0, 0, 10] },
+        table: { margin: [0, 5, 0, 15], fontSize: 12 },
+        tableHeader: { fillColor: "#FF0000", bold: true }, // In đậm tiêu đề
+      },
+    };
+
+    // Xuất PDF
+    pdfMake.createPdf(docDefinition).download("NguoiDung.pdf");
+  }
+  };
+  // /PDF
+}
+
 
 

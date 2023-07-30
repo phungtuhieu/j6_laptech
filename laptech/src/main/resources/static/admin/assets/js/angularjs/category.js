@@ -218,9 +218,9 @@ function dataFileHandler($scope, $http) {
         worksheet.eachRow((row, index) => {
           if (index > 1) {
             let student = {
-              id: row.getCell(1).value,
+              id: row.getCell(1).value, // 1
               name: row.getCell(2).value,
-              description: row.getCell(3).value,
+              description: row.getCell(3).value, // 2
             };
             let url = `${host}/category`;
             $http
@@ -246,11 +246,11 @@ function dataFileHandler($scope, $http) {
     var confirmImport = confirm("Bạn có muốn export file Excel?");
     if (confirmImport) {
     var tableData = [];
-    var headers = ["ID", "FULLNAME", "DESCRIPTION"];
+    var headers = ["ID", "FULLNAME", "DESCRIPTION"]; //1
 
     // Thêm dữ liệu của từng hàng (row) trong bảng vào mảng tableData
     angular.forEach($scope.items, function (item) {
-      var rowData = [item.id, item.name, item.description];
+      var rowData = [item.id, item.name, item.description]; //2
       tableData.push(rowData);
     });
 
@@ -261,7 +261,7 @@ function dataFileHandler($scope, $http) {
     var worksheet = XLSX.utils.aoa_to_sheet([headers].concat(tableData));
 
     // Thêm trang tính vào workbook
-    XLSX.utils.book_append_sheet(workbook, worksheet, "category_data");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "category_data"); // 3
 
     // Xuất file Excel
     var excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
@@ -282,11 +282,11 @@ function dataFileHandler($scope, $http) {
     var confirmImport = confirm("Bạn có muốn export file PDF?");
     if (confirmImport) {
     var tableData = [];
-    var headers = ["ID", "Tên danh mục", "Mô tả"];
+    var headers = ["ID", "Tên danh mục", "Mô tả"]; //1
 
     // Thêm dữ liệu của từng hàng (row) trong bảng vào mảng tableData
     angular.forEach($scope.items, function (item) {
-      var rowData = [item.id, item.name, item.description];
+      var rowData = [item.id, item.name, item.description]; //2
       tableData.push(rowData);
     });
 
@@ -297,7 +297,7 @@ function dataFileHandler($scope, $http) {
         {
           table: {
             headerRows: 1,
-            widths: ["auto", "*", "*"],
+            widths: ["auto", "*", "*"], //3
             body: [headers].concat(tableData),
           },
           style: "table",

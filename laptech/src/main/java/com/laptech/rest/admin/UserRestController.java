@@ -52,7 +52,7 @@ public class UserRestController {
         return ResponseEntity.ok(user);
     }
 
-    @DeleteMapping("/api/user/{id}")
+    @DeleteMapping("/api/user/{username}")
     public ResponseEntity<Boolean> delete(@PathVariable("username") String username) {
         User user = dao.findById(username).get();
         if (user == null) {
@@ -65,5 +65,15 @@ public class UserRestController {
         return ResponseEntity.ok(true);
 
     }
+    // @GetMapping("/api/user/search/{name}")
+    // public ResponseEntity<List<User>> search(@PathVariable("name") String
+    // name){
+    // return ResponseEntity.ok(dao.findByNameLike(name));
+    // }
 
+    @GetMapping("/api/user/search/{keyword}")
+    public ResponseEntity<List<User>> searchUsers(@PathVariable("keyword") String keyword) {
+        List<User> user = dao.findByFullnameOrUsernameLike(keyword);
+        return ResponseEntity.ok(user);
+    }
 }

@@ -47,9 +47,10 @@
                         </div>
                         <div class="mb-4 col-lg-4 form-group">
                             <label for="" class="form-label">Trạng thái</label>
-                            <select class="form-select" aria-label="Default select example">
-                                <option selected value="1">Hoạt động</option>
-                                <option value="2">Ngừng hoạt động</option>
+                            <select class="form-select" aria-label="Default select example" 
+                            ng-model="form.active" ng-options="option.value as option.name for option in optionActive">
+                                <!-- <option selected value="1">Hoạt động</option>
+                                <option value="2">Ngừng hoạt động</option> -->
                             </select>
                         </div>
                         <div class="mb-4 col-lg-12 form-group">
