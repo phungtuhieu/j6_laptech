@@ -406,7 +406,7 @@ function dataFileHandler($scope, $http) {
       icon: "success",
       title: "Import Excel thành công",
     });
-    saveAsExcel(excelBuffer, "graphicsCard_data.xlsx");
+    saveAsExcel(excelBuffer, "graphicsCard.xlsx");
   };
 
   // Hàm hỗ trợ lưu file Excel
@@ -445,37 +445,42 @@ function dataFileHandler($scope, $http) {
     });
 
     //
+    var columnWidths = [];
+
+    var totalColumns = headers.length;
+    var widthPercentage = 100 / totalColumns;
+    for (var i = 0; i < totalColumns; i++) {
+      columnWidths[i] = widthPercentage + "%";
+    }
+
     var docDefinition = {
       content: [
-        { text: "Danh sách card đồ họa", style: "header" },
+        { text: "Danh sách hãng", style: "header" },
         {
           table: {
             headerRows: 1,
-            widths: ["auto", "auto", "auto", "auto", "auto", "auto", "auto"],
+            widths: columnWidths,
             body: [headers].concat(tableData),
           },
           style: "table",
         },
       ],
-      styles: {
-        header: { fontSize: 20, bold: true, margin: [0, 0, 0, 10] },
-        table: { margin: [0, 5, 0, 15], fontSize: 12 },
-        tableHeader: { fillColor: "#FF0000", bold: true }, // In đậm tiêu đề
-      },
     };
+
     toastMixin.fire({
       animation: true,
       icon: "success",
       title: "Import PDF thành công",
     });
     // Xuất PDF
-    pdfMake.createPdf(docDefinition).download("graphics_card.pdf");
+    pdfMake.createPdf(docDefinition).download("graphicsCard.pdf");
   };
   // /PDF
 }
 //
 function validation($scope, item) {
-  var chu = /^[a-zA-Z\s]*$/;
+  var chu =
+    /^[a-zA-Z\sàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ]*$/;
   var soNguyenDuong = /^[1-9]\d*$/;
   var valid = true;
   var kyTuDacBiet = /[!@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?]/;

@@ -159,80 +159,80 @@ function list($scope, $http) {
 }
 function formCreate($scope, $http) {
   //
-  $scope.optionCapacity =[
+  $scope.optionCapacity = [
     {
       id: 8,
-      value: "8"
+      value: "8",
     },
     {
       id: 16,
-      value: "16"
+      value: "16",
     },
     {
       id: 32,
-      value: "32"
+      value: "32",
     },
     {
       id: 64,
-      value: "64"
+      value: "64",
     },
-  ]
+  ];
 
-  $scope.form = { capacity:8 };
+  $scope.form = { capacity: 8 };
   $scope.items = [];
   $scope.create = () => {
     if (validation($scope, $scope.form)) {
-      if(validationCreate($scope.form)){
-      confirmationDialog(
-        "Xác nhận thêm?",
-        "Bạn có chắc chắn muốn thêm dữ liệu?",
-        "question",
-        "Thêm",
-        "Hủy"
-      ).then((result) => {
-        if (result.isConfirmed) {
-          var item = angular.copy($scope.form);
-          var url = `${host}/ram`;
-          $http({
-            method: "post",
-            url: url,
-            data: item,
-          })
-            .then((resp) => {
-              $scope.items.push(item);
-              console.log("Success", resp);
-              window.location.href = "/admin/ram/list";
-              window.sessionStorage.setItem("name", "create");
+      if (validationCreate($scope.form)) {
+        confirmationDialog(
+          "Xác nhận thêm?",
+          "Bạn có chắc chắn muốn thêm dữ liệu?",
+          "question",
+          "Thêm",
+          "Hủy"
+        ).then((result) => {
+          if (result.isConfirmed) {
+            var item = angular.copy($scope.form);
+            var url = `${host}/ram`;
+            $http({
+              method: "post",
+              url: url,
+              data: item,
             })
-            .catch((error) => {
-              console.log("Error", error);
-            });
-        }
-      });
-    }
+              .then((resp) => {
+                $scope.items.push(item);
+                console.log("Success", resp);
+                window.location.href = "/admin/ram/list";
+                window.sessionStorage.setItem("name", "create");
+              })
+              .catch((error) => {
+                console.log("Error", error);
+              });
+          }
+        });
+      }
     }
   };
 }
 function formUpdate($scope, $http) {
   //
-  $scope.optionCapacity =[
+  $scope.optionCapacity = [
     {
       id: 8,
-      value: "8"
+      value: "8",
     },
     {
       id: 16,
-      value: "16"
+      value: "16",
     },
     {
       id: 32,
-      value: "32"
+      value: "32",
     },
     {
       id: 64,
-      value: "64"
+      value: "64",
     },
-  ]
+  ];
   $scope.isLoading = true;
   $scope.form = {};
   $scope.items = [];
@@ -341,8 +341,7 @@ function dataFileHandler($scope, $http) {
         toastMixin.fire({
           animation: true,
           icon: "error",
-          title:
-            "Tên worksheet không đúng. Vui lòng sửa lại tên worksheet.",
+          title: "Tên worksheet không đúng. Vui lòng sửa lại tên worksheet.",
           position: "top",
           width: 600,
         });
@@ -367,10 +366,10 @@ function dataFileHandler($scope, $http) {
             .catch((error) => {
               console.log("Error", error);
               importSuccess = false;
-            });         
-        }  
+            });
+        }
       });
-      
+
       if (importSuccess) {
         $scope.load_all();
         toastMixin.fire({
@@ -387,21 +386,23 @@ function dataFileHandler($scope, $http) {
       }
     };
 
-    
-    
-    
-
     reader.readAsArrayBuffer(files[0]);
   };
 
   // Hàm xuất dữ liệu ra tập tin Excel
   $scope.export = () => {
     var tableData = [];
-    var headers = ["ID", "NAME", "CAPACITY","TYPE","MANUFACTURER"];
+    var headers = ["ID", "NAME", "CAPACITY", "TYPE", "MANUFACTURER"];
 
     // Thêm dữ liệu của từng hàng (row) trong bảng vào mảng tableData
     angular.forEach($scope.items, function (item) {
-      var rowData = [item.id, item.name, item.capacity,item.type,item.manufacturer];
+      var rowData = [
+        item.id,
+        item.name,
+        item.capacity,
+        item.type,
+        item.manufacturer,
+      ];
       tableData.push(rowData);
     });
 
@@ -438,32 +439,41 @@ function dataFileHandler($scope, $http) {
   // PDF
   $scope.exportToPDF = function () {
     var tableData = [];
-    var headers = ["ID", "NAME", "CAPACITY","TYPE","MANUFACTURER"];
+    var headers = ["ID", "NAME", "CAPACITY", "TYPE", "MANUFACTURER"];
 
     // Thêm dữ liệu của từng hàng (row) trong bảng vào mảng tableData
     angular.forEach($scope.items, function (item) {
-      var rowData = [item.id, item.name, item.capacity,item.type,item.manufacturer];
+      var rowData = [
+        item.id,
+        item.name,
+        item.capacity,
+        item.type,
+        item.manufacturer,
+      ];
       tableData.push(rowData);
     });
 
     //
+    var columnWidths = [];
+
+    var totalColumns = headers.length;
+    var widthPercentage = 100 / totalColumns;
+    for (var i = 0; i < totalColumns; i++) {
+      columnWidths[i] = widthPercentage + "%";
+    }
+
     var docDefinition = {
       content: [
-        { text: "Danh sách danh mục", style: "header" },
+        { text: "Danh sách hãng", style: "header" },
         {
           table: {
             headerRows: 1,
-            widths: ["auto","auto","auto","auto","auto"],
+            widths: columnWidths,
             body: [headers].concat(tableData),
           },
           style: "table",
         },
       ],
-      styles: {
-        header: { fontSize: 20, bold: true, margin: [0, 0, 0, 10] },
-        table: { margin: [0, 5, 0, 15], fontSize: 12 },
-        tableHeader: { fillColor: "#FF0000", bold: true }, // In đậm tiêu đề
-      },
     };
 
     toastMixin.fire({
@@ -476,82 +486,82 @@ function dataFileHandler($scope, $http) {
   };
   // /PDF
 }
-
-// 
+//
 function validation($scope, item) {
-  var chu = /^[a-zA-Z.\s]*$/;
+  var chu =
+    /^[a-zA-Z\sàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ]*$/;
   var kyTuDacBietTen = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
   var kyTuDacBietManufacturer = /[!@#$%^&*()_+\-=\[\]{};':"\\|,<>\/?]/;
   var valid = true;
 
- if (!item.name) {
-   $scope.MessageName = "Không để rỗng tên danh mục";
-   $scope.showName = true;
-   valid = false;
- } else if (kyTuDacBietTen.test(item.name)) {
-   $scope.MessageName = "Không được chứa ký tự đặc biệt trong tên danh mục";
-   $scope.showName = true;
-   valid = false;
- }  else {
-   $scope.MessageName = "";
-   $scope.showName = false;
- }
- //capacity
- if (!item.capacity) {
-   $scope.MessageCapacity = "Không để rỗng tên danh mục";
-   $scope.showCapacity = true;
-   valid = false;
- }  else {
-   $scope.MessageCapacity = "";
-   $scope.showCapacity = false;
- }
+  if (!item.name) {
+    $scope.MessageName = "Không để rỗng tên danh mục";
+    $scope.showName = true;
+    valid = false;
+  } else if (kyTuDacBietTen.test(item.name)) {
+    $scope.MessageName = "Không được chứa ký tự đặc biệt trong tên danh mục";
+    $scope.showName = true;
+    valid = false;
+  } else {
+    $scope.MessageName = "";
+    $scope.showName = false;
+  }
+  //capacity
+  if (!item.capacity) {
+    $scope.MessageCapacity = "Không để rỗng tên danh mục";
+    $scope.showCapacity = true;
+    valid = false;
+  } else {
+    $scope.MessageCapacity = "";
+    $scope.showCapacity = false;
+  }
 
- //type
- if (!item.type) {
-   $scope.MessageType = "Không để rỗng tên danh mục";
-   $scope.showType = true;
-   valid = false;
- } else if (kyTuDacBietTen.test(item.type)) {
-   $scope.MessageType = "Không được chứa ký tự đặc biệt trong tên danh mục";
-   $scope.showType = true;
-   valid = false;
- }  else {
-   $scope.MessageType = "";
-   $scope.showType = false;
- }
+  //type
+  if (!item.type) {
+    $scope.MessageType = "Không để rỗng tên danh mục";
+    $scope.showType = true;
+    valid = false;
+  } else if (kyTuDacBietTen.test(item.type)) {
+    $scope.MessageType = "Không được chứa ký tự đặc biệt trong tên danh mục";
+    $scope.showType = true;
+    valid = false;
+  } else {
+    $scope.MessageType = "";
+    $scope.showType = false;
+  }
 
-// manufacturer
-if (!item.manufacturer) {
- $scope.MessageManufacturer = "Không để rỗng nhà sản xuất";
- $scope.showManufacturer = true;
- valid = false;
-} else if (kyTuDacBietManufacturer.test(item.manufacturer)) {
- $scope.MessageManufacturer =
-   "Không được chứa ký tự đặc biệt trong nhà sản xuất";
- $scope.showManufacturer = true;
- valid = false;
-} else if (!chu.test(item.manufacturer)) {
- $scope.MessageManufacturer = "Nhà sản xuất không nhập số";
- $scope.showManufacturer = true;
- valid = false;
-} else {
- $scope.MessageManufacturer = "";
- $scope.showManufacturer = false;
+  // manufacturer
+  if (!item.manufacturer) {
+    $scope.MessageManufacturer = "Không để rỗng nhà sản xuất";
+    $scope.showManufacturer = true;
+    valid = false;
+  } else if (kyTuDacBietManufacturer.test(item.manufacturer)) {
+    $scope.MessageManufacturer =
+      "Không được chứa ký tự đặc biệt trong nhà sản xuất";
+    $scope.showManufacturer = true;
+    valid = false;
+  } else if (!chu.test(item.manufacturer)) {
+    $scope.MessageManufacturer = "Nhà sản xuất không nhập số";
+    $scope.showManufacturer = true;
+    valid = false;
+  } else {
+    $scope.MessageManufacturer = "";
+    $scope.showManufacturer = false;
+  }
+
+  return valid;
 }
-
- return valid;
-}
-function validationCreate(item){
-
-   const items = JSON.parse(window.sessionStorage.getItem("items"));
-   var index = items.findIndex(
-     (items) =>
-       items.name.toLowerCase().replace(/\s+/g, "") === item.name.toLowerCase().replace(/\s+/g, "")
-        && items.capacity === item.capacity
-        && items.type == item.type
-        && items.manufacturer == item.manufacturer
-   );
-   if (index !== -1) {
+function validationCreate(item) {
+  const items = JSON.parse(window.sessionStorage.getItem("items"));
+  var index = items.findIndex(
+    (items) =>
+      items.name.toLowerCase().replace(/\s+/g, "") ===
+        item.name.toLowerCase().replace(/\s+/g, "") &&
+      items.capacity === item.capacity &&
+      items.type == item.type &&
+      items.manufacturer == item.manufacturer
+  );
+  if (index !== -1) {
     toastMixin.fire({
       animation: true,
       icon: "error",
@@ -559,8 +569,8 @@ function validationCreate(item){
       position: "top",
       width: 600,
     });
-    return  false;
-   }
+    return false;
+  }
 
-   return true;
+  return true;
 }

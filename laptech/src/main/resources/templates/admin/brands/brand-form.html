@@ -84,14 +84,15 @@
                         <div class="mb-4 col-lg-12 form-group">
                             <label for="prod-desciption" class="form-label">Logo <span>[img-name]</span></label>
                             <div class="image-upload">
-                                <input ng-model="form.logo" type="file">
+                                <input ng-model="form.logo" type="file" accept=".png,.jpg"
+                                 onchange="angular.element(this).scope().uploadName(this.files)">
                                 
                                 <div class="image-uploads ">
                                     <i class="fa-solid fa-cloud-arrow-up icon-upload"></i>
                                     <h4>Drag and drop a file to upload</h4>
                                 </div>
-                                <span ng-show="showLogo"  class="text-danger">{{MessageLogo}}</span>
                             </div>
+                            <span ng-show="showLogo"  class="text-danger">{{MessageLogo}}</span>
                         </div>
                         <div class="mb-4 col-lg-12 ">
                                 <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('create')}" class="btn btn-submit me-2" ng-click="create()">Lưu</a>

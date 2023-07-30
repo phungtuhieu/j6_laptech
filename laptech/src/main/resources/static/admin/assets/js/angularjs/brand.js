@@ -15,9 +15,6 @@ function APICountry1($http) {
     });
 }
 
-
-
-
 const app = angular.module("app", []);
 app
   .controller("list", list)
@@ -176,58 +173,57 @@ function list($scope, $http) {
   $scope.check();
 }
 function formCreate($scope, $http) {
-  
-
-  APICountry1($http)
-  .then((data) => {
+  APICountry1($http).then((data) => {
     $scope.optionCountry = data;
     console.log("Dữ liệu từ API:", data);
-  })
-//
-  $scope.form = {country:"VN"};
+  });
+  //
+  $scope.form = { country: "VN" };
   $scope.items = [];
+
+  $scope.uploadName = (files) => {
+    return ($scope.form.logo = files[0].name);
+  };
+
   $scope.create = () => {
     if (validation($scope, $scope.form)) {
-      if(validationCreate($scope.form)){
-      confirmationDialog(
-        "Xác nhận thêm?",
-        "Bạn có chắc chắn muốn thêm dữ liệu?",
-        "question",
-        "Thêm",
-        "Hủy"
-      ).then((result) => {
-        console.log($scope.form)
-        if (result.isConfirmed) {
-         $scope.form.website = "https://www." + $scope.form.website;
-          var item = angular.copy($scope.form);
-          var url = `${host}/brand`;
-          $http({
-            method: "post",
-            url: url,
-            data: item,
-          })
-            .then((resp) => {
-              $scope.items.push(item);
-              console.log("Success", resp);
-              window.location.href = "/admin/brand/list";
-              window.sessionStorage.setItem("name", "create");
+      if (validationCreate($scope.form)) {
+        confirmationDialog(
+          "Xác nhận thêm?",
+          "Bạn có chắc chắn muốn thêm dữ liệu?",
+          "question",
+          "Thêm",
+          "Hủy"
+        ).then((result) => {
+          if (result.isConfirmed) {
+            $scope.form.website = "https://www." + $scope.form.website;
+            var item = angular.copy($scope.form);
+            var url = `${host}/brand`;
+            $http({
+              method: "post",
+              url: url,
+              data: item,
             })
-            .catch((error) => {
-              console.log("Error", error);
-            });
-        }
-      });
-    }
+              .then((resp) => {
+                $scope.items.push(item);
+                console.log("Success", resp);
+                window.location.href = "/admin/brand/list";
+                window.sessionStorage.setItem("name", "create");
+              })
+              .catch((error) => {
+                console.log("Error", error);
+              });
+          }
+        });
+      }
     }
   };
 }
-
 function formUpdate($scope, $http) {
-  APICountry1($http)
-  .then((data) => {
+  APICountry1($http).then((data) => {
     $scope.optionCountry = data;
     console.log("Dữ liệu từ API:", data);
-  })
+  });
   //
   $scope.isLoading = true;
   $scope.form = {};
@@ -251,7 +247,6 @@ function formUpdate($scope, $http) {
 
   $scope.update = () => {
     if (validation($scope, $scope.form)) {
-     
       confirmationDialog(
         "Xác nhận sửa?",
         "Bạn có chắc chắn muốn sửa dữ liệu?",
@@ -281,7 +276,6 @@ function formUpdate($scope, $http) {
             });
         }
       });
-    
     }
   };
   $scope.delete = (id) => {
@@ -394,11 +388,29 @@ function dataFileHandler($scope, $http) {
   // Hàm xuất dữ liệu ra tập tin Excel
   $scope.export = () => {
     var tableData = [];
-    var headers = ["ID", "NAME","LOGO","EMAIL","PHONE","WEBSITE","COUNTRY", "DESCRIPTION"];
+    var headers = [
+      "ID",
+      "NAME",
+      "LOGO",
+      "EMAIL",
+      "PHONE",
+      "WEBSITE",
+      "COUNTRY",
+      "DESCRIPTION",
+    ];
 
     // Thêm dữ liệu của từng hàng (row) trong bảng vào mảng tableData
     angular.forEach($scope.items, function (item) {
-      var rowData = [item.id, item.name,item.logo,item.email,item.phone,item.website,item.country, item.description];
+      var rowData = [
+        item.id,
+        item.name,
+        item.logo,
+        item.email,
+        item.phone,
+        item.website,
+        item.country,
+        item.description,
+      ];
       tableData.push(rowData);
     });
 
@@ -435,28 +447,52 @@ function dataFileHandler($scope, $http) {
   // PDF
   $scope.exportToPDF = function () {
     var tableData = [];
-    var headers = ["ID", "NAME","LOGO","EMAIL","PHONE","WEBSITE","COUNTRY", "DESCRIPTION"];
+    var headers = [
+      "ID",
+      "NAME",
+      "LOGO",
+      "EMAIL",
+      "PHONE",
+      "WEBSITE",
+      "COUNTRY",
+      "DESCRIPTION",
+    ];
 
     // Thêm dữ liệu của từng hàng (row) trong bảng vào mảng tableData
     angular.forEach($scope.items, function (item) {
-      var rowData = [item.id, item.name,item.logo,item.email,item.phone,item.website,item.country, item.description];
+      var rowData = [
+        item.id,
+        item.name,
+        item.logo,
+        item.email,
+        item.phone,
+        item.website,
+        item.country,
+        item.description,
+      ];
       tableData.push(rowData);
     });
 
-    //
+    var columnWidths = [];
+
+    var totalColumns = headers.length;
+    var widthPercentage = 100 / totalColumns;
+    for (var i = 0; i < totalColumns; i++) {
+      columnWidths[i] = widthPercentage + "%";
+    }
+
     var docDefinition = {
       content: [
         { text: "Danh sách hãng", style: "header" },
         {
           table: {
             headerRows: 1,
-            widths: ["auto", "auto", "auto", "auto", "auto", "auto", "auto", "auto"],
+            widths: columnWidths,
             body: [headers].concat(tableData),
           },
           style: "table",
         },
       ],
-      
     };
 
     toastMixin.fire({
@@ -469,14 +505,17 @@ function dataFileHandler($scope, $http) {
   };
   // /PDF
 }
+//
 function validation($scope, item) {
-  var chu = /^[a-zA-Z\s]*$/;
   var kyTuDacBietTen = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
-  var regexEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?$/;
+  var regexEmail =
+    /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?$/;
   var regexPhoneNumber = /^(09|03|08|05)\d{8}$/;
   const domainRegex = /^(https:\/\/www\.)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
+  var chu =
+    /^[a-zA-Z\sàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ]*$/;
   var valid = true;
-
+  //name
   if (!item.name) {
     $scope.MessageName = "Không để rỗng tên hãng";
     $scope.showName = true;
@@ -493,7 +532,16 @@ function validation($scope, item) {
     $scope.MessageName = "";
     $scope.showName = false;
   }
-//email
+
+  if (!item.logo) {
+    $scope.MessageLogo = "Chọn ảnh hãng";
+    $scope.showLogo = true;
+    valid = false;
+  } else {
+    $scope.MessageLogo = "";
+    $scope.showLogo = false;
+  }
+  //email
   if (!item.email) {
     $scope.MessageEmail = "Không để rỗng email";
     $scope.showEmail = true;
@@ -502,7 +550,7 @@ function validation($scope, item) {
     $scope.MessageEmail = "Email không đúng địng dạng";
     $scope.showEmail = true;
     valid = false;
-  }  else {
+  } else {
     $scope.MessageEmail = "";
     $scope.showEmail = false;
   }
@@ -512,7 +560,7 @@ function validation($scope, item) {
     $scope.MessagePhone = "Không để rỗng phone";
     $scope.showPhone = true;
     valid = false;
-  }else if (isNaN(item.phone)) {
+  } else if (isNaN(item.phone)) {
     $scope.MessagePhone = "Nhập số cho số điện thoại";
     $scope.showPhone = true;
     valid = false;
@@ -520,7 +568,7 @@ function validation($scope, item) {
     $scope.MessagePhone = "Số điện thoại không đúng địng dạng ";
     $scope.showPhone = true;
     valid = false;
-  }  else {
+  } else {
     $scope.MessagePhone = "";
     $scope.showPhone = false;
   }
@@ -530,10 +578,11 @@ function validation($scope, item) {
     $scope.showWebsite = true;
     valid = false;
   } else if (!domainRegex.test(item.website)) {
-    $scope.MessageWebsite = "Tên      website không đúng địng dạng VD: website.com ";
+    $scope.MessageWebsite =
+      "Tên      website không đúng địng dạng VD: website.com ";
     $scope.showWebsite = true;
     valid = false;
-  }  else {
+  } else {
     $scope.MessageWebsite = "";
     $scope.showWebsite = false;
   }
@@ -547,32 +596,26 @@ function validation($scope, item) {
     $scope.showDescription = false;
   }
 
-    
-
   return valid;
 }
-
-function validationCreate(item){
+function validationCreate(item) {
   const items = JSON.parse(window.sessionStorage.getItem("items"));
-    var index = items.findIndex(
-      (items) =>
-        items.name.toLowerCase().replace(/\s+/g, "") ===
-        item.name.toLowerCase().replace(/\s+/g, "")
-        && items.website === 
-        "https://www."+item.website 
-        && items.country ===
-          item.country
-
-    );
-    if (index !== -1) {
-      toastMixin.fire({
-        animation: true,
-        icon: "error",
-        title: "Tên danh mục đã tồn tại",
-        position: "top",
-        width: 600,
-      });
-      return false;
-    }
-    return true;
+  var index = items.findIndex(
+    (items) =>
+      items.name.toLowerCase().replace(/\s+/g, "") ===
+        item.name.toLowerCase().replace(/\s+/g, "") &&
+      items.website === "https://www." + item.website &&
+      items.country === item.country
+  );
+  if (index !== -1) {
+    toastMixin.fire({
+      animation: true,
+      icon: "error",
+      title: "Tên danh mục đã tồn tại",
+      position: "top",
+      width: 600,
+    });
+    return false;
+  }
+  return true;
 }

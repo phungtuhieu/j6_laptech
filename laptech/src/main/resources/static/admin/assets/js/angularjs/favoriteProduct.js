@@ -3,11 +3,9 @@ let host = "http://localhost:8081/api";
 const app = angular.module("app", []);
 app
   .controller("list", list)
-  //.controller("create", formCreate)
-  //.controller("update", formUpdate)
   .controller("dataFileHandler", dataFileHandler);
 
-function list($scope, $http,$filter) {
+function list($scope, $http, $filter) {
   //
   $scope.form = {};
   $scope.items = [];
@@ -64,7 +62,6 @@ function list($scope, $http,$filter) {
   };
   //
 
-  
   //
   $scope.search = (name) => {
     if (name != "") {
@@ -85,86 +82,88 @@ function list($scope, $http,$filter) {
         console.log("Error_edit", error);
       });
   };
-  
-  $scope.date = () =>{
-        const formattedStartDate = $filter('date')($scope.startDate, 'yyyy-MM-dd');
-        const formattedEndDate = $filter('date')($scope.endDate, 'yyyy-MM-dd');
 
+  $scope.date = () => {
+    const formattedStartDate = $filter("date")($scope.startDate, "yyyy-MM-dd");
+    const formattedEndDate = $filter("date")($scope.endDate, "yyyy-MM-dd");
 
-        var valid = true;
+    var valid = true;
 
-        if (!formattedStartDate) {
-          $scope.MessageStartDate = "Vui lòng chọn từ ngày";
-          $scope.showStartDate = true;
-          valid = false;
-        }  else {
-          $scope.MessageStartDate = "";
-          $scope.showStartDate = false;
-        }
+    if (!formattedStartDate) {
+      $scope.MessageStartDate = "Vui lòng chọn từ ngày";
+      $scope.showStartDate = true;
+      valid = false;
+    } else {
+      $scope.MessageStartDate = "";
+      $scope.showStartDate = false;
+    }
 
-        if (!formattedEndDate) {
-          $scope.MessageEndDate = "Vui lòng chọn Đến ngày";
-          $scope.showEndDate = true;
-          valid = false;
-        }  else {
-          $scope.MessageEndDate = "";
-          $scope.showEndDate = false;
-        }
+    if (!formattedEndDate) {
+      $scope.MessageEndDate = "Vui lòng chọn Đến ngày";
+      $scope.showEndDate = true;
+      valid = false;
+    } else {
+      $scope.MessageEndDate = "";
+      $scope.showEndDate = false;
+    }
 
-        // 
-        if (formattedStartDate && formattedEndDate) {
-          var fromDate = new Date(formattedStartDate);
-          var toDate = new Date(formattedEndDate);
-        
-          if (fromDate > toDate) {
-            $scope.MessageStartDate = "Từ ngày không được nhỏ hơn Đến ngày";
-            $scope.MessageEndDate = "Đến ngày không được lớn hơn Từ ngày";
-            $scope.showStartDate = true;
-            $scope.showEndDate = true;
-            valid = false;
-          }
-        }
-        
+    //
+    if (formattedStartDate && formattedEndDate) {
+      var fromDate = new Date(formattedStartDate);
+      var toDate = new Date(formattedEndDate);
 
+      if (fromDate > toDate) {
+        $scope.MessageStartDate = "Từ ngày không được nhỏ hơn Đến ngày";
+        $scope.MessageEndDate = "Đến ngày không được lớn hơn Từ ngày";
+        $scope.showStartDate = true;
+        $scope.showEndDate = true;
+        valid = false;
+      }
+    }
 
-
-
-        if(valid){
-          var url = `${host}/favoriteProduct/${formattedStartDate}/${formattedEndDate}`;
-        $http({
-          method: "GET",
-          url: url,
+    if (valid) {
+      var url = `${host}/favoriteProduct/${formattedStartDate}/${formattedEndDate}`;
+      $http({
+        method: "GET",
+        url: url,
+      })
+        .then((resp) => {
+          $scope.items = resp.data;
+          $scope.pageCount = Math.ceil($scope.items.length / 5);
+          console.log("search", resp);
         })
-          .then((resp) => {
-            $scope.items = resp.data;
-            $scope.pageCount = Math.ceil($scope.items.length / 5);
-            console.log("search", resp);
-          })
-          .catch((error) => {
-            console.log("Error_edit", error);
-          });
-        }
-
-        
-  }
-
- 
+        .catch((error) => {
+          console.log("Error_edit", error);
+        });
+    }
+  };
 
   // thực hiện
   $scope.reset();
   $scope.load_all();
 }
+//
 function dataFileHandler($scope, $http) {
-  
-
   // Hàm xuất dữ liệu ra tập tin Excel
   $scope.export = () => {
     var tableData = [];
-    var headers = ["TÊN SẢN PHẨM", "DANH MỤC","SỐ LƯỢNG THÍCH","NGÀY CŨ NHẤT","NGÀY MỚI NHẤT"];
+    var headers = [
+      "TÊN SẢN PHẨM",
+      "DANH MỤC",
+      "SỐ LƯỢNG THÍCH",
+      "NGÀY CŨ NHẤT",
+      "NGÀY MỚI NHẤT",
+    ];
 
     // Thêm dữ liệu của từng hàng (row) trong bảng vào mảng tableData
     angular.forEach($scope.items, function (item) {
-      var rowData = [item.tenLap, item.danhMuc,item.soLuongThich,item.ngayCu,item.ngayMoi];
+      var rowData = [
+        item.tenLap,
+        item.danhMuc,
+        item.soLuongThich,
+        item.ngayCu,
+        item.ngayMoi,
+      ];
       tableData.push(rowData);
     });
 
@@ -175,14 +174,14 @@ function dataFileHandler($scope, $http) {
     var worksheet = XLSX.utils.aoa_to_sheet([headers].concat(tableData));
 
     // Thêm trang tính vào workbook
-    XLSX.utils.book_append_sheet(workbook, worksheet, "brand_data");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "favoriteProduct_data");
 
     // Xuất file Excel
     var excelBuffer = XLSX.write(workbook, {
       bookType: "xlsx",
       type: "array",
     });
-    saveAsExcel(excelBuffer, "brand.xlsx");
+    saveAsExcel(excelBuffer, "favoriteProduct.xlsx");
     toastMixin.fire({
       animation: true,
       icon: "success",
@@ -201,28 +200,46 @@ function dataFileHandler($scope, $http) {
   // PDF
   $scope.exportToPDF = function () {
     var tableData = [];
-    var headers = ["TÊN SẢN PHẨM", "DANH MỤC","SỐ LƯỢNG THÍCH","NGÀY CŨ NHẤT","NGÀY MỚI NHẤT"];
+    var headers = [
+      "TÊN SẢN PHẨM",
+      "DANH MỤC",
+      "SỐ LƯỢNG THÍCH",
+      "NGÀY CŨ NHẤT",
+      "NGÀY MỚI NHẤT",
+    ];
 
     // Thêm dữ liệu của từng hàng (row) trong bảng vào mảng tableData
     angular.forEach($scope.items, function (item) {
-      var rowData = [item.tenLap, item.danhMuc,item.soLuongThich,item.ngayCu,item.ngayMoi];
+      var rowData = [
+        item.tenLap,
+        item.danhMuc,
+        item.soLuongThich,
+        item.ngayCu,
+        item.ngayMoi,
+      ];
       tableData.push(rowData);
     });
 
-    //
+    var columnWidths = [];
+
+    var totalColumns = headers.length;
+    var widthPercentage = 100 / totalColumns;
+    for (var i = 0; i < totalColumns; i++) {
+      columnWidths[i] = widthPercentage + "%";
+    }
+
     var docDefinition = {
       content: [
         { text: "Danh sách hãng", style: "header" },
         {
           table: {
             headerRows: 1,
-            widths: ["auto", "auto", "auto", "auto", "auto"],
+            widths: columnWidths,
             body: [headers].concat(tableData),
           },
           style: "table",
         },
       ],
-      
     };
 
     toastMixin.fire({

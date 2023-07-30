@@ -164,38 +164,37 @@ function formCreate($scope, $http) {
   $scope.items = [];
   $scope.create = () => {
     if (validation($scope, $scope.form)) {
-      if(validationCreate($scope.form)){
-      confirmationDialog(
-        "Xác nhận thêm?",
-        "Bạn có chắc chắn muốn thêm dữ liệu?",
-        "question",
-        "Thêm",
-        "Hủy"
-      ).then((result) => {
-        if (result.isConfirmed) {
-          var item = angular.copy($scope.form);
-          var url = `${host}/category`;
-          $http({
-            method: "post",
-            url: url,
-            data: item,
-          })
-            .then((resp) => {
-              $scope.items.push(item);
-              console.log("Success", resp);
-              window.location.href = "/admin/category/list";
-              window.sessionStorage.setItem("name", "create");
+      if (validationCreate($scope.form)) {
+        confirmationDialog(
+          "Xác nhận thêm?",
+          "Bạn có chắc chắn muốn thêm dữ liệu?",
+          "question",
+          "Thêm",
+          "Hủy"
+        ).then((result) => {
+          if (result.isConfirmed) {
+            var item = angular.copy($scope.form);
+            var url = `${host}/category`;
+            $http({
+              method: "post",
+              url: url,
+              data: item,
             })
-            .catch((error) => {
-              console.log("Error", error);
-            });
-        }
-      });
-    }
+              .then((resp) => {
+                $scope.items.push(item);
+                console.log("Success", resp);
+                window.location.href = "/admin/category/list";
+                window.sessionStorage.setItem("name", "create");
+              })
+              .catch((error) => {
+                console.log("Error", error);
+              });
+          }
+        });
+      }
     }
   };
 }
-
 function formUpdate($scope, $http) {
   //
   $scope.isLoading = true;
@@ -220,7 +219,6 @@ function formUpdate($scope, $http) {
 
   $scope.update = () => {
     if (validation($scope, $scope.form)) {
-     
       confirmationDialog(
         "Xác nhận sửa?",
         "Bạn có chắc chắn muốn sửa dữ liệu?",
@@ -250,7 +248,6 @@ function formUpdate($scope, $http) {
             });
         }
       });
-    
     }
   };
   $scope.delete = (id) => {
@@ -380,7 +377,7 @@ function dataFileHandler($scope, $http) {
       bookType: "xlsx",
       type: "array",
     });
-    saveAsExcel(excelBuffer, "danh_muc.xlsx");
+    saveAsExcel(excelBuffer, "category.xlsx");
     toastMixin.fire({
       animation: true,
       icon: "success",
@@ -407,24 +404,26 @@ function dataFileHandler($scope, $http) {
       tableData.push(rowData);
     });
 
-    //
+    var columnWidths = [];
+
+    var totalColumns = headers.length;
+    var widthPercentage = 100 / totalColumns;
+    for (var i = 0; i < totalColumns; i++) {
+      columnWidths[i] = widthPercentage + "%";
+    }
+
     var docDefinition = {
       content: [
-        { text: "Danh sách danh mục", style: "header" },
+        { text: "Danh sách hãng", style: "header" },
         {
           table: {
             headerRows: 1,
-            widths: ["auto", "*", "*"],
+            widths: columnWidths,
             body: [headers].concat(tableData),
           },
           style: "table",
         },
       ],
-      styles: {
-        header: { fontSize: 20, bold: true, margin: [0, 0, 0, 10] },
-        table: { margin: [0, 5, 0, 15], fontSize: 12 },
-        tableHeader: { fillColor: "#FF0000", bold: true }, // In đậm tiêu đề
-      },
     };
 
     toastMixin.fire({
@@ -437,9 +436,10 @@ function dataFileHandler($scope, $http) {
   };
   // /PDF
 }
-// 
+//
 function validation($scope, item) {
-  var chu = /^[a-zA-Z\s]*$/;
+  var chu =
+    /^[a-zA-Z\sàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ]*$/;
   var kyTuDacBietTen = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
   var valid = true;
 
@@ -469,27 +469,24 @@ function validation($scope, item) {
     $scope.showDescription = false;
   }
 
-    
-
   return valid;
 }
-function validationCreate(item){
+function validationCreate(item) {
   const items = JSON.parse(window.sessionStorage.getItem("items"));
-    var index = items.findIndex(
-      (items) =>
-        items.name.toLowerCase().replace(/\s+/g, "") ===
-        item.name.toLowerCase().replace(/\s+/g, "")
-        
-    );
-    if (index !== -1) {
-      toastMixin.fire({
-        animation: true,
-        icon: "error",
-        title: "Tên danh mục đã tồn tại",
-        position: "top",
-        width: 600,
-      });
-      return false;
-    }
-    return true;
+  var index = items.findIndex(
+    (items) =>
+      items.name.toLowerCase().replace(/\s+/g, "") ===
+      item.name.toLowerCase().replace(/\s+/g, "")
+  );
+  if (index !== -1) {
+    toastMixin.fire({
+      animation: true,
+      icon: "error",
+      title: "Tên danh mục đã tồn tại",
+      position: "top",
+      width: 600,
+    });
+    return false;
+  }
+  return true;
 }
