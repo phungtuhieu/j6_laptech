@@ -330,7 +330,7 @@ function dataFileHandler($scope, $http) {
             })
             .catch((error) => {
               console.log("Error", error);
-              let importSuccess = files;
+              let importSuccess = false;
             });
 
           $scope.load_all();
@@ -437,6 +437,7 @@ function dataFileHandler($scope, $http) {
   };
   // /PDF
 }
+// 
 function validation($scope, item) {
   var chu = /^[a-zA-Z\s]*$/;
   var kyTuDacBietTen = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
@@ -472,13 +473,13 @@ function validation($scope, item) {
 
   return valid;
 }
-
 function validationCreate(item){
   const items = JSON.parse(window.sessionStorage.getItem("items"));
     var index = items.findIndex(
       (items) =>
         items.name.toLowerCase().replace(/\s+/g, "") ===
         item.name.toLowerCase().replace(/\s+/g, "")
+        
     );
     if (index !== -1) {
       toastMixin.fire({

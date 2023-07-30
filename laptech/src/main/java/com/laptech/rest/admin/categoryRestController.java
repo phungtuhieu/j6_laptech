@@ -25,7 +25,7 @@ public class categoryRestController {
     @Autowired
     CategoryDAO dao;
 
-     @GetMapping("/api/category")
+    @GetMapping("/api/category")
     public ResponseEntity<List<Category>> getAll(Model model){
         return ResponseEntity.ok(dao.findAll());
     }

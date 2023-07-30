@@ -96,7 +96,7 @@ function list($scope, $http) {
               animation: true,
               icon: "error",
               title:
-                "Danh mục đã tồn tại trong sản phẩm. Cập nhật không thành công.",
+                "RAM đã tồn tại trong sản phẩm. Cập nhật không thành công.",
               position: "top",
               width: 600,
             });
@@ -213,7 +213,6 @@ function formCreate($scope, $http) {
     }
   };
 }
-
 function formUpdate($scope, $http) {
   //
   $scope.optionCapacity =[
@@ -318,7 +317,7 @@ function formUpdate($scope, $http) {
               animation: true,
               icon: "error",
               title:
-                "Danh mục đã tồn tại trong sản phẩm. Cập nhật không thành công.",
+                "RAM đã tồn tại trong sản phẩm. Cập nhật không thành công.",
               position: "top",
               width: 600,
             });
@@ -478,7 +477,7 @@ function dataFileHandler($scope, $http) {
   // /PDF
 }
 
-
+// 
 function validation($scope, item) {
   var chu = /^[a-zA-Z.\s]*$/;
   var kyTuDacBietTen = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
@@ -542,8 +541,6 @@ if (!item.manufacturer) {
 
  return valid;
 }
-
-
 function validationCreate(item){
 
    const items = JSON.parse(window.sessionStorage.getItem("items"));

@@ -114,7 +114,7 @@ function list($scope, $http) {
               animation: true,
               icon: "error",
               title:
-                "Danh mục đã tồn tại trong sản phẩm. Cập nhật không thành công.",
+                "Hãng đã tồn tại trong sản phẩm. Cập nhật không thành công.",
               position: "top",
               width: 600,
             });
@@ -176,6 +176,7 @@ function list($scope, $http) {
   $scope.check();
 }
 function formCreate($scope, $http) {
+  
 
   APICountry1($http)
   .then((data) => {
@@ -197,6 +198,7 @@ function formCreate($scope, $http) {
       ).then((result) => {
         console.log($scope.form)
         if (result.isConfirmed) {
+         $scope.form.website = "https://www." + $scope.form.website;
           var item = angular.copy($scope.form);
           var url = `${host}/brand`;
           $http({
@@ -313,7 +315,7 @@ function formUpdate($scope, $http) {
               animation: true,
               icon: "error",
               title:
-                "Danh mục đã tồn tại trong sản phẩm. Cập nhật không thành công.",
+                "Hãng đã tồn tại trong sản phẩm. Cập nhật không thành công.",
               position: "top",
               width: 600,
             });
@@ -349,7 +351,12 @@ function dataFileHandler($scope, $http) {
           let student = {
             id: row.getCell(1).value,
             name: row.getCell(2).value,
-            description: row.getCell(3).value,
+            logo: row.getCell(3).value,
+            email: row.getCell(4).value,
+            phone: row.getCell(5).value,
+            website: row.getCell(6).value,
+            country: row.getCell(7).value,
+            description: row.getCell(8).value,
           };
           let url = `${host}/brand`;
           $http
@@ -359,7 +366,7 @@ function dataFileHandler($scope, $http) {
             })
             .catch((error) => {
               console.log("Error", error);
-              let importSuccess = files;
+              let importSuccess = false;
             });
 
           $scope.load_all();
@@ -387,11 +394,11 @@ function dataFileHandler($scope, $http) {
   // Hàm xuất dữ liệu ra tập tin Excel
   $scope.export = () => {
     var tableData = [];
-    var headers = ["ID", "NAME", "DESCRIPTION"];
+    var headers = ["ID", "NAME","LOGO","EMAIL","PHONE","WEBSITE","COUNTRY", "DESCRIPTION"];
 
     // Thêm dữ liệu của từng hàng (row) trong bảng vào mảng tableData
     angular.forEach($scope.items, function (item) {
-      var rowData = [item.id, item.name, item.description];
+      var rowData = [item.id, item.name,item.logo,item.email,item.phone,item.website,item.country, item.description];
       tableData.push(rowData);
     });
 
@@ -409,11 +416,11 @@ function dataFileHandler($scope, $http) {
       bookType: "xlsx",
       type: "array",
     });
-    saveAsExcel(excelBuffer, "danh_muc.xlsx");
+    saveAsExcel(excelBuffer, "brand.xlsx");
     toastMixin.fire({
       animation: true,
       icon: "success",
-      title: "Import Excel thành công",
+      title: "Export excel thành công",
     });
   };
 
@@ -428,32 +435,28 @@ function dataFileHandler($scope, $http) {
   // PDF
   $scope.exportToPDF = function () {
     var tableData = [];
-    var headers = ["ID", "NAME", "DESCRIPTION"];
+    var headers = ["ID", "NAME","LOGO","EMAIL","PHONE","WEBSITE","COUNTRY", "DESCRIPTION"];
 
     // Thêm dữ liệu của từng hàng (row) trong bảng vào mảng tableData
     angular.forEach($scope.items, function (item) {
-      var rowData = [item.id, item.name, item.description];
+      var rowData = [item.id, item.name,item.logo,item.email,item.phone,item.website,item.country, item.description];
       tableData.push(rowData);
     });
 
     //
     var docDefinition = {
       content: [
-        { text: "Danh sách danh mục", style: "header" },
+        { text: "Danh sách hãng", style: "header" },
         {
           table: {
             headerRows: 1,
-            widths: ["auto", "*", "*"],
+            widths: ["auto", "auto", "auto", "auto", "auto", "auto", "auto", "auto"],
             body: [headers].concat(tableData),
           },
           style: "table",
         },
       ],
-      styles: {
-        header: { fontSize: 20, bold: true, margin: [0, 0, 0, 10] },
-        table: { margin: [0, 5, 0, 15], fontSize: 12 },
-        tableHeader: { fillColor: "#FF0000", bold: true }, // In đậm tiêu đề
-      },
+      
     };
 
     toastMixin.fire({
@@ -462,40 +465,87 @@ function dataFileHandler($scope, $http) {
       title: "Import PDF thành công",
     });
     // Xuất PDF
-    pdfMake.createPdf(docDefinition).download("danh_muc.pdf");
+    pdfMake.createPdf(docDefinition).download("brand.pdf");
   };
   // /PDF
 }
 function validation($scope, item) {
   var chu = /^[a-zA-Z\s]*$/;
   var kyTuDacBietTen = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+  var regexEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?$/;
+  var regexPhoneNumber = /^(09|03|08|05)\d{8}$/;
+  const domainRegex = /^(https:\/\/www\.)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
   var valid = true;
 
   if (!item.name) {
-    $scope.MessageName = "Không để rỗng tên danh mục";
+    $scope.MessageName = "Không để rỗng tên hãng";
     $scope.showName = true;
     valid = false;
   } else if (kyTuDacBietTen.test(item.name)) {
-    $scope.MessageName = "Không được chứa ký tự đặc biệt trong tên danh mục";
+    $scope.MessageName = "Không được chứa ký tự đặc biệt trong tên hãng";
     $scope.showName = true;
     valid = false;
   } else if (!chu.test(item.name)) {
-    $scope.MessageName = "Không để số tên danh mục";
+    $scope.MessageName = "Không để số tên hãng";
     $scope.showName = true;
     valid = false;
   } else {
     $scope.MessageName = "";
     $scope.showName = false;
   }
+//email
+  if (!item.email) {
+    $scope.MessageEmail = "Không để rỗng email";
+    $scope.showEmail = true;
+    valid = false;
+  } else if (!regexEmail.test(item.email)) {
+    $scope.MessageEmail = "Email không đúng địng dạng";
+    $scope.showEmail = true;
+    valid = false;
+  }  else {
+    $scope.MessageEmail = "";
+    $scope.showEmail = false;
+  }
 
-  // if (kyTuDacBietTen.test(item.description)) {
-  //   $scope.MessageDescription = "Không được chứa ký tự đặc biệt trong mô tả";
-  //   $scope.showDescription = true;
-  //   valid = false;
-  // } else {
-  //   $scope.MessageDescription = "";
-  //   $scope.showDescription = false;
-  // }
+  //phone
+  if (!item.phone) {
+    $scope.MessagePhone = "Không để rỗng phone";
+    $scope.showPhone = true;
+    valid = false;
+  }else if (isNaN(item.phone)) {
+    $scope.MessagePhone = "Nhập số cho số điện thoại";
+    $scope.showPhone = true;
+    valid = false;
+  } else if (!regexPhoneNumber.test(item.phone)) {
+    $scope.MessagePhone = "Số điện thoại không đúng địng dạng ";
+    $scope.showPhone = true;
+    valid = false;
+  }  else {
+    $scope.MessagePhone = "";
+    $scope.showPhone = false;
+  }
+  //website
+  if (!item.website) {
+    $scope.MessageWebsite = "Không để rỗng website";
+    $scope.showWebsite = true;
+    valid = false;
+  } else if (!domainRegex.test(item.website)) {
+    $scope.MessageWebsite = "Tên      website không đúng địng dạng VD: website.com ";
+    $scope.showWebsite = true;
+    valid = false;
+  }  else {
+    $scope.MessageWebsite = "";
+    $scope.showWebsite = false;
+  }
+
+  if (kyTuDacBietTen.test(item.description)) {
+    $scope.MessageDescription = "Không được chứa ký tự đặc biệt trong mô tả";
+    $scope.showDescription = true;
+    valid = false;
+  } else {
+    $scope.MessageDescription = "";
+    $scope.showDescription = false;
+  }
 
     
 
@@ -508,6 +558,11 @@ function validationCreate(item){
       (items) =>
         items.name.toLowerCase().replace(/\s+/g, "") ===
         item.name.toLowerCase().replace(/\s+/g, "")
+        && items.website === 
+        "https://www."+item.website 
+        && items.country ===
+          item.country
+
     );
     if (index !== -1) {
       toastMixin.fire({

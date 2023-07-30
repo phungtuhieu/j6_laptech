@@ -41,18 +41,30 @@
                         </div>
                         <div class="mb-4 col-lg-4 form-group">
                             <label for="" class="form-label">Email</label>
-                            <input type="text" ng-model="form.email" class="form-control" id="">
+                            <input type="text" ng-model="form.email" class="form-control" id="" list="email">
                             <span ng-show="showEmail"  class="text-danger">{{MessageEmail}}</span>
+                            <datalist id="email">
+                                <option value="123@gmail.com">
+                                <option value="example@gmail.com">
+                        </datalist>
                         </div>
                         <div class="mb-4 col-lg-4 form-group">
                             <label for="" class="form-label">Số điện thoại</label>
-                            <input type="text" ng-model="form.phone" class="form-control" id="">
+                            <input type="text" ng-model="form.phone" class="form-control" id="" list="phone">
                             <span ng-show="showPhone"  class="text-danger">{{MessagePhone}}</span>
+                            <datalist id="phone">
+                                <option value="0945747051">
+                                <option value="0813515234">
+                        </datalist>
                         </div>
                         <div class="mb-4 col-lg-4 form-group">
                             <label for="" class="form-label">Website</label>
-                            <input type="text" ng-model="form.website" class="form-control" id="">
+                            <input type="text" ng-model="form.website" class="form-control" id="" list="web"  placeholder="https://www." >
                             <span ng-show="showWebsite"  class="text-danger">{{MessageWebsite}}</span>
+                            <datalist id="web">
+                                    <option value="hp.com.vn">
+                                    <option value="dell.com">
+                            </datalist>
                         </div>
                         <div class="mb-4 col-lg-4 form-group">
                             <label for="" class="form-label">Quốc gia</label>

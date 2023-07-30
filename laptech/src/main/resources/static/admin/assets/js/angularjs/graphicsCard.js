@@ -165,40 +165,39 @@ function formCreate($scope, $http) {
   $scope.items = [];
   $scope.create = () => {
     if (validation($scope, $scope.form)) {
-      if(validationCreate($scope.form)){
-      confirmationDialog(
-        "Xác nhận thêm?",
-        "Bạn có chắc chắn muốn thêm dữ liệu?",
-        "question",
-        "Thêm",
-        "Hủy"
-      ).then((result) => {
-        if (result.isConfirmed) {
-          // Thực hiện thêm dữ liệu sau khi xác nhận
-          var item = angular.copy($scope.form);
-          var url = `${host}/graphics-card`;
-          $http({
-            method: "post",
-            url: url,
-            data: item,
-          })
-            .then((resp) => {
-              $scope.items.push(item);
-              console.log("Success", resp);
-              window.location.href = "/admin/graphics-card/list";
-
-              window.sessionStorage.setItem("name", "create");
+      if (validationCreate($scope.form)) {
+        confirmationDialog(
+          "Xác nhận thêm?",
+          "Bạn có chắc chắn muốn thêm dữ liệu?",
+          "question",
+          "Thêm",
+          "Hủy"
+        ).then((result) => {
+          if (result.isConfirmed) {
+            // Thực hiện thêm dữ liệu sau khi xác nhận
+            var item = angular.copy($scope.form);
+            var url = `${host}/graphics-card`;
+            $http({
+              method: "post",
+              url: url,
+              data: item,
             })
-            .catch((error) => {
-              console.log("Error", error);
-            });
-        }
-      });
+              .then((resp) => {
+                $scope.items.push(item);
+                console.log("Success", resp);
+                window.location.href = "/admin/graphics-card/list";
+
+                window.sessionStorage.setItem("name", "create");
+              })
+              .catch((error) => {
+                console.log("Error", error);
+              });
+          }
+        });
+      }
     }
-  }
   };
 }
-
 function formUpdate($scope, $http) {
   //
   $scope.isLoading = true;
@@ -309,8 +308,7 @@ function dataFileHandler($scope, $http) {
         toastMixin.fire({
           animation: true,
           icon: "error",
-          title:
-            "Tên worksheet không đúng. Vui lòng sửa lại tên worksheet.",
+          title: "Tên worksheet không đúng. Vui lòng sửa lại tên worksheet.",
           position: "top",
           width: 600,
         });
@@ -338,27 +336,26 @@ function dataFileHandler($scope, $http) {
               console.log("Error", error);
               let importSuccess = files;
             });
-            
 
           $scope.load_all();
         }
       });
-    
-    if (importSuccess) {
-      $scope.load_all();
-      toastMixin.fire({
-        animation: true,
-        icon: "success",
-        title: "Import Excel thành công",
-      });
-    } else {
-      toastMixin.fire({
-        animation: true,
-        icon: "error",
-        title: "Import Excel thất bại. Vui lòng kiểm tra lại.",
-      });
-    }
-  };
+
+      if (importSuccess) {
+        $scope.load_all();
+        toastMixin.fire({
+          animation: true,
+          icon: "success",
+          title: "Import Excel thành công",
+        });
+      } else {
+        toastMixin.fire({
+          animation: true,
+          icon: "error",
+          title: "Import Excel thất bại. Vui lòng kiểm tra lại.",
+        });
+      }
+    };
 
     reader.readAsArrayBuffer(files[0]);
   };
@@ -476,6 +473,7 @@ function dataFileHandler($scope, $http) {
   };
   // /PDF
 }
+//
 function validation($scope, item) {
   var chu = /^[a-zA-Z\s]*$/;
   var soNguyenDuong = /^[1-9]\d*$/;
@@ -495,7 +493,7 @@ function validation($scope, item) {
     $scope.MessageName = "";
     $scope.showName = false;
   }
-  
+
   // cores
   if (!item.cores) {
     $scope.MessageCores = "Không để rỗng hệ số nhân";
@@ -517,7 +515,7 @@ function validation($scope, item) {
     $scope.MessageCores = "";
     $scope.showCores = false;
   }
-  
+
   // memorySize
   if (!item.memorySize) {
     $scope.MessageMemorySize = "Không để rỗng kích thước bộ nhớ";
@@ -540,7 +538,7 @@ function validation($scope, item) {
     $scope.MessageMemorySize = "";
     $scope.showMemorySize = false;
   }
-  
+
   // baseClock
   if (!item.baseClock) {
     $scope.MessageBaseClock = "Không để rỗng base clock";
@@ -562,7 +560,7 @@ function validation($scope, item) {
     $scope.MessageBaseClock = "";
     $scope.showBaseClock = false;
   }
-  
+
   // boostClock
   if (!item.boostClock) {
     $scope.MessageBoostClock = "Không để rỗng boost clock";
@@ -585,7 +583,7 @@ function validation($scope, item) {
     $scope.MessageBoostClock = "";
     $scope.showBoostClock = false;
   }
-  
+
   // manufacturer
   if (!item.manufacturer) {
     $scope.MessageManufacturer = "Không để rỗng nhà sản xuất";
@@ -604,33 +602,31 @@ function validation($scope, item) {
     $scope.MessageManufacturer = "";
     $scope.showManufacturer = false;
   }
-  
+
   return valid;
 }
+function validationCreate(item) {
+  const items = JSON.parse(window.sessionStorage.getItem("items"));
+  var index = items.findIndex(
+    (items) =>
+      items.name.toLowerCase().replace(/\s+/g, "") ===
+        item.name.toLowerCase().replace(/\s+/g, "") &&
+      +items.cores === +item.cores &&
+      +items.memorySize === +item.memorySize &&
+      +items.baseClock === +item.baseClock &&
+      items.manufacturer === item.manufacturer
+  );
 
+  if (index !== -1) {
+    toastMixin.fire({
+      animation: true,
+      icon: "error",
+      title: "Card đồ họa đã tồn tại trong danh sách",
+      position: "top",
+      width: 600,
+    });
+    return false;
+  }
 
-function validationCreate(item){
-    const items = JSON.parse(window.sessionStorage.getItem("items"));
-    var index = items.findIndex(
-      (items) =>
-        items.name.toLowerCase().replace(/\s+/g, "") ===
-          item.name.toLowerCase().replace(/\s+/g, "") &&
-        +items.cores === +item.cores &&
-        +items.memorySize === +item.memorySize &&
-        +items.baseClock === +item.baseClock &&
-        items.manufacturer === item.manufacturer
-    );
-
-    if (index !== -1) {
-      toastMixin.fire({
-        animation: true,
-        icon: "error",
-        title: "Card đồ họa đã tồn tại trong danh sách",
-        position: "top",
-        width: 600,
-      });
-      return  false;
-    }
-  
-  return true
+  return true;
 }

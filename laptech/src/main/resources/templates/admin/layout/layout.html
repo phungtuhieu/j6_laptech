@@ -55,6 +55,9 @@
     <th:block th:if="${#ctx.springRequestContext.requestUri.contains('brand')}">
         <script type="module" th:src="@{/admin/assets/js/angularjs/brand.js}"></script>
     </th:block>
+    <th:block th:if="${#ctx.springRequestContext.requestUri.contains('favorite')}">
+        <script type="module" th:src="@{/admin/assets/js/angularjs/favoriteProduct.js}"></script>
+    </th:block>
     <th:block th:if="${#ctx.springRequestContext.requestUri.contains('product')}">
         <script th:src="@{/admin/assets/js/angularjs/product.js}"></script>
     </th:block>
