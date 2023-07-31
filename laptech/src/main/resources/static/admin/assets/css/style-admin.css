@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
 :root {
     --border-header: #DEE2E6;
     --mau-border: #DEE2E6;
@@ -20,6 +21,10 @@
     --mau-bg-hover-tr: #f5f5f5;
     --mau-bg-header-table:#FAFBFE;
 }
+body {
+    font-family: 'Quicksand', sans-serif;
+}
+
 /* Header */
 .title-page {
     font-weight: 600;
@@ -266,9 +271,94 @@
     box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
 
 }
+.content-page .page-body {
+    min-height: 500px;
+}
 .page-header , .table-top{
     margin-bottom: 25px;
 }
+/* Hình ảnh form */
+.img-box {
+    position: relative;
+    height: 176.4px;
+    border-radius: 5px;
+    border: #888888 solid 1px;
+}
+
+
+.img-box.selected{
+    border-color:var(--mau-chu-sidebar) ;
+    box-shadow: var(--mau-chu-sidebar) 0px 0px 0px 3px;
+}
+
+.label-choice-img{
+    font-weight: 600;
+    font-size: 14px;
+}
+.img-box img{
+    border-radius: 5px;
+    height: 100%;
+    box-sizing: border-box;
+    width: 100%;
+}
+.img-box .img-remove {
+    position: absolute;
+    top: -15px;
+    right: -10px;
+    font-size: 26px;
+}
+.img-box .img-remove a {
+    color: #ee2b3e;
+    
+}
+.img-box .img-remove i {
+ 
+    background-color: #fff;
+}
+.img-box .img-remove:hover a{
+    color: #dc293b;;
+}
+
+.add-img {
+    border-radius: 5px;
+    height: 176.4px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: #b7b7b7 dashed 2px;
+    color:  #b7b7b7;
+    text-decoration: none;
+}
+.add-img i {
+    position: absolute;
+    font-size: 40px;
+}
+.add-img input[type=file] {
+    width: 100%;
+    opacity: 0;
+    height: 100px;
+    position: relative;
+    z-index: 9;
+    cursor: pointer;
+}
+.add-img:hover {
+    border: #545454 dashed 2px;
+    color: #545454;
+}
+/* /Hình ảnh form */
+.loading-page {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Đảm bảo hiển thị trên cùng */
+  }
 .page-header .btn-added {
     background: #FF9F43;
     padding: 7px 15px;
@@ -448,6 +538,11 @@
     max-height: 400px; 
 }
 
+.table-responsive table thead th {
+    position: sticky;
+    top: 0px;
+}
+
 
 .table .td-action .btn:before {
     position: absolute;
@@ -518,7 +613,7 @@
 .form-group .form-label {
     margin-bottom: 8px;
     color: #212B36;
-    font-weight: 500;
+    font-weight: 600;
     font-size: 14px ;
     display: block;
 }
@@ -603,6 +698,7 @@
 
 
 /* /FORM */
+
 
 
 .reduce-td{
