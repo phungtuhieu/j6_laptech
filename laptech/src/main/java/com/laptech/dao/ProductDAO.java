@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import com.laptech.model.Category;
 import com.laptech.model.Product;
 import com.laptech.model.ReportFavoriteProduct;
+import com.laptech.model.ReportProductSold;
 
 public interface ProductDAO extends JpaRepository<Product,Long>{
 
@@ -35,6 +36,43 @@ public interface ProductDAO extends JpaRepository<Product,Long>{
             + " GROUP BY p.category.name, p"
             + " ORDER BY COUNT(f) DESC")
     List<ReportFavoriteProduct> getFavoriteDate(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
+
+
+    @Query("SELECT new com.laptech.model.ReportProductSold(p.name, CAST(o.orderDate AS DATE), SUM(od.quantity), SUM(od.quantity * price.price)) "
+    + " FROM OrderDetail od "
+    + " JOIN od.product p "
+    + " JOIN od.order o "
+    + " JOIN p.prices price "
+    + " WHERE o.status = 3 "
+    + " GROUP BY p.name, CAST(o.orderDate AS DATE)"
+    + " ORDER BY CAST(o.orderDate AS DATE) DESC")
+List<ReportProductSold> getProductSold();
+
+    @Query("SELECT new com.laptech.model.ReportProductSold(p.name, CAST(o.orderDate AS DATE), SUM(od.quantity), SUM(od.quantity * price.price)) "
+    + " FROM OrderDetail od "
+    + " JOIN od.product p "
+    + " JOIN od.order o "
+    + " JOIN p.prices price "
+    + " WHERE o.status = 3 AND "
+    + " p.name LIKE CONCAT('%', :name, '%') " 
+    + " GROUP BY p.name, CAST(o.orderDate AS DATE)"
+    + " ORDER BY CAST(o.orderDate AS DATE) DESC")
+List<ReportProductSold> getProductSoldName(@Param("name") String name);
+
+    @Query("SELECT new com.laptech.model.ReportProductSold(p.name, CAST(o.orderDate AS DATE), SUM(od.quantity), SUM(od.quantity * price.price)) "
+    + " FROM OrderDetail od "
+    + " JOIN od.product p "
+    + " JOIN od.order o "
+    + " JOIN p.prices price "
+    + " WHERE o.status = 3 AND "
+    + " CAST(o.orderDate AS DATE) BETWEEN :startDate AND :endDate"
+    + " GROUP BY p.name, CAST(o.orderDate AS DATE)"
+    + " ORDER BY CAST(o.orderDate AS DATE) DESC")
+List<ReportProductSold> getProductSoldDate(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
+
+
 
 
 }

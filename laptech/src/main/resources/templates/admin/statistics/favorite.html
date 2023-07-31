@@ -44,7 +44,7 @@
                         <div class="wordset" ng-controller="dataFileHandler">
                             <ul>
                                 <li>
-                                   <a href="" class="text-danger" ng-click="exportToPDF()"><i class="fa-solid fa-file-pdf"></i></a>
+                                   <a href="" class="text-danger" ng-click="exportToPDF()" ><i class="fa-solid fa-file-pdf"></i></a>
                                 </li>
                                 <li>
                                     <a href="" class="text-success" ng-click="export()" ><i class="fa-solid fa-file-excel"></i></a>
@@ -84,20 +84,20 @@
                             <table class="table table-hover">
                               <thead>
                                 <tr class="tb-header">
-                                    <th ng-click="sortBy('id')" scope="col" >Tên sản phẩm</th>
-                                    <th ng-click="sortBy('id')" scope="col">Danh mục</th>
-                                    <th ng-click="sortBy('id')" scope="col">SL thích</th>
-                                    <th ng-click="sortBy('id')" scope="col" >Ngày thích cũ nhất</th>
-                                    <th ng-click="sortBy('id')" scope="col" >Ngày thích mới nhất</th>
+                                    <th ng-click="sortBy('tenLap')" scope="col" >Tên sản phẩm</th>
+                                    <th ng-click="sortBy('danhMuc')" scope="col">Danh mục</th>
+                                    <th ng-click="sortBy('soLuongThich')" scope="col">SL thích</th>
+                                    <th ng-click="sortBy('ngayCu')" scope="col" >Ngày thích cũ nhất</th>
+                                    <th ng-click="sortBy('ngayMoi)" scope="col" >Ngày thích mới nhất</th>
                                 </tr>
                               </thead>
                               <tbody>
                                 <tr class="" ng-repeat="fa in items |  orderBy:sortColumn:reverseSort | limitTo:5:begin">
-                                  <td scope="row">{{fa.tenLap}}</td>
-                                  <td>{{fa.danhMuc}}</td>
-                                  <td>{{fa.soLuongThich}}</td>
-                                  <td>{{ fa.ngayCu | date: 'dd-MM-yyyy' }}</td>
-                                  <td>{{ fa.ngayMoi | date: 'dd-MM-yyyy' }}</td>
+                                  <td scope="row">{{fa.name}}</td>
+                                  <td>{{fa.categoryName}}</td>
+                                  <td>{{fa.numberOfLikes}}</td>
+                                  <td>{{ fa.startDate | date: 'dd-MM-yyyy' }}</td>
+                                  <td>{{ fa.endDate | date: 'dd-MM-yyyy' }}</td>
                                 </tr>
                               </tbody>
                             </table>

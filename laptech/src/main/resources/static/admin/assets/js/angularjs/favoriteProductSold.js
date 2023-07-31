@@ -3,7 +3,14 @@ let host = "http://localhost:8081/api";
 const app = angular.module("app", []);
 app
   .controller("list", list)
-  .controller("dataFileHandler", dataFileHandler);
+  .controller("dataFileHandler", dataFileHandler)
+  .filter('formatCurrency', function () {
+    return function (input) {
+        // Chuyển đổi số tiền thành tiền Việt Nam
+        var formattedPrice = input.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+        return formattedPrice;
+    };
+});
 
 function list($scope, $http, $filter) {
   //
@@ -18,7 +25,8 @@ function list($scope, $http, $filter) {
     $scope.MessageEndDate = "";
   };
   $scope.load_all = () => {
-    var url = `${host}/favoriteProduct`;
+    
+    var url = `${host}/ProductSold`;
     //var url = host+'/students.json';
     $http({
       method: "GET",
@@ -67,9 +75,9 @@ function list($scope, $http, $filter) {
   //
   $scope.search = (name) => {
     if (name != "") {
-      var url = `${host}/favoriteProduct/${name}`;
+      var url = `${host}/ProductSold/${name}`;
     } else {
-      var url = `${host}/favoriteProduct`;
+      var url = `${host}/ProductSold`;
     }
     $http({
       method: "GET",
@@ -86,8 +94,16 @@ function list($scope, $http, $filter) {
   };
 
   $scope.date = () => {
+
+   
     const formattedStartDate = $filter("date")($scope.startDate, "yyyy-MM-dd");
     const formattedEndDate = $filter("date")($scope.endDate, "yyyy-MM-dd");
+      
+
+      // In kết quả
+      console.log(formattedStartDate);
+      console.log(formattedEndDate);
+   
 
     var valid = true;
 
@@ -124,7 +140,7 @@ function list($scope, $http, $filter) {
     }
 
     if (valid) {
-      var url = `${host}/favoriteProduct/${formattedStartDate}/${formattedEndDate}`;
+      var url = `${host}/ProductSold/${formattedStartDate}/${formattedEndDate}`;
       $http({
         method: "GET",
         url: url,
@@ -144,8 +160,6 @@ function list($scope, $http, $filter) {
   $scope.reset();
   $scope.load_all();
 }
-
-
 //
 function dataFileHandler($scope, $http) {
   // Hàm xuất dữ liệu ra tập tin Excel
@@ -153,20 +167,18 @@ function dataFileHandler($scope, $http) {
     var tableData = [];
     var headers = [
       "TÊN SẢN PHẨM",
-      "DANH MỤC",
-      "SỐ LƯỢNG THÍCH",
-      "NGÀY CŨ NHẤT",
-      "NGÀY MỚI NHẤT",
+      "SỐ LƯỢNG SẢN PHẨM",
+      "NGÀY BÁN",
+      "TỔNG TIỀN",
     ];
 
     // Thêm dữ liệu của từng hàng (row) trong bảng vào mảng tableData
     angular.forEach($scope.items, function (item) {
       var rowData = [
         item.name,
-        item.categoryName,
-        item.numberOfLikes,
-        item.startDate,
-        item.endDate,
+        item.saleDate,
+        item.quantity,
+        item.totalPrice,
       ];
       tableData.push(rowData);
     });
@@ -178,14 +190,14 @@ function dataFileHandler($scope, $http) {
     var worksheet = XLSX.utils.aoa_to_sheet([headers].concat(tableData));
 
     // Thêm trang tính vào workbook
-    XLSX.utils.book_append_sheet(workbook, worksheet, "favoriteProduct_data");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "ProductSold_data");
 
     // Xuất file Excel
     var excelBuffer = XLSX.write(workbook, {
       bookType: "xlsx",
       type: "array",
     });
-    saveAsExcel(excelBuffer, "favoriteProduct.xlsx");
+    saveAsExcel(excelBuffer, "ProductSold.xlsx");
     toastMixin.fire({
       animation: true,
       icon: "success",
@@ -206,20 +218,18 @@ function dataFileHandler($scope, $http) {
     var tableData = [];
     var headers = [
       "TÊN SẢN PHẨM",
-      "DANH MỤC",
-      "SỐ LƯỢNG THÍCH",
-      "NGÀY CŨ NHẤT",
-      "NGÀY MỚI NHẤT",
+      "SỐ LƯỢNG SẢN PHẨM",
+      "NGÀY BÁN",
+      "TỔNG TIỀN",
     ];
 
     // Thêm dữ liệu của từng hàng (row) trong bảng vào mảng tableData
     angular.forEach($scope.items, function (item) {
       var rowData = [
         item.name,
-        item.categoryName,
-        item.numberOfLikes,
-        item.startDate,
-        item.endDate,
+        item.saleDate,
+        item.quantity,
+        item.totalPrice,
       ];
       tableData.push(rowData);
     });
@@ -252,7 +262,7 @@ function dataFileHandler($scope, $http) {
       title: "Export PDF thành công",
     });
     // Xuất PDF
-    pdfMake.createPdf(docDefinition).download("favoriteProduct.pdf");
+    pdfMake.createPdf(docDefinition).download("ProductSold.pdf");
   };
   // /PDF
 }

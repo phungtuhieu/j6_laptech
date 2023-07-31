@@ -470,7 +470,7 @@ function dataFileHandler($scope, $http) {
     toastMixin.fire({
       animation: true,
       icon: "success",
-      title: "Import PDF thành công",
+      title: "Export PDF thành công",
     });
     // Xuất PDF
     pdfMake.createPdf(docDefinition).download("graphicsCard.pdf");

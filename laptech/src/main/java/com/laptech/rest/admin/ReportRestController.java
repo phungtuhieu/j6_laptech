@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.laptech.dao.CategoryDAO;
 import com.laptech.dao.ProductDAO;
 import com.laptech.model.ReportFavoriteProduct;
+import com.laptech.model.ReportProductSold;
 
 
 
@@ -36,18 +37,43 @@ public class ReportRestController {
     }
 
     @GetMapping("/api/favoriteProduct/{name}")
-    public ResponseEntity<List<ReportFavoriteProduct>> Name(@PathVariable("name") String name){
+    public ResponseEntity<List<ReportFavoriteProduct>> getNameFavorite(@PathVariable("name") String name){
         return ResponseEntity.ok(dao.getFavoriteBookName(name));
     }
 
     @GetMapping("/api/favoriteProduct/{startdate}/{enddate}")
-    public ResponseEntity<List<ReportFavoriteProduct>> date(
+    public ResponseEntity<List<ReportFavoriteProduct>> getDateFavorite(
         @PathVariable("startdate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
         @PathVariable("enddate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate
     ) {
         List<ReportFavoriteProduct> favorites = dao.getFavoriteDate(startDate, endDate);
         return ResponseEntity.ok(favorites);
     }
+
+
+    @GetMapping("/api/ProductSold")
+    public ResponseEntity<List<ReportProductSold>> getAllProductSold(){
+        return ResponseEntity.ok(dao.getProductSold());
+    }
+
+
+    @GetMapping("/api/ProductSold/{name}")
+    public ResponseEntity<List<ReportProductSold>> getNameSold(@PathVariable("name") String name){
+        return ResponseEntity.ok(dao.getProductSoldName(name));
+    }
+
+
+    @GetMapping("/api/ProductSold/{startdate}/{enddate}")
+    public ResponseEntity<List<ReportProductSold>> getDateSold(
+        @PathVariable("startdate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+        @PathVariable("enddate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate
+    ) {
+        List<ReportProductSold> favorites = dao.getProductSoldDate(startDate, endDate);
+        return ResponseEntity.ok(favorites);
+    }
+   
+
+
 
     
 }

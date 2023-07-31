@@ -11,13 +11,13 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class ReportFavoriteProduct implements Serializable {
+@NoArgsConstructor
+public class ReportProductSold implements Serializable {
     @Id
     String name;
-    String categoryName;
-    Long numberOfLikes;
-    Date startDate;
-    Date endDate;
+    Date saleDate;
+    Long  quantity;
+    Double totalPrice;
+    
 }
