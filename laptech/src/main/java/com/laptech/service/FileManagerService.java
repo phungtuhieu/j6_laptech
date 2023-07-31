@@ -42,6 +42,7 @@ public class FileManagerService {
             String name = System.currentTimeMillis() + file.getOriginalFilename();
             String filename = Integer.toHexString(name.hashCode()) + name.substring(name.lastIndexOf("."));
             Path path = this.getPath(folder, filename);
+            System.out.println("--- Save"+path.toFile().getAbsolutePath());
             try {
                 file.transferTo(path);
                 filenames.add(filename);
@@ -56,7 +57,9 @@ public class FileManagerService {
     public List<String> list(String folder) {
         List<String> filenames = new ArrayList<>();
         File dir =  Paths.get(app.getRealPath("/file/"),folder).toFile();
+        System.out.println("--- List"+dir.getAbsolutePath());
         if(dir.exists()) {
+        	System.out.println("--- if"+dir.getAbsolutePath());
             File[] files = dir.listFiles();
             for (File file : files) {
                 filenames.add(file.getName());

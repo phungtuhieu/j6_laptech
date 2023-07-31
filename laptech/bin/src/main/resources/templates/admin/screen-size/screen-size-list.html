@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+    th:replace="~{/admin/layout/layout.html :: admin(~{::title},~{:: .content-page}) }">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product</title>
+</head>
+
+<body>
+    <div class="content-page">
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <ul class="page-info">
+                <li class=" page-title">Danh sách màn hình</li>
+                <li class=" page-description">Thông tin màn hình</li>
+            </ul>
+            <a th:href="@{/admin/screen-size/create}" class="btn btn-added">
+                <i class="fa-solid fa-plus"></i>
+                Thêm màn hình mới
+            </a>
+        </div>
+            <div class="card">
+                <div class="card-body page-body" > 
+                    <div class="table-top d-flex justify-content-between align-items-center">
+                        <div class="search-input">
+                            <div class="btn-searchset">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </div>
+                            <form class="d-flex">
+                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                            </form>
+                        </div>
+                        <div class="wordset">
+                            <ul>
+                                <li>
+                                   <a href="" class="text-danger"><i class="fa-solid fa-file-pdf"></i></a>
+                                </li>
+                                <li>
+                                    <a href="" class="text-success"><i class="fa-solid fa-file-excel"></i></a>
+                                </li>
+                                <li>
+                                    <a href="" class="text-secondary"><i class="fa-solid fa-print"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="table-center">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                              <thead>
+                                <tr class="tb-header">
+                                  <th scope="col">Kích thước</th>
+                                  <th scope="col">Độ phân giải</th>
+                                  <th scope="col">Loại màn hình</th>
+                                  <th scope="col">Cảm ứng</th>
+                                  <th scope="col">Thao tác</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr class="">
+                                  <td scope="row">1</td>
+                                  <td>3</td>
+                                  <td>4</td>
+                                  <td class="td-action ">
+                                     <div class="wordset">
+                                        <ul>
+                                            <li>
+                                                <a th:href="@{/admin/screen-size/update}" class="text-secondary-emphasis"><i class="fa-solid fa-pen-to-square"></i></a>
+                                            </li>
+                                            <li>
+                                                <a href="" class="text-danger"><i class="fa-solid fa-trash"></i></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                    </div>
+                    <div class="table-bottom d-flex justify-content-end align-items-center pt-4">
+                        <span class="pagination-info me-2">1 - 10 of <span >11</span> items</span>
+                        <nav aria-label="Page navigation " >
+                            <ul class="pagination mb-0">
+                              <li class="page-item"><a class="page-link" href="#"><i class="fa-solid fa-backward-step"></i></a></li>
+                              <li class="page-item"><a class="page-link" href="#"><i class="fa-solid fa-backward"></i></a></li>
+                              <li class="page-item"><a class="page-link" href="#"><i class="fa-solid fa-forward"></i></a></li>
+                              <li class="page-item"><a class="page-link" href="#"><i class="fa-solid fa-forward-step"></i></a></li>
+                            </ul>
+                          </nav>
+                    </div>
+                </div>
+            </div>
+    </div>
+</body>
+
+</html>
