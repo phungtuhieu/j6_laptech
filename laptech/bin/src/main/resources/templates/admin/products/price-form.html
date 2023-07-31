@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+    th:replace="~{/admin/layout/layout.html :: admin(~{::title},~{:: .content-page}) }">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+</head>
+
+<body>
+    <div class="content-page">
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <ul class="page-info">
+                <li class=" page-title">[[${#ctx.springRequestContext.requestUri.contains('create')} ? 'Tạo giá sản phẩm' :'Cập nhật giá sản phẩm']]</li>
+                <li class=" page-description">[[${#ctx.springRequestContext.requestUri.contains('create')} ? 'Thêm giá mới cho sản phẩm' :'Thay đổi thông tin giá sản phẩm']]</li>
+            </ul>
+            <!-- <a href="#" class="btn btn-added">
+                <i class="fa-solid fa-plus"></i>
+                Thêm giá sản phẩm
+            </a> -->
+        </div>
+        <div class="card">
+            <div class="card-body page-body">
+                <form action="">
+                    <div class="row">
+                        <div class="mb-4 row justify-content-center">
+                            <div class="mb-4 col-lg-4 form-group">
+                                <label for="" class="form-label" >Sản phẩm</label>
+                                <input class="form-control" list="products" id="exampleDataList" placeholder="Tìm sản phẩm...">
+                                <datalist id="products">
+                                    <option value="SP001 - Lap top Acer Nitro 1">
+                                    <option value="SP002 - Lap top Acer Nitro 1">
+                                    <option value="SP003 - Lap top Acer Nitro 1">
+                                    <option value="SP004 - Lap top Acer Nitro 1">
+                                </datalist>
+                            </div>
+                            <div class="mb-4 col-lg-4 form-group">
+                                <label for="" class="form-label">Giá</label>
+                                <input type="text" class="form-control" id="">
+                            </div>
+                        </div>
+                        <div class="mb-4 row justify-content-center">
+                            <div class="mb-4 col-lg-4 form-group">
+                                <label for="" class="form-label">Ngày bắt đầu</label>
+                                <input type="date" class="form-control"  value="" >
+                            </div>
+                            <div class="mb-4 col-lg-4 form-group">
+                                <label for="" class="form-label">Ngày kết thúc</label>
+                                <input type="date" class="form-control"  value="" >
+                            </div>
+                        </div>
+                        <div class="row justify-content-start">
+                            <div class="mb-4 col-lg-5 offset-md-2 ">
+                                    <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('create')}" class="btn btn-submit me-2">Lưu</a>
+                                    <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('update')}" class="btn btn-submit me-2">Cập nhật</a>
+                                    <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('update')}" class="btn btn-remove me-2">Xoá</a>
+                                    <a th:href="@{/admin/price/list}" class="btn btn-cancel" >Huỷ bỏ</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
