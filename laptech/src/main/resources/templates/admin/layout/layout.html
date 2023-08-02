@@ -47,6 +47,9 @@
     <th:block th:if="${#ctx.springRequestContext.requestUri.contains('user')}">
         <script th:src="@{/admin/assets/js/angularjs/user-ctrl.js}"></script>
     </th:block>
+    <th:block th:if="${#ctx.springRequestContext.requestUri.contains('cpu')}">
+        <script th:src="@{/admin/assets/js/angularjs/cpu-ctrl.js}"></script>
+    </th:block>
 
 
     

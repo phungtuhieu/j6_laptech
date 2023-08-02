@@ -25,28 +25,28 @@ public class categoryRestController {
     @Autowired
     CategoryDAO dao;
 
-     @GetMapping("/api/category")
-    public ResponseEntity<List<Category>> getAll(Model model){
+    @GetMapping("/api/category")
+    public ResponseEntity<List<Category>> getAll(Model model) {
         return ResponseEntity.ok(dao.findAll());
     }
 
-     @GetMapping("/api/category/{id}")
-    public ResponseEntity<Category> getOne(@PathVariable("id") Long id){
-        if(!dao.existsById(id)){
+    @GetMapping("/api/category/{id}")
+    public ResponseEntity<Category> getOne(@PathVariable("id") Long id) {
+        if (!dao.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(dao.findById(id).get());
     }
 
     @PostMapping("/api/category")
-    public ResponseEntity<Category> post(@RequestBody Category category){
-       dao.save(category);
+    public ResponseEntity<Category> post(@RequestBody Category category) {
+        dao.save(category);
         return ResponseEntity.ok(category);
     }
 
     @PutMapping("/api/category/{id}")
-    public ResponseEntity<Category> update(@PathVariable("id") Long id, @RequestBody Category category){
-        if(!dao.existsById(id)){
+    public ResponseEntity<Category> update(@PathVariable("id") Long id, @RequestBody Category category) {
+        if (!dao.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
         dao.save(category);
@@ -54,22 +54,22 @@ public class categoryRestController {
     }
 
     @DeleteMapping("/api/category/{id}")
-    public ResponseEntity<Boolean> delete(@PathVariable("id") Long id){
-          Category category = dao.findById(id).get();
-          if(category == null){
+    public ResponseEntity<Boolean> delete(@PathVariable("id") Long id) {
+        Category category = dao.findById(id).get();
+        if (category == null) {
             return ResponseEntity.notFound().build();
-          }
-          if(!category.getProducts().isEmpty()){ 
+        }
+        if (!category.getProducts().isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
-          }
-           dao.deleteById(id);
-           return ResponseEntity.ok(true);
-       
+        }
+        dao.deleteById(id);
+        return ResponseEntity.ok(true);
+
     }
 
     @GetMapping("/api/category/search/{name}")
-    public ResponseEntity<List<Category>> search(@PathVariable("name") String name){
+    public ResponseEntity<List<Category>> search(@PathVariable("name") String name) {
         return ResponseEntity.ok(dao.findByNameLike(name));
     }
-    
+
 }
