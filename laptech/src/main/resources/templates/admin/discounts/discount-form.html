@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+    th:replace="~{/admin/layout/layout.html :: admin(~{::title},~{:: .content-page}) }">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product</title>
+</head>
+
+<body>
+    <div class="content-page">
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <ul class="page-info">
+                <li class=" page-title">[[${#ctx.springRequestContext.requestUri.contains('create')} ? 'Tạo khuyến mãi' :'Cập nhật khuyến mãi']]</li>
+                <li class=" page-description">[[${#ctx.springRequestContext.requestUri.contains('create')} ? 'Thêm khuyến mãi mới' :'Thay đổi thông tin khuyến mãi']]</li>
+            </ul>
+            <!-- <a href="#" class="btn btn-added">
+                <i class="fa-solid fa-plus"></i>
+                Thêm sản phẩm
+            </a> -->
+        </div>
+        <div class="card">
+            <div class="card-body page-body">
+
+                <form action="">
+                    <div class="row">
+                        <div class="mb-4 col-lg-4  form-group">
+                            <label for="product-name" class="form-label">Mã khuyến mãi</label>
+                            <input type="text" class="form-control" id="product-name">
+                            <span ng-show="showId"  class="text-danger">{{MessageId}}</span>
+                        </div>
+                        <div class="mb-4 col-lg-4  form-group">
+                            <label for="" class="form-label">Tên khuyến mãi</label>
+                            <input type="text" class="form-control" id="">
+                            <span ng-show="showTitle"  class="text-danger">{{MessageTitle}}</span>
+                        </div>
+                        <div class="mb-4 col-lg-4  form-group">
+                            <label for="" class="form-label">% khuyến mãi</label>
+                            <input type="text" class="form-control" id="">
+                            <span ng-show="showPercentage"  class="text-danger">{{MessagePercentage}}</span>
+                        </div>
+                        <div class=" col-lg-4 form-group">
+                            <label for="" class="form-label">Từ ngày</label>
+                            <input type="date" ng-model="startDate" class="form-control" >
+                            <span ng-show="showStartDate"  class="text-danger">{{MessageStartDate}}</span>
+                        </div>
+                        <div class=" col-lg-4 form-group">
+                            <label for="" class="form-label">đến ngày</label>
+                            <input type="date" ng-model="startDate" class="form-control" >
+                            <span ng-show="showStartDate"  class="text-danger">{{MessageStartDate}}</span>
+                        </div>
+                        <div class="mb-4 col-lg-4  form-group">
+                            <label for="" class="form-label">Hoạt động</label>
+                            <select class="form-select" aria-label="Default select example">
+                                <option selected>Chọn nhà sản xuất</option>
+                                <option value="1">One</option>
+                            </select>
+                            <span ng-show="showActive"  class="text-danger">{{MessageActive}}</span>
+                        </div>
+                        <div class="mb-4 col-lg-12 form-group">
+                            <label for="prod-desciption" class="form-label">Mô tả</label>
+                            <textarea ng-model="form.description" class="form-control" id="prod-desciption" rows="3"></textarea>
+                            <span ng-show="showDescription"  class="text-danger">{{MessageDescription}}</span>
+                        </div>
+                    </div>
+                        <div class="mb-4 col-lg-12 ">
+                                <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('create')}" class="btn btn-submit me-2">Lưu</a>
+                                <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('update')}" class="btn btn-submit me-2">Cập nhật</a>
+                                <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('update')}" class="btn btn-remove me-2">Xoá</a>
+                                <a th:href="@{/admin/discount/list}" class="btn btn-cancel" >Huỷ bỏ</a>
+                        </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
