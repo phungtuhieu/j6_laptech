@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.laptech.dao.CPUDAO;
 import com.laptech.model.CPU;
-import com.laptech.model.User;
 
 @CrossOrigin("*")
 @RestController

@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.laptech.model.CPU;
-import com.laptech.model.User;
 
 public interface CPUDAO extends JpaRepository<CPU, Long> {
 
