@@ -286,12 +286,10 @@ body {
 }
 
 
-.img-box.selected{
-    border-color:var(--mau-chu-sidebar) ;
-    box-shadow: var(--mau-chu-sidebar) 0px 0px 0px 3px;
-}
 
 .label-choice-img{
+	height: 100%;
+	width: 100%;
     font-weight: 600;
     font-size: 14px;
 }

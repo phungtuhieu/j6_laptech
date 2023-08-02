@@ -1,5 +1,7 @@
 package com.laptech.rest.admin;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,29 +74,37 @@ public class ProductRestController {
         return ResponseEntity.ok().build();
     }
 
-    // @GetMapping("/files/{folder}/{file}")
-    // public byte[] download(@PathVariable("folder") String folder, @PathVariable("file") String file){
-    //     return fileService.read(folder, file);
-    // }
-    @PostMapping("/files/{folder}")
-    public List<String> upload(@PathVariable("folder") String folder,@RequestPart("files") MultipartFile[] files) {
-        return fileService.save(folder, files);
-    }
-    @PostMapping("/files/{folder}/save")
-    public ResponseEntity<List<ProductImages>> saveImg(@PathVariable("folder") String folder,@RequestBody  List<ProductImages> prodImages) {
+  
+    @PostMapping("/img/save")
+    public ResponseEntity<List<ProductImages>> saveImg(@RequestBody  List<ProductImages> prodImages) {
         for (ProductImages pImg : prodImages) {
             pImgDao.save(pImg);
         }
         return ResponseEntity.ok(prodImages)  ;
     }
-
-    @GetMapping("/files/{folder}")
-    public List<String> list(@PathVariable("folder") String folder){
-        return fileService.list(folder);
-    }
-    @DeleteMapping("/files/{folder}/{file}")
-    public void delete(@PathVariable("folder") String folder,@PathVariable("file") String file){
-         fileService.delete(folder, file);
+    @GetMapping("/img/load-form/{idProd}")
+    public ResponseEntity<List<ProductImages>> loadImgToForm(@PathVariable("idProd") Long idProd) {
+    	
+    	List<ProductImages> listProdImg = new ArrayList<>();
+        if(!dao.existsById(idProd)){
+            return ResponseEntity.notFound().build();
+        }else {
+        	Product product = dao.findById(idProd).get();
+        	listProdImg = product.getProductImages();
+       }
+        return ResponseEntity.ok(listProdImg)  ;
     }
     
+    @DeleteMapping("/img/delete/{id}")
+    public ResponseEntity<Void> updateImg(@PathVariable("id") Long idProd) {
+     if(!pImgDao.existsById(idProd)){
+    	            return ResponseEntity.notFound().build();
+    	        }else {
+    	        	pImgDao.deleteById(idProd);
+    	       }
+	
+      
+        return ResponseEntity.ok().build()  ;
+    }
 }
+

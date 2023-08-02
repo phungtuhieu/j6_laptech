@@ -11,6 +11,7 @@ function list($scope, $http) {
   const url = `${host}/product`;
   $scope.isLoading = true;
   $scope.items = [];
+ 
   $scope.load_all = () => {
     $http.get(url).then(
       (resp) => {
@@ -47,9 +48,10 @@ function list($scope, $http) {
 function form ($scope, $http,$location,$filter) {
   $scope.isLoading = false;
   $scope.form = {};
-  $scope.checkMainImg = 0;
+  $scope.isEditImg = false;
   $scope.isEdit = $location.absUrl().includes('update');
-  
+   var listImgIdDeleted = [];
+   var listProdImg = [];
   $scope.optionsStatus = [
     {
       id: 1,
@@ -115,7 +117,9 @@ function form ($scope, $http,$location,$filter) {
       $scope.form = resp.data;
       $scope.form.createDate = new Date($scope.form.createDate);
       console.log("Success", resp);
+      loadProdImgUpdate(angular.copy($scope.form));
       $scope.isLoading = false;
+      
     }).catch(err => {
       console.log("Err", err);
     })
@@ -126,8 +130,9 @@ function form ($scope, $http,$location,$filter) {
     $http.post(url,item).then(resp => {
       console.log("Success-save", resp);
       $scope.form = resp.data;
-      saveProdImg($scope.filenames, $scope.form);
+      createProdImg($scope.filenames, $scope.form);
       $scope.form = {};
+      $scope.filenames.length = 0;
     }).catch(err => {
       console.log("Err", err);
     })
@@ -138,7 +143,11 @@ function form ($scope, $http,$location,$filter) {
    
     $http.put(url,item).then(resp => {
       $scope.form = resp.data;
-      console.log("Success-err", resp);
+       $scope.form.createDate = new Date($scope.form.createDate);
+      if(listImgIdDeleted.length > 0) {
+		   deleteProdImg();
+	  }
+      console.log("Success-", resp);
     }).catch(err => {
       console.log("Err", err);
     })
@@ -161,7 +170,7 @@ function form ($scope, $http,$location,$filter) {
     return `${urlImg}/${filename}`;
   }
   $scope.listImg = () => {
-    var url = getUrl(`${"/product"}${urlImg}`);
+    var url = getUrl(`${urlImg}`);
       $http.get(url).then(resp => {
           $scope.filenames = resp.data;
       }).catch(err => {
@@ -169,7 +178,6 @@ function form ($scope, $http,$location,$filter) {
       })
   }
   $scope.upload = (files) => {
-  
     var maxFiles = 5;
     if (files.length > maxFiles) {
         alert("Chỉ được phép chọn tối đa 5 ảnh.");
@@ -184,38 +192,55 @@ function form ($scope, $http,$location,$filter) {
     for(var i = 0; i < files.length;i++){
       form.append("files",files[i]);
     }
-    var url = getUrl(`${"/product"}${urlImg}`);
+    var url = getUrl(`${urlImg}`);
     $http.post(url,form, {
       transformRequest: angular.identity,
       headers: {'Content-Type' : undefined}
     }).then(resp=> {
       $scope.filenames.push(...resp.data);
+      var listName = [];
+      listName.push(...resp.data);
+     	if($scope.isEdit) {
+			  createProdImg(listName,$scope.form);
+		 }
+		 
     }).catch(err => {
       console.log("Errors",err);
     })
   }
   $scope.removeImg = (filename) => {
-    var url = getUrl(`${"/product"}${urlImg}`);
-      $http.delete(`${url}/${filename}`).then(resp => {
+    var url = getUrl(`${urlImg}`);
+		$http.delete(`${url}/${filename}`).then(resp => {
         let i = $scope.filenames.findIndex(name => name == filename);
         $scope.filenames.splice(i,1);
-        $scope.checkMainImg = 0;
+        if($scope.isEdit) {
+			deleteProdImg(i);
+		}
       }).catch(err => {
           console.log("Errors",err);
       })
   }
-  var saveProdImg = (filenames,product) => {
-    var url = getUrl(`${"/product"}${urlImg}/save`);
+   var deleteProdImg = (index) => {
+	  var prodImg = listProdImg[index];
+	  var url = getUrl(`/product/img/delete/${prodImg.id}`);
+	  $http.delete(url).then( resp => {
+		  console.log("Success-del-img",resp);	
+	  }).catch(err => {
+		  console.log("Err-del-img",err);		  
+	  });
+  }
+  var createProdImg = (filenames,product) => {
+    var url = getUrl(`/product/img/save`);
     var productImages = {};
     var list = [];
     for(var i = 0; i < filenames.length;i++){
       productImages  = {
         name: filenames[i],
-        main: $scope.checkMainImg == i,
+        main: i == 0 ? true: false,
         product:product
      }
      list.push(productImages);
-     console.log("as",productImages);
+     console.log("as",productImages.main);
     }
     $http.post(url,list).then(resp => {
       console.log("Success-save-img",resp);
@@ -223,11 +248,19 @@ function form ($scope, $http,$location,$filter) {
       console.log("Err-save-img",err);
     })
   }
-  
-  $scope.selectMain = (index) => {
-    $scope.checkMainImg = index;
-    
+  var loadProdImgUpdate = (product) => {
+	  var url = getUrl(`/product/img/load-form/${product.id}`);
+	  
+	  $http.get(url).then(resp => {
+			listProdImg = resp.data;
+			listProdImg.map(prodImg => $scope.filenames.push(prodImg.name));
+	  }).catch(err => {
+		 	console.log("Err-load-img",err);		  	
+	  })
   }
+ 
+  
+
   // /HÌNH ẢNH ------------------------
 $scope.listImg();
 $scope.load_form();

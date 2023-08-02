@@ -105,7 +105,7 @@
                         </div>
                         <div class="mb-4 col-lg-3 form-group">
                             <label for="" class="form-label">Ngày tạo</label>
-                            <input type="date" ng-model="form.createDate"  class="form-control" id="">
+                            <input type="date" ng-model="form.createDate" readonly  class="form-control" id="">
                         </div>
                         <div class="mb-4 col-lg-12 form-group">
                             <label for="prod-desciption" class="form-label">Mô tả</label>
@@ -113,23 +113,22 @@
                                 rows="3"></textarea>
                         </div>
                         <div class="mb-4 col-lg-12 form-group">
-                            <label for="prod-desciption" class="form-label">Hình ảnh</label>
+                            <label for="prod-desciption" class="form-label">Hình ảnh </label>
+                            <!--<div class="form-check form-switch my-2 " ng-show="isEdit">
+							  <input class="form-check-input" type="checkbox" ng-model="isEditImg" id="edit-img">
+							  <label class="form-check-label" for="edit-img">Chỉnh sửa ảnh</label>
+							</div>-->
                             <div class="row" >
                                 <div class="mb-4 col-lg-2 " ng-cloak ng-repeat="filename in filenames">
-                                    <label  class="form-check-label label-choice-img text-center" for="{{filename}}{{$index }}">
-                                    <div class="img-box " ng-class="{'selected': checkMainImg == $index}" >
-                                        <div class="img-remove">
+                                    <div class="img-box " >
+                                        <div class="img-remove" >
                                            <a href="" ng-click="removeImg(filename)"><i class="fa-solid fa-circle-xmark"></i></a> 
                                         </div>
                                             <img ng-src="{{urlImg(filename)}}" alt="">
-                                        <div class="form-check form-check-inline mt-2 ">
-                                            <input class="form-check-input" type="radio" name="prodImgs" id="{{filename}}{{$index }}" ng-click="selectMain($index)" ng-checked="checkMainImg == $index" value="{{$index }}">
-                                            Ảnh đại diện
-                                          </div>
                                     </div>
-                                    </label>
+                                    
                                 </div>  
-                                <div class="mb-4 col-lg-2 " ng-hide="filenames.length > 4">
+                                <div class="mb-4 col-lg-2 " ng-hide="filenames.length > 4 ">
                                     <label class="add-img" >
                                         <input type="file" accept="image/*"  multiple
                                         onchange="angular.element(this).scope().upload(this.files)">
