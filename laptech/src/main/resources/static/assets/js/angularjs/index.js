@@ -75,7 +75,7 @@ app
         $scope.setCurrentPage = function (page) {
             $scope.currentPage = page;
             $scope.updatePagination();
-            $scope.begin = (page - 1) * 8; // Calculate the new begin index for displaying items
+            $scope.begin = (page - 1) * 10; // Calculate the new begin index for displaying items
         };
 
         $scope.load_all = () => {
@@ -86,7 +86,7 @@ app
             })
             .then((resp) => {
                 $scope.items = resp.data;
-                $scope.pageCount = Math.ceil($scope.items.length / 8);
+                $scope.pageCount = Math.ceil($scope.items.length / 10);
                 $scope.updatePagination(); // Update pagination when the data is loaded
                 console.log("Success1", resp);
             })
