@@ -162,17 +162,8 @@ function list($scope, $http) {
 }
 function formCreate($scope, $http) {
 
-
-    $("#startDatePicker").datetimepicker({
-        format: "DD/MM/YYYY HH:mm:ss", // Định dạng ngày giờ có giờ, phút và giây
-        autoclose: true,
-      });
+  
     
-      // Sử dụng ng-focus để kích hoạt datetime picker cho đến ngày
-      $("#endDatePicker").datetimepicker({
-        format: "DD/MM/YYYY HH:mm:ss", // Định dạng ngày giờ có giờ, phút và giây
-        autoclose: true,
-      });
     $scope.optionActive = [
         {
           id: true,
@@ -185,14 +176,27 @@ function formCreate($scope, $http) {
       ];
 
   //
-  $scope.form = { active: true,startDate:"20/08/2023" };
+  $scope.form = { active: true };
   $scope.items = [];
 
   $scope.uploadName = (files) => {
     return ($scope.form.logo = files[0].name);
   };
 
+
+  $scope.ten =(ten) =>{
+    alert(ten);
+  }
+
+
+
   $scope.create = () => {
+
+    console.log($scope.abc)
+    console.log($scope.startTime)
+
+    console.log($scope.cba)
+    console.log($scope.endTime)
 
   
     
@@ -229,7 +233,7 @@ function formCreate($scope, $http) {
    // }
   };
 }
-function formUpdate($scope, $http) {
+function formUpdate($scope, $http, $filter) {
 
     $scope.optionActive = [
         {
@@ -253,7 +257,12 @@ function formUpdate($scope, $http) {
       url: url,
     })
       .then((resp) => {
+      
+       
         $scope.form = resp.data;
+        $scope.form.startDate =$filter("date")($scope.form.startDate, "dd/MM/yyyy")
+        $scope.form.endDate =$filter("date")($scope.form.endDate, "dd/MM/yyyy")
+        
         console.log("Success_edit", resp);
         $scope.isLoading = false;
       })
