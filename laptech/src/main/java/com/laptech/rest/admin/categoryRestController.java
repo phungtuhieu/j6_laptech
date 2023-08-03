@@ -25,7 +25,7 @@ public class categoryRestController {
     @Autowired
     CategoryDAO dao;
 
-     @GetMapping("/api/category")
+    @GetMapping("/api/category")
     public ResponseEntity<List<Category>> getAll(Model model){
         return ResponseEntity.ok(dao.findAll());
     }
@@ -59,9 +59,9 @@ public class categoryRestController {
           if(category == null){
             return ResponseEntity.notFound().build();
           }
-          if(!category.getProducts().isEmpty()){ 
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
-          }
+        //   if(!category.getProducts().isEmpty()){ 
+        //     return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+        //   }
            dao.deleteById(id);
            return ResponseEntity.ok(true);
        

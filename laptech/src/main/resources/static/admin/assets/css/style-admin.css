@@ -604,7 +604,8 @@ body {
 .form-group textarea:focus,
 .form-group .form-select:focus
 ,.form-group input[list]:focus
-,.form-group input[type=date]:focus {
+,.form-group input[type=date]:focus
+,.form-group input[type=time]:focus {
     border-color: #FF9F43;
     background: #fff;
     box-shadow: none;

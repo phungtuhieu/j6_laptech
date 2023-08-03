@@ -28,11 +28,14 @@ public class Discount {
     String id;
     String title;
     Integer percentage;
+
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "start_date")
     Date startDate = new Date();
-    @Temporal(TemporalType.DATE)
+
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "end_date")
-    Date enDate = new Date();
+    Date endDate = new Date();
 
     Boolean active;
     String description;

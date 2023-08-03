@@ -31,7 +31,7 @@
         <link rel="stylesheet" th:href="@{/assets/css/cart.css}">
     </th:block>
 </head>
-<body>
+<body ng-app="app">
 
 
     
@@ -42,9 +42,13 @@
 
     <footer th:insert="~{/layout/_footer.html:: footer}"></footer>
 
+    
+    <th:block th:if="${#ctx.springRequestContext.requestUri.contains('index')}">
+        <script th:src="@{/assets/js/angularjs/index.js}"></script>
+    </th:block>
 
     <th:block th:include="layout/library/script-links.html"></th:block>
-    
+
 
 </body>
 </html>

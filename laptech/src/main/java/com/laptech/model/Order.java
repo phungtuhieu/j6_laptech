@@ -33,6 +33,24 @@ public class Order {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "order_date")
     Date orderDate = new Date();
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "completion_date")
+    Date completionDate = new Date();
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "delivery_date")
+    Date deliveryDate = new Date();
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "cancellation_date")
+    Date cancellationDate = new Date();
+
+    String cancellationReason;
+
+    Boolean paymentMethod;
+
+    Integer  status;
     
     @ManyToOne
     @JoinColumn(name = "user_id")
