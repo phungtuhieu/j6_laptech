@@ -4,9 +4,17 @@ const urlImg = "/files/images";
 const app = angular.module("app", []);
 app.controller("list", list)
     .controller("form", form)
-
+const Toast = Swal.mixin({
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  
+})
+var isCreateSuccess = false;
     // Controller List
-function list($scope, $http) {
+function list($scope, $http,$timeout) {
 
   const url = `${host}/product`;
   $scope.isLoading = true;
@@ -17,6 +25,24 @@ function list($scope, $http) {
       (resp) => {
         $scope.items = resp.data;
         console.log("Success", resp);
+        console.log("isCreateSuccess",isCreateSuccess);
+        isCreateSuccess = window.localStorage.getItem("isCreateSuccess");
+        window.localStorage.removeItem("isCreateSuccess")
+        if(isCreateSuccess) {
+		
+			Toast.fire({
+			  icon: 'success',
+			  title: 'Tạo mới thành công'
+			})
+			$scope.isNewProductAdded = true;
+
+	      $timeout(function() {
+	        $scope.isNewProductAdded = false;
+	        
+	      }, 5000);
+			
+		}
+		
         $scope.isLoading = false;
       },
       (err) => {
@@ -40,12 +66,14 @@ function list($scope, $http) {
       console.log("Err", err);
     })
   }
+
   $scope.load_all();
 };
 // /Controller List
 
 // Controller form
 function form ($scope, $http,$location,$filter) {
+
   $scope.isLoading = false;
   $scope.form = {};
   $scope.isEditImg = false;
@@ -133,6 +161,8 @@ function form ($scope, $http,$location,$filter) {
       createProdImg($scope.filenames, $scope.form);
       $scope.form = {};
       $scope.filenames.length = 0;
+    	window.location.href = "/admin/product/list";
+    	window.localStorage.setItem("isCreateSuccess",true)
     }).catch(err => {
       console.log("Err", err);
     })
@@ -258,9 +288,6 @@ function form ($scope, $http,$location,$filter) {
 		 	console.log("Err-load-img",err);		  	
 	  })
   }
- 
-  
-
   // /HÌNH ẢNH ------------------------
 $scope.listImg();
 $scope.load_form();

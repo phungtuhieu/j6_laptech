@@ -459,6 +459,7 @@ body {
 
 .table .tb-header{
     border-bottom: 1px solid #E9ECEF;
+     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
 }
 
 .table th {
@@ -539,6 +540,7 @@ body {
 .table-responsive table thead th {
     position: sticky;
     top: 0px;
+   
 }
 
 
@@ -728,7 +730,9 @@ body {
     /* Có thể thay đổi mã màu để phù hợp với icon của bạn */
   }
   
-
+.table-row-added {
+	background-color: #637381;
+}
   .modal-header .file-label:not(:last-child) {
     margin-right: 90px;
 }
