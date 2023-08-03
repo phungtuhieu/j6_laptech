@@ -1,8 +1,6 @@
 import { toastMixin, confirmationDialog } from "../global/custom-sweetalert.js";
 let host = "http://localhost:8081/api";
 
-
-
 const app = angular.module("app", []);
 app
   .controller("list", list)
@@ -160,21 +158,18 @@ function list($scope, $http) {
   $scope.load_all();
   $scope.check();
 }
-function formCreate($scope, $http) {
-
-  
-    
-    $scope.optionActive = [
-        {
-          id: true,
-          value: "Hoạt động",
-        },
-        {
-          id: false,
-          value: "Không hoạt động",
-        }  
-      ];
-
+function formCreate($scope, $http,$filter) {
+  $scope.MessageStartDate = "Vui lòng chọn Đến ngày";
+  $scope.optionActive = [
+    {
+      id: true,
+      value: "Hoạt động",
+    },
+    {
+      id: false,
+      value: "Không hoạt động",
+    },
+  ];
   //
   $scope.form = { active: true };
   $scope.items = [];
@@ -182,69 +177,51 @@ function formCreate($scope, $http) {
   $scope.uploadName = (files) => {
     return ($scope.form.logo = files[0].name);
   };
-
-
-  $scope.ten =(ten) =>{
-    alert(ten);
-  }
-
-
-
   $scope.create = () => {
-
-    console.log($scope.abc)
-    console.log($scope.startTime)
-
-    console.log($scope.cba)
-    console.log($scope.endTime)
-
-  
-    
-   // if (validation($scope, $scope.form)) {
-     // if (validationCreate($scope.form)) {
-        confirmationDialog(
-          "Xác nhận thêm?",
-          "Bạn có chắc chắn muốn thêm dữ liệu?",
-          "question",
-          "Thêm",
-          "Hủy"
-        ).then((result) => {
-          if (result.isConfirmed) {
-            $scope.form.website = "https://www." + $scope.form.website;
-            var item = angular.copy($scope.form);
-            var url = `${host}/discount`;
-            $http({
-              method: "post",
-              url: url,
-              data: item,
+    if (validation($scope, $scope.form,$filter)) {
+      // if (validationCreate($scope.form)) {
+      confirmationDialog(
+        "Xác nhận thêm?",
+        "Bạn có chắc chắn muốn thêm dữ liệu?",
+        "question",
+        "Thêm",
+        "Hủy"
+      ).then((result) => {
+        if (result.isConfirmed) {
+          
+          var item = angular.copy($scope.form);
+          var url = `${host}/discount`;
+          $http({
+            method: "post",
+            url: url,
+            data: item,
+          })
+            .then((resp) => {
+              $scope.items.push(item);
+              console.log("Success", resp);
+              window.location.href = "/admin/discount/list";
+              window.sessionStorage.setItem("name", "create");
             })
-              .then((resp) => {
-                $scope.items.push(item);
-                console.log("Success", resp);
-                window.location.href = "/admin/discount/list";
-                window.sessionStorage.setItem("name", "create");
-              })
-              .catch((error) => {
-                console.log("Error", error);
-              });
-          }
-        });
-    //  }
-   // }
+            .catch((error) => {
+              console.log("Error", error);
+            });
+        }
+      });
+      //  }
+    }
   };
 }
-function formUpdate($scope, $http, $filter) {
-
-    $scope.optionActive = [
-        {
-          id: true,
-          value: "Hoạt động",
-        },
-        {
-          id: false,
-          value: "Không hoạt động",
-        }  
-      ];
+function formUpdate($scope, $http) {
+  $scope.optionActive = [
+    {
+      id: true,
+      value: "Hoạt động",
+    },
+    {
+      id: false,
+      value: "Không hoạt động",
+    },
+  ];
 
   //
   $scope.isLoading = true;
@@ -257,12 +234,12 @@ function formUpdate($scope, $http, $filter) {
       url: url,
     })
       .then((resp) => {
-      
-       
         $scope.form = resp.data;
-        $scope.form.startDate =$filter("date")($scope.form.startDate, "dd/MM/yyyy")
-        $scope.form.endDate =$filter("date")($scope.form.endDate, "dd/MM/yyyy")
-        
+        $scope.form.startDate = new Date($scope.form.startDate);
+        $scope.form.endDate = new Date($scope.form.endDate);
+
+        $scope.startTime = $filter("date")($scope.form.startDate, "HH:mm:ss");
+        $scope.endTime = $filter("date")($scope.form.endDate, "HH:mm:ss");
         console.log("Success_edit", resp);
         $scope.isLoading = false;
       })
@@ -273,37 +250,49 @@ function formUpdate($scope, $http, $filter) {
   };
 
   $scope.update = () => {
-  //  if (validation($scope, $scope.form)) {
-      confirmationDialog(
-        "Xác nhận sửa?",
-        "Bạn có chắc chắn muốn sửa dữ liệu?",
-        "question",
-        "Sửa",
-        "Hủy"
-      ).then((result) => {
-        if (result.isConfirmed) {
-          var item = angular.copy($scope.form);
-          var url = `${host}/discount/${$scope.form.id}`;
-          $http({
-            method: "put",
-            url: url,
-            data: item,
+    //  if (validation($scope, $scope.form)) {
+    confirmationDialog(
+      "Xác nhận sửa?",
+      "Bạn có chắc chắn muốn sửa dữ liệu?",
+      "question",
+      "Sửa",
+      "Hủy"
+    ).then((result) => {
+      if (result.isConfirmed) {
+        $scope.form.startDate = new Date(
+          $filter("date")($scope.form.startDate, "yyyy-MM-dd") +
+            "T" +
+            $scope.startTime
+        ).toISOString();
+        $scope.form.endDate = new Date(
+          $filter("date")($scope.form.endDate, "yyyy-MM-dd") +
+            "T" +
+            $scope.endTime
+        ).toISOString();
+        var item = angular.copy($scope.form);
+
+        var url = `${host}/discount/${$scope.form.id}`;
+
+        $http({
+          method: "put",
+          url: url,
+          data: item,
+        })
+          .then((resp) => {
+            var index = $scope.items.findIndex(
+              (item) => item.id == $scope.form.id
+            );
+            $scope.items[index] = resp.data;
+            console.log("Success", resp);
+            window.location.href = "/admin/discount/list";
+            window.sessionStorage.setItem("name", "update");
           })
-            .then((resp) => {
-              var index = $scope.items.findIndex(
-                (item) => item.id == $scope.form.id
-              );
-              $scope.items[index] = resp.data;
-              console.log("Success", resp);
-              window.location.href = "/admin/discount/list";
-              window.sessionStorage.setItem("name", "update");
-            })
-            .catch((error) => {
-              console.log("Error", error);
-            });
-        }
-      });
-   // }
+          .catch((error) => {
+            console.log("Error", error);
+          });
+      }
+    });
+    // }
   };
   $scope.delete = (id) => {
     confirmationDialog(
@@ -533,87 +522,115 @@ function dataFileHandler($scope, $http) {
   // /PDF
 }
 //
-function validation($scope, item) {
+function validation($scope, item,$filter) {
   var kyTuDacBietTen = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
-  var regexEmail =
-    /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?$/;
-  var regexPhoneNumber = /^(09|03|08|05)\d{8}$/;
-  const domainRegex = /^(https:\/\/www\.)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
+  var kyTuDacBietSo = /[!@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?]/;
   var chu =
     /^[a-zA-Z\sàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ]*$/;
+
   var valid = true;
-  //name
-  if (!item.name) {
-    $scope.MessageName = "Không để rỗng tên hãng";
-    $scope.showName = true;
+
+  //id
+  if (!item.id) {
+    $scope.MessageId = "Không để rỗng mã khuyễn mãi";
+    $scope.showId = true;
     valid = false;
-  } else if (kyTuDacBietTen.test(item.name)) {
-    $scope.MessageName = "Không được chứa ký tự đặc biệt trong tên hãng";
-    $scope.showName = true;
-    valid = false;
-  } else if (!chu.test(item.name)) {
-    $scope.MessageName = "Không để số tên hãng";
-    $scope.showName = true;
+  } else if (kyTuDacBietTen.test(item.id)) {
+    $scope.MessageId = "Không được chứa ký tự đặc biệt trong tên khuyễn mãi";
+    $scope.showId = true;
     valid = false;
   } else {
-    $scope.MessageName = "";
-    $scope.showName = false;
+    $scope.MessageId = "";
+    $scope.showId = false;
   }
 
-  if (!item.logo) {
-    $scope.MessageLogo = "Chọn ảnh hãng";
-    $scope.showLogo = true;
+  //title
+  if (!item.title) {
+    $scope.MessageTitle = "Không để rỗng tên khuyễn mãi";
+    $scope.showTitle = true;
+    valid = false;
+  } else if (kyTuDacBietTen.test(item.title)) {
+    $scope.MessageTitle = "Không được chứa ký tự đặc biệt trong tên khuyễn mãi";
+    $scope.showTitle = true;
+    valid = false;
+  } else if (!chu.test(item.title)) {
+    $scope.MessageTitle = "Không để số tên khuyễn mãi";
+    $scope.showTitle = true;
     valid = false;
   } else {
-    $scope.MessageLogo = "";
-    $scope.showLogo = false;
-  }
-  //email
-  if (!item.email) {
-    $scope.MessageEmail = "Không để rỗng email";
-    $scope.showEmail = true;
-    valid = false;
-  } else if (!regexEmail.test(item.email)) {
-    $scope.MessageEmail = "Email không đúng địng dạng";
-    $scope.showEmail = true;
-    valid = false;
-  } else {
-    $scope.MessageEmail = "";
-    $scope.showEmail = false;
+    $scope.MessageTitle = "";
+    $scope.showTitle = false;
   }
 
-  //phone
-  if (!item.phone) {
-    $scope.MessagePhone = "Không để rỗng phone";
-    $scope.showPhone = true;
+  //percentage
+  if (!item.percentage) {
+    $scope.MessagePercentage = "Không để rỗng % khuyễn mãi";
+    $scope.showPercentage = true;
     valid = false;
-  } else if (isNaN(item.phone)) {
-    $scope.MessagePhone = "Nhập số cho số điện thoại";
-    $scope.showPhone = true;
+  } else if (kyTuDacBietSo.test(item.percentage)) {
+    $scope.MessagePercentage =
+      "Không được chứa ký tự đặc biệt trong % khuyễn mãi";
+    $scope.showPercentage = true;
     valid = false;
-  } else if (!regexPhoneNumber.test(item.phone)) {
-    $scope.MessagePhone = "Số điện thoại không đúng địng dạng ";
-    $scope.showPhone = true;
+  } else if (isNaN(item.percentage)) {
+    $scope.MessagePercentage = "Nhập số cho % khuyễn mãi";
+    $scope.showPercentage = true;
     valid = false;
-  } else {
-    $scope.MessagePhone = "";
-    $scope.showPhone = false;
-  }
-  //website
-  if (!item.website) {
-    $scope.MessageWebsite = "Không để rỗng website";
-    $scope.showWebsite = true;
-    valid = false;
-  } else if (!domainRegex.test(item.website)) {
-    $scope.MessageWebsite =
-      "Tên      website không đúng địng dạng VD: website.com ";
-    $scope.showWebsite = true;
+  }else if (item.percentage < 1 || item.percentage > 100) {
+    $scope.MessagePercentage = "Nhập số từ 1 đến 100 cho % khuyến mãi";
+    $scope.showPercentage = true;
     valid = false;
   } else {
-    $scope.MessageWebsite = "";
-    $scope.showWebsite = false;
+    $scope.MessagePercentage = "";
+    $scope.showPercentage = false;
   }
 
+
+    const formattedStartDate =  $filter("date")($scope.form.startDate, "yyyy-MM-dd") ;
+    const formattedEndDate = $filter("date")($scope.form.endDate, "yyyy-MM-dd")  ;
+
+    // alert(formattedStartDate)
+    // alert(formattedEndDate)
+    if (!formattedStartDate || !$scope.startTime) {
+      $scope.MessageStartDate = "Vui lòng chọn từ ngày và giờ";
+      $scope.showStartDate = true;
+      valid = false;
+    } else {
+      $scope.MessageStartDate = "";
+      $scope.showStartDate = false;
+    }
+    
+    if (!formattedEndDate || !$scope.endTime) {
+      $scope.MessageEndDate = "Vui lòng chọn đến ngày và giờ";
+      $scope.showEndDate = true;
+      valid = false;
+    } else {
+      $scope.MessageEndDate = "";
+      $scope.showEndDate = false;
+    }
+
+      
+    if (formattedStartDate && formattedEndDate) {
+      var fromDate = new Date(formattedStartDate);
+      var toDate = new Date(formattedEndDate);
+      if (fromDate > toDate) {
+        $scope.MessageStartDate = "Từ ngày không được nhỏ hơn Đến ngày";
+        $scope.MessageEndDate = "Đến ngày không được lớn hơn Từ ngày";
+        $scope.showStartDate = true;
+        $scope.showEndDate = true;
+        valid = false;
+      }
+      const startTime = new Date(`1970-01-01T${$scope.startTime}`);
+      const endTime = new Date(`1970-01-01T${$scope.endTime}`);
+      if (startTime > endTime) {
+        $scope.MessageStartDate = "Giờ bắt đầu không được nhỏ hơn Giờ kết thúc";
+        $scope.MessageEndDate = "Giờ kết thúc không được lớn hơn Giờ bắt đầu";
+        $scope.showStartDate = true;
+        $scope.showEndDate = true;
+        valid = false;
+      }
+    }
+  //description
   if (kyTuDacBietTen.test(item.description)) {
     $scope.MessageDescription = "Không được chứa ký tự đặc biệt trong mô tả";
     $scope.showDescription = true;

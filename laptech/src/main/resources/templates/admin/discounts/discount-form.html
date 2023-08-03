@@ -43,31 +43,24 @@
                             <input type="text" ng-model="form.percentage" class="form-control" id="">
                             <span ng-show="showPercentage" class="text-danger">{{MessagePercentage}}</span>
                         </div>
-                        <div class="col-lg-4 form-group">
+                        <div class="mb-4 col-lg-4 form-group">
                             <label for="" class="form-label">Từ ngày</label>
                             <div class="row">
                                 <div class="col-lg-6"><input type="date" ng-model="form.startDate"  class="form-control" ></div>
                                 <div class="col-lg-6"><input type="text" ng-model="startTime" placeholder="HH:mm:ss" class=" time form-control" ></div>
-                                {{form.startDate}}
-                                {{startTime}}
                             </div>
                             <span ng-show="showStartDate" class="text-danger">{{MessageStartDate}}</span>
                         </div>
 
-                        <div class="col-lg-4 form-group">
+                        <div class="mb-4 col-lg-4 form-group">
                             <label for="" class="form-label">Đến ngày</label>
                             <div class="row">
                                 <div class="col-lg-6"><input type="text" ng-model="endTime" placeholder="HH:mm:ss" class=" time form-control" /></div>
                                 <div class="col-lg-6"> <input type="date" ng-model="form.endDate"   class="form-control" /></div>
-                                    {{form.endDate}}
-                                    {{endTime}}
-
                             </div>
                             <span ng-show="showEndDate" class="text-danger">{{MessageEndDate}}</span>
                         </div>
-                        <p>
-                        </p>
-                        <div class="mb-4 col-lg-4  form-group">
+                        <div class="mb-4 col-lg-4 form-group">
                             <label for="" class="form-label">Hoạt động</label>
                             <select class="form-select" ng-model="form.active" aria-label="Default select example"
                                 ng-options="option.id as option.value for option in optionActive">
@@ -77,9 +70,8 @@
                         </div>
                         <div class="mb-4 col-lg-12 form-group">
                             <label for="prod-desciption" class="form-label">Mô tả</label>
-                            <textarea ng-model="form.description" class="form-control" id="prod-desciption"
-                                rows="3"></textarea>
-                            <span ng-show="showDescription" class="text-danger">{{MessageDescription}}</span>
+                            <textarea ng-model="form.description" class="form-control" id="prod-desciption" rows="3"></textarea>
+                            <span ng-show="showDescription"  class="text-danger">{{MessageDescription}}</span>
                         </div>
                     </div>
                     <div class="mb-4 col-lg-12 ">
