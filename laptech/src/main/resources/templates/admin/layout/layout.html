@@ -104,6 +104,15 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.7.20/dist/sweetalert2.min.css
     <th:block th:if="${#ctx.springRequestContext.requestUri.contains('product')}">
         <script th:src="@{/admin/assets/js/angularjs/product.js}"></script>
     </th:block>
+    <th:block th:if="${#ctx.springRequestContext.requestUri.contains('user')}">
+        <script th:src="@{/admin/assets/js/angularjs/user-ctrl.js}"></script>
+    </th:block>
+    <th:block th:if="${#ctx.springRequestContext.requestUri.contains('cpu')}">
+        <script th:src="@{/admin/assets/js/angularjs/cpu-ctrl.js}"></script>
+    </th:block>
+    <th:block th:if="${#ctx.springRequestContext.requestUri.contains('storage')}">
+        <script th:src="@{/admin/assets/js/angularjs/storage-ctrl.js}"></script>
+    </th:block>
 
 
 

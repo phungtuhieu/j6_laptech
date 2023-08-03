@@ -359,7 +359,7 @@ function dataFileHandler($scope, $http) {
 
     // Thêm dữ liệu của từng hàng (row) trong bảng vào mảng tableData
     angular.forEach($scope.items, function (item) {
-      var rowData = [item.id, item.name, item.description];
+      var rowData = [item.id, item.name, item.description]; //2
       tableData.push(rowData);
     });
 
@@ -370,7 +370,7 @@ function dataFileHandler($scope, $http) {
     var worksheet = XLSX.utils.aoa_to_sheet([headers].concat(tableData));
 
     // Thêm trang tính vào workbook
-    XLSX.utils.book_append_sheet(workbook, worksheet, "category_data");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "category_data"); // 3
 
     // Xuất file Excel
     var excelBuffer = XLSX.write(workbook, {
@@ -400,7 +400,7 @@ function dataFileHandler($scope, $http) {
 
     // Thêm dữ liệu của từng hàng (row) trong bảng vào mảng tableData
     angular.forEach($scope.items, function (item) {
-      var rowData = [item.id, item.name, item.description];
+      var rowData = [item.id, item.name, item.description]; //2
       tableData.push(rowData);
     });
 
