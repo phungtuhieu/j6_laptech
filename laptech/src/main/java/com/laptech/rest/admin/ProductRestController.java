@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.laptech.dao.ProductDAO;
 import com.laptech.dao.ProductImagesDAO;
+import com.laptech.model.Price;
 import com.laptech.model.Product;
 import com.laptech.model.ProductImages;
 import com.laptech.service.FileManagerService;
@@ -104,6 +105,11 @@ public class ProductRestController {
     	       }
 	
       
+        return ResponseEntity.ok().build()  ;
+    }
+    @PostMapping("/price")
+    public ResponseEntity<Void> createPrice(List<Price> prices) {
+        System.out.println(prices.get(0).getPrice());
         return ResponseEntity.ok().build()  ;
     }
 }

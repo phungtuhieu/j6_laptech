@@ -33,14 +33,14 @@
                     </div>
                 </div>
                 
-                <form action="" ng-if="!isLoading || !isEdit">
+                <form action="" class="form-input" ng-if="!isLoading || !isEdit">
                     <div class="row">
                         <div class="mb-4 col-lg-3 form-group d-none" >
-                            <!-- <input type="hidden" class="form-control" ng-model="form.id"  id="product-name"> -->
+                            <!-- <input type="hidden" class="form-control" ng-model="form.id"  id=""> -->
                         </div>
                         <div class="mb-4 col-lg-3 form-group">
-                            <label for="product-name" class="form-label">Tên sản phẩm</label>
-                            <input type="text" class="form-control" ng-model="form.name" id="product-name">
+                            <label for="" class="form-label">Tên sản phẩm</label>
+                            <input type="text" class="form-control" ng-model="form.name" id="">
                         </div>
                         <div class="mb-4 col-lg-3 form-group">
                             <label for="" class="form-label">Số lượng</label>
@@ -106,6 +106,52 @@
                         <div class="mb-4 col-lg-3 form-group">
                             <label for="" class="form-label">Ngày tạo</label>
                             <input type="date" ng-model="form.createDate" readonly  class="form-control" id="">
+                        </div>
+                        <div class=" col-lg-12 form-group">
+                          
+                            <div class="accordion " id="price-product-tab">
+                                <div class="accordion-item">
+                                  <h2 class="accordion-header" id="flush-headingOne">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                                        <label for="" class="form-label">Giá sản phẩm</label>
+                                    </button>
+                                  </h2>
+                                  <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#price-product-tab">
+                                    <div class="accordion-body">
+                                        <div class=" list-price">
+                                            <div class="row" ng-repeat="p in priceForms track by $index">
+                                                <div class="mb-4 col-lg-3 form-group">
+                                                    <label for="" class="form-label">Giá </label>
+                                                    <input type="text" class="form-control" placeholder="Nhập giá (VND)" ng-model="p.price" id="">
+                                                </div>
+                                                <div class="mb-4 col-lg-3 form-group">
+                                                    <label for="" class="form-label">Ngày áp dụng</label>
+                                                    <input type="date"   class="form-control" ng-model="p.startDate"  id="">
+                                                </div>
+                                                <div class="mb-4 col-lg-3 form-group">
+                                                    <label for="" class="form-label">Ngày kết thúc</label>
+                                                    <input type="date"   class="form-control"  ng-model="p.endDate"  id="">
+                                                </div>
+                                                <div class="mb-4 col-lg-3 form-group d-flex">
+                                                    <a href=""class="btn btn-danger me-2 mt-auto mb-0" ng-click="removePriceForm($index)" >
+                                                        <i class="fa-solid fa-trash-can"></i>
+                                                   </a>
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="mb-4 col-lg-12" style="padding-left:  12px;">
+                                            <a href=""class="btn btn-outline-secondary me-2" ng-click="addPriceForm()" >
+                                                 <i class="fa-solid fa-plus"></i> Thêm giá mới
+                                            </a>
+                                        </div>
+                                    </div>
+                                  </div>
+                                </div>
+                               
+                              </div>
+                        
+                            
                         </div>
                         <div class="mb-4 col-lg-12 form-group">
                             <label for="prod-desciption" class="form-label">Mô tả</label>

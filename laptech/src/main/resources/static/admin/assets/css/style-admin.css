@@ -201,6 +201,11 @@ body {
     padding: 10px 0;
     display: block;
 }
+.form-input  .accordion {
+    border-bottom: none;
+    padding: 10px 0;
+    display: block;
+}
 
 .submenu-open .submenu-group .nav-link{
     font-weight: 500;
@@ -222,19 +227,26 @@ body {
     background-color: var(--mau-btn-active);
 }
 
-.submenu-open .submenu-group .nav-pills {
+.submenu-open .submenu-group .nav-pills,
+.form-input  .accordion .nav-pills {
     width: 100%;
 }
-.submenu-open .nav-pills .nav-link.active {
+.submenu-open .nav-pills .nav-link.active,
+.form-input  .accordion .nav-pills .nav-link.active {
     background-color:  var(--mau-btn-active);
     color: var(--mau-chu-sidebar);  
 }
-.submenu-open  .accordion .accordion-item {
-
+.submenu-open  .accordion .accordion-item,
+.form-input  .accordion .accordion-item {
     border: none;
 }
-
-.submenu-open  .accordion .accordion-item .accordion-button {
+.form-input  .accordion .accordion-item .accordion-body{
+    box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
+    padding-left:5px ;
+    padding-right:5px ;
+}
+.submenu-open  .accordion .accordion-item .accordion-button
+{
     font-weight: 500;
     font-size: 16px;
     color: #67748E;
@@ -244,20 +256,39 @@ body {
     padding: 8px 15px;
     border: none;
 }
-
+.form-input  .accordion .accordion-item .accordion-button {
+    font-weight: 500;
+    font-size: 16px;
+    background-color: #f7f7f7;
+    color: #67748E;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 8px 15px;
+    border: none;
+}
 .submenu-open  .accordion-item .accordion-button:hover, 
-.submenu-open .submenu-group .nav-link:hover
+.submenu-open .submenu-group .nav-link:hover,
+.form-input  .accordion-item .accordion-button:hover
 {
     color: var(--mau-chu-sidebar) !important;
     
 }
-.submenu-open  .accordion-item .accordion-button:focus {
+.submenu-open  .accordion-item .accordion-button:focus,
+.form-input  .accordion-item .accordion-button:focus {
     box-shadow: none;
 }
-.submenu-open  .accordion-item .accordion-button:not(.collapsed) {
+.submenu-open  .accordion-item .accordion-button:not(.collapsed)
+ {
     background: var(--mau-btn-active);
     box-shadow: none;
     color: var(--mau-chu-sidebar) !important;
+}
+.form-input  .accordion-item .accordion-button:not(.collapsed)
+ {
+    background-color: #f7f7f7;
+    box-shadow: none;
+    color: #67748E!important;
 }
 /* /Side bar */
 
@@ -532,9 +563,19 @@ body {
     width: calc(100% - 2px);
     color: var(--mau-chu-btn-hover);
 }
-.table-responsive {
+.table-responsive ,.list-price    {
     overflow-y: auto;
+
+}
+.table-responsive {
     max-height: 400px; 
+}
+.list-price  
+{
+   overflow-x: hidden;
+    max-height: 500px; 
+    padding: 10px 10px;
+    margin-bottom: 20px;
 }
 
 .table-responsive table thead th {

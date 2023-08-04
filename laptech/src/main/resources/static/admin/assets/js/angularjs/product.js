@@ -73,7 +73,14 @@ function list($scope, $http,$timeout) {
 
 // Controller form
 function form ($scope, $http,$location,$filter) {
-
+  $scope.priceForms = [
+    {
+      price: null,
+      product: {},
+      startDate: new Date(),
+      endDate: null,
+    }
+  ];
   $scope.isLoading = false;
   $scope.form = {};
   $scope.isEditImg = false;
@@ -289,6 +296,28 @@ function form ($scope, $http,$location,$filter) {
 	  })
   }
   // /HÌNH ẢNH ------------------------
+
+  // GIÁ
+  $scope.addPriceForm = () => {
+    $scope.priceForms.push({
+      price: null,
+      product: {},
+      startDate: new Date(),
+      endDate: null,
+    })
+    console.log($scope.priceForms);
+  }
+  $scope.removePriceForm = (index) => {
+    $scope.priceForms.splice(index,1)
+  }
+  var createPrice = (listPrice) => {
+    $http.post(getUrl(`/price`),listPrice).then(resp => {
+      
+    }).catch(err => {
+
+    })
+  }
+  // /GIÁ
 $scope.listImg();
 $scope.load_form();
 }
