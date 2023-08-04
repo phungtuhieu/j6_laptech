@@ -1907,7 +1907,7 @@ img {
 
 .quickview_pro_des .pro-title{
   font-size: 14px;
-  padding-right: 100px;
+  padding-right: 90px;
   font-weight: 600;
 }
 
@@ -1920,7 +1920,7 @@ img {
 
 .quickview_pro_des .quantity-title{
   font-size: 14px;
-  padding-right: 70px;
+  padding-right: 65px;
   font-weight: 600;
 }
 .quickview_pro_des .mota{
@@ -1931,7 +1931,7 @@ img {
 .quickview_pro_des .favorite-title{
   font-size: 14px;
   font-weight: 500;
-  padding-right: 60px;
+  padding-right: 47px;
 
   }
 .quickview_pro_des .favorite-icon i{
@@ -1975,14 +1975,20 @@ img {
 }
 
 
+.modal-content-img{
+  border: 1px solid red;
+  width: 100%;
+  height: 200px;
+  padding: 20px;
+  margin: 0px 20px 20px 20px;
+}
 
-.quickview_pro_img > img{
- margin-top: 50px;
+/* .modal-content-img > img{
  width: 100%; 
- height: 230px;
+ height: 100%;
  background-color: red;
  
-}
+} */
 
 
 .detail a{
@@ -1990,6 +1996,7 @@ img {
   color: red;
   text-decoration: dotted;
 }
+
 
 .slide:hover, .slide:focus {
   box-shadow: inset 28.5em 0 0 0 #112EA7;
@@ -2010,13 +2017,12 @@ img {
 }
 
 .button-cart {
-  width: 424px;
+  width: 100%;
   height: 46px;
   background: none;
   border: 2px solid;
   font: inherit;
   line-height: 1;
-  margin: 0.5em;
   padding: 0em 2em;
   color: #112EA7;
   transition: 0.35s;
@@ -2526,4 +2532,129 @@ img {
 }
 /* 14 */
 
+/*  */
 
+/*  */
+/*  */
+
+.container_img {
+  position: relative;
+}
+
+.mySlides {
+  display: none;
+}
+
+.cursor {
+  cursor: pointer;
+}
+
+.prev,
+.next {
+  cursor: pointer;
+  position: absolute;
+  top: 60%;
+  padding: 16px;
+  margin-top: -50px;
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  border-radius: 0 3px 3px 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.next {
+  right: 12px;
+  border-radius: 3px 0 0 3px;
+}
+
+.prev:hover,
+.next:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+
+
+
+.img_bottom:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.column {
+  float: left;
+  width: 20%;
+  padding: 0px 2px 0px 2px;
+}
+
+.demo {
+  opacity: 0.6;
+}
+
+.active,
+.demo:hover {
+  opacity: 1;
+}
+
+
+/*  */
+
+
+/* The Modal (background) */
+.modal-img {
+display: none; /* Hidden by default */
+position: fixed; /* Stay in place */
+z-index: 1; /* Sit on top */
+padding-top: 100px; /* Location of the box */
+left: 0;
+top: 0;
+width: 100%; /* Full width */
+height: 100%; /* Full height */
+overflow: auto; /* Enable scroll if needed */
+background-color: rgb(0,0,0); /* Fallback color */
+background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+transform: scale(0); /* Start with no scale */
+}
+
+/* Modal Content (image) */
+.modal-content-img {
+margin: auto;
+display: block;
+width: 80%;
+max-width: 700px;
+animation: zoom 0.6s;
+}
+
+
+/* Add Animation */
+@keyframes zoom {
+from {transform: scale(0);} /* Start with no scale */
+to {transform: scale(1);} /* Zoom to actual size */
+}
+
+/* The Close Button */
+.close-img {
+position: absolute;
+top: 15px;
+right: 35px;
+color: #f1f1f1;
+font-size: 40px;
+font-weight: bold;
+transition: 0.3s;
+}
+
+.close-img:hover,
+.close-img:focus {
+color: #bbb;
+text-decoration: none;
+cursor: pointer;
+}
+
+/* 100% Image Width on Smaller Screens */
+@media only screen and (max-width: 700px){
+.modal-content {
+  width: 100%;
+}
+}

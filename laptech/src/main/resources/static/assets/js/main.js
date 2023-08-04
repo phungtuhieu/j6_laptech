@@ -848,9 +848,8 @@ $(document).ready(function () {
       }, t.speed);
     }
   };
-})(jQuery)(
-  
-
+})
+(jQuery)(
   (function ($) {
     "use strict";
 
