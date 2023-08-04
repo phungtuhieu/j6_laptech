@@ -97,7 +97,7 @@ function list($scope, $http) {
               animation: true,
               icon: "error",
               title:
-                "Hãng đã tồn tại trong sản phẩm. Cập nhật không thành công.",
+                "Khuyễn mãi đang áp dụng. Xóa không thành công",
               position: "top",
               width: 600,
             });
@@ -179,7 +179,7 @@ function formCreate($scope, $http,$filter) {
   };
   $scope.create = () => {
     if (validation($scope, $scope.form,$filter)) {
-      // if (validationCreate($scope.form)) {
+       if (validationCreate($scope.form)) {
       confirmationDialog(
         "Xác nhận thêm?",
         "Bạn có chắc chắn muốn thêm dữ liệu?",
@@ -188,7 +188,8 @@ function formCreate($scope, $http,$filter) {
         "Hủy"
       ).then((result) => {
         if (result.isConfirmed) {
-          
+          $scope.form.startDate = new Date($filter("date")($scope.form.startDate, "yyyy-MM-dd")+"T"+$scope.startTime).toISOString();
+          $scope.form.endDate = new Date($filter("date")($scope.form.endDate, "yyyy-MM-dd")+"T"+$scope.endTime).toISOString(); 
           var item = angular.copy($scope.form);
           var url = `${host}/discount`;
           $http({
@@ -197,6 +198,7 @@ function formCreate($scope, $http,$filter) {
             data: item,
           })
             .then((resp) => {
+
               $scope.items.push(item);
               console.log("Success", resp);
               window.location.href = "/admin/discount/list";
@@ -207,11 +209,11 @@ function formCreate($scope, $http,$filter) {
             });
         }
       });
-      //  }
+       }
     }
   };
 }
-function formUpdate($scope, $http) {
+function formUpdate($scope, $http,$filter) {
   $scope.optionActive = [
     {
       id: true,
@@ -222,7 +224,6 @@ function formUpdate($scope, $http) {
       value: "Không hoạt động",
     },
   ];
-
   //
   $scope.isLoading = true;
   $scope.form = {};
@@ -248,9 +249,8 @@ function formUpdate($scope, $http) {
       });
     window.sessionStorage.removeItem("editId");
   };
-
   $scope.update = () => {
-    //  if (validation($scope, $scope.form)) {
+      if (validation($scope, $scope.form, $filter)) {
     confirmationDialog(
       "Xác nhận sửa?",
       "Bạn có chắc chắn muốn sửa dữ liệu?",
@@ -259,16 +259,8 @@ function formUpdate($scope, $http) {
       "Hủy"
     ).then((result) => {
       if (result.isConfirmed) {
-        $scope.form.startDate = new Date(
-          $filter("date")($scope.form.startDate, "yyyy-MM-dd") +
-            "T" +
-            $scope.startTime
-        ).toISOString();
-        $scope.form.endDate = new Date(
-          $filter("date")($scope.form.endDate, "yyyy-MM-dd") +
-            "T" +
-            $scope.endTime
-        ).toISOString();
+        $scope.form.startDate = new Date($filter("date")($scope.form.startDate, "yyyy-MM-dd")+"T"+$scope.startTime).toISOString();
+        $scope.form.endDate = new Date($filter("date")($scope.form.endDate, "yyyy-MM-dd")+"T"+$scope.endTime).toISOString();
         var item = angular.copy($scope.form);
 
         var url = `${host}/discount/${$scope.form.id}`;
@@ -292,7 +284,7 @@ function formUpdate($scope, $http) {
           });
       }
     });
-    // }
+     }
   };
   $scope.delete = (id) => {
     confirmationDialog(
@@ -325,7 +317,7 @@ function formUpdate($scope, $http) {
               animation: true,
               icon: "error",
               title:
-                "Hãng đã tồn tại trong sản phẩm. Cập nhật không thành công.",
+              "Khuyễn mãi đang áp dụng. Xóa không thành công",
               position: "top",
               width: 600,
             });
@@ -360,13 +352,12 @@ function dataFileHandler($scope, $http) {
         if (index > 1) {
           let student = {
             id: row.getCell(1).value,
-            name: row.getCell(2).value,
-            logo: row.getCell(3).value,
-            email: row.getCell(4).value,
-            phone: row.getCell(5).value,
-            website: row.getCell(6).value,
-            country: row.getCell(7).value,
-            description: row.getCell(8).value,
+            title: row.getCell(2).value,
+            percentage: row.getCell(3).value,
+            startDate: new Date(row.getCell(4).value),
+            endDate: new Date(row.getCell(5).value),
+            active: row.getCell(6).value,
+            description: row.getCell(7).value,
           };
           let url = `${host}/discount`;
           $http
@@ -387,13 +378,13 @@ function dataFileHandler($scope, $http) {
         toastMixin.fire({
           animation: true,
           icon: "success",
-          title: "Import Excel thành công",
+          title: "Import excel thành công",
         });
       } else {
         toastMixin.fire({
           animation: true,
           icon: "error",
-          title: "Import Excel thất bại. Vui lòng kiểm tra lại.",
+          title: "Import excel thất bại. Vui lòng kiểm tra lại.",
         });
       }
     };
@@ -401,31 +392,42 @@ function dataFileHandler($scope, $http) {
     reader.readAsArrayBuffer(files[0]);
   };
 
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear().toString();
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const seconds = date.getSeconds().toString().padStart(2, '0');
+  
+    return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+  }
   // Hàm xuất dữ liệu ra tập tin Excel
   $scope.export = () => {
     var tableData = [];
     var headers = [
       "ID",
-      "NAME",
-      "LOGO",
-      "EMAIL",
-      "PHONE",
-      "WEBSITE",
-      "COUNTRY",
+      "TITLE",
+      "PERCENTAGE",
+      "STARTDATE",
+      "ENDDATE",
+      "ACTIVE",
       "DESCRIPTION",
+     
     ];
 
     // Thêm dữ liệu của từng hàng (row) trong bảng vào mảng tableData
     angular.forEach($scope.items, function (item) {
       var rowData = [
         item.id,
-        item.name,
-        item.logo,
-        item.email,
-        item.phone,
-        item.website,
-        item.country,
+        item.title,
+        item.percentage,
+        formatDate(item.startDate),
+        formatDate(item.endDate),
+        item.active,
         item.description,
+      
       ];
       tableData.push(rowData);
     });
@@ -465,12 +467,11 @@ function dataFileHandler($scope, $http) {
     var tableData = [];
     var headers = [
       "ID",
-      "NAME",
-      "LOGO",
-      "EMAIL",
-      "PHONE",
-      "WEBSITE",
-      "COUNTRY",
+      "TITLE",
+      "PERCENTAGE",
+      "STARTDATE",
+      "ENDDATE",
+      "ACTIVE",
       "DESCRIPTION",
     ];
 
@@ -478,12 +479,11 @@ function dataFileHandler($scope, $http) {
     angular.forEach($scope.items, function (item) {
       var rowData = [
         item.id,
-        item.name,
-        item.logo,
-        item.email,
-        item.phone,
-        item.website,
-        item.country,
+        item.title,
+        item.percentage,
+        formatDate(item.startDate),
+        formatDate(item.endDate),
+        item.active,
         item.description,
       ];
       tableData.push(rowData);
@@ -522,7 +522,7 @@ function dataFileHandler($scope, $http) {
   // /PDF
 }
 //
-function validation($scope, item,$filter) {
+function validation($scope, item, $filter) {
   var kyTuDacBietTen = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
   var kyTuDacBietSo = /[!@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?]/;
   var chu =
@@ -588,9 +588,6 @@ function validation($scope, item,$filter) {
 
     const formattedStartDate =  $filter("date")($scope.form.startDate, "yyyy-MM-dd") ;
     const formattedEndDate = $filter("date")($scope.form.endDate, "yyyy-MM-dd")  ;
-
-    // alert(formattedStartDate)
-    // alert(formattedEndDate)
     if (!formattedStartDate || !$scope.startTime) {
       $scope.MessageStartDate = "Vui lòng chọn từ ngày và giờ";
       $scope.showStartDate = true;
@@ -644,18 +641,17 @@ function validation($scope, item,$filter) {
 }
 function validationCreate(item) {
   const items = JSON.parse(window.sessionStorage.getItem("items"));
+    console.log(items)
+    console.log(item)
   var index = items.findIndex(
     (items) =>
-      items.name.toLowerCase().replace(/\s+/g, "") ===
-        item.name.toLowerCase().replace(/\s+/g, "") &&
-      items.website === "https://www." + item.website &&
-      items.country === item.country
+     items.id === item.id
   );
   if (index !== -1) {
     toastMixin.fire({
       animation: true,
       icon: "error",
-      title: "Tên danh mục đã tồn tại",
+      title: "Tên khuyến mãi đã tồn tại",
       position: "top",
       width: 600,
     });
