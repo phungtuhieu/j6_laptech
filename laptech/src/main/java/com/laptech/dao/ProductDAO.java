@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.laptech.model.Brand;
 import com.laptech.model.Category;
 import com.laptech.model.Product;
 import com.laptech.model.ReportFavoriteProduct;
@@ -14,6 +15,9 @@ import com.laptech.model.ReportProductSold;
 
 public interface ProductDAO extends JpaRepository<Product,Long>{
 
+
+    @Query("SELECT p FROM Product p WHERE p.brand.name LIKE %:name%")
+    List<Product> findByProductBrandName(@Param("name") String name);
 
     
 
@@ -70,6 +74,7 @@ List<ReportProductSold> getProductSoldName(@Param("name") String name);
     + " GROUP BY p.name, CAST(o.orderDate AS DATE)"
     + " ORDER BY CAST(o.orderDate AS DATE) DESC")
 List<ReportProductSold> getProductSoldDate(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
 
 
 
