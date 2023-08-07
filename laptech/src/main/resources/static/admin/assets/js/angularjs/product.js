@@ -30,18 +30,33 @@ function list($scope, $http,$timeout) {
 
   const url = `${host}/product`;
   $scope.isLoading = true;
-  $scope.items = [];
- 
+  $scope.page = [];
+  $scope.prop = "name";
+  var isAscending = false;
+  $scope.sortBy = (prop) => {
+    $scope.prop = (isAscending? '+' : '-' )+ prop;
+    isAscending = !isAscending;
+  }
+  $scope.getPage = (pageNo) => {
+    var urlGet = `${url}?pageNo=${pageNo}`;
+    $http.get(urlGet).then(resp => {
+      $scope.page = resp.data;
+      $scope.isLoading = false;
+    }).catch(err => {
+      console.log("Errors", err);
+      $scope.isLoading = false;
+    });
+  }
+  
   $scope.load_all = () => {
     $http.get(url).then(
       (resp) => {
-        $scope.items = resp.data;
+        $scope.page = resp.data;
         console.log("Success", resp);
         console.log("isCreateSuccess",isCreateSuccess);
         isCreateSuccess = window.localStorage.getItem("isCreateSuccess");
         window.localStorage.removeItem("isCreateSuccess")
         if(isCreateSuccess) {
-		
 			Toast.fire({
 			  icon: 'success',
 			  title: 'Tạo mới thành công'
@@ -54,7 +69,6 @@ function list($scope, $http,$timeout) {
 	      }, 5000);
 			
 		}
-		
         $scope.isLoading = false;
       },
       (err) => {
@@ -67,15 +81,59 @@ function list($scope, $http,$timeout) {
   $scope.edit = (id) => {
     window.sessionStorage.setItem("id", id);
     window.location.href = "/admin/product/update";
-  };
+  };   
   $scope.delete = (id) => {
     var urlDel = url+`/${id}`;
     $http.delete(urlDel).then(resp => {
-      var i = $scope.items.findIndex(item => item.id == id);
-      $scope.items.splice(i,1);
-      console.log("Success-delete", resp);
+      Toast.fire({
+        icon: 'success',
+        title: 'Đã Xóa thành công'
+      })
+      $scope.load_all();
     }).catch(err => {
       console.log("Err", err);
+      if(err.status === 409) {
+        swalWithBootstrapButtons.fire({
+          title: 'Bạn có muốn ngừng kinh doanh?',
+          text: "Thông tin sản phẩm đã được lưu ở nơi khác không thể xóa!",
+          icon: 'warning',
+          showCancelButton: true,
+          cancelButtonText: 'Không, Hủy bỏ!',
+          confirmButtonText: 'Có, Ngừng kinh doanh!',
+          reverseButtons: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            $http.get(urlDel).then(resp => {
+            $scope.isLoading = false;
+            var item = resp.data;
+            item.status = statusProduct.DISCONTINUED;
+            $http.put(urlDel,item).then(resp => {
+              console.log("Success-", resp);
+              swalWithBootstrapButtons.fire(
+                'Đã ngừng kinh doanh!',
+                'Sản phẩm đã chuyển trạng thái ngừng kinh doanh.',
+                'success'
+              )
+              $scope.load_all();
+            }).catch(err => {
+              console.log("Err", err);
+            })
+            
+            }).catch(err => {
+              console.log("Err", err);
+            })
+            
+          } else if (
+            result.dismiss === Swal.DismissReason.cancel
+          ) {
+            swalWithBootstrapButtons.fire(
+              'Đã hủy thao tác',
+              'Thao tác đã được hủy',
+              'error'
+            )
+          }
+        })
+      }
     })
   }
 
@@ -224,12 +282,14 @@ function form ($scope, $http,$location,$filter) {
     } else {
       clearError('image');
     }
-  
-    if ($scope.priceForms[0].price <= 0) {
-      setError('price', 'Giá phải lớn hơn 0!');
-    } else {
-      clearError('price');
+    if($scope.priceForms.length > 0){
+      if ($scope.priceForms[0].price <= 0) {
+        setError('price', 'Giá phải lớn hơn 0!');
+      } else {
+        clearError('price');
+      }
     }
+   
     return isError ;
   }
   $scope.create = () => {
@@ -285,7 +345,10 @@ function form ($scope, $http,$location,$filter) {
     $http.delete(url).then(resp => {
       $scope.form = {};
       $scope.filenames.length = 0;
-      console.log("Success-err", resp);
+      Toast.fire({
+        icon: 'success',
+        title: 'Đã Xóa thành công'
+      })
     }).catch(err => {
       console.log("Err", err);
       if(err.status === 409) {
@@ -334,6 +397,8 @@ function form ($scope, $http,$location,$filter) {
       }
     })
   }
+
+
   if( $scope.isEdit) {
     $scope.edit();
   }

@@ -577,7 +577,22 @@ VALUES
     (N'Laptop Dell Inspiron 15 7000', '2023-07-11', 80, N'Laptop Ultrabook cao cấp với CPU Intel Core i5 10th Gen và RAM 16GB', 1, 3, 1, 2, 4, 1, 2, 1, 1),
     (N'Laptop Lenovo ThinkPad P1', '2023-07-12', 50, N'Laptop Workstation chuyên dụng cho đồ họa và kỹ thuật số', 1, 1, 5, 1, 2, 4, 3, 3, 3),
     (N'Chromebook Acer Chromebook 14', '2023-07-13', 30, N'Laptop Chromebook giá rẻ với màn hình 14 inch', 1, 5, 4, 3, 5, 2, 5, 4, 4),
-    (N'Laptop Doanh Nhân HP EliteBook 850 G8', '2023-07-14', 20, N'Laptop chất lượng cao dành cho doanh nhân với CPU Intel Core i9 12th Gen', 1, 4, 2, 4, 1, 5, 4, 5, 5);
+    (N'Laptop Doanh Nhân HP EliteBook 850 G8', '2023-07-14', 20, N'Laptop chất lượng cao dành cho doanh nhân với CPU Intel Core i9 12th Gen', 1, 4, 2, 4, 1, 5, 4, 5, 5),
+	('Laptop MSI GS66 Stealth', '2023-08-06', 10, 'Slim gaming laptop with powerful performance.',1, 4, 2, 4, 1, 5, 4, 5, 5),
+('Laptop Apple MacBook Pro', '2023-08-07', 25, 'Sleek and high-quality laptop for Mac lovers.', 1, 5, 4, 3, 5, 2, 5, 4, 4),
+('Laptop Microsoft Surface Laptop', '2023-08-08', 12, 'Lightweight and stylish laptop for productivity.',  1, 1, 5, 1, 2, 4, 3, 3, 3),
+('Laptop Samsung Galaxy Book', '2023-08-09', 18, '2-in-1 laptop with touchscreen functionality.',  1, 3, 1, 2, 4, 1, 2, 1, 1),
+('Laptop LG Gram', '2023-08-10', 22, 'Ultra-lightweight laptop for portability.',  1, 2, 3, 1, 3, 3, 1, 1, 2),
+('Laptop Razer Blade 17', '2023-08-11', 8, 'High-performance gaming laptop with RGB keyboard.', 1, 4, 2, 4, 1, 5, 4, 5, 5),
+('Laptop Huawei MateBook', '2023-08-12', 35, 'Sleek and modern laptop for work and entertainment.',  1, 2, 3, 1, 3, 3, 1, 1, 2),
+('Laptop Google Pixelbook', '2023-08-13', 16, 'Chromebook with smooth performance and Google integration.',  1, 5, 4, 3, 5, 2, 5, 4, 4),
+('Laptop Xiaomi Mi Notebook', '2023-08-14', 28, 'Budget-friendly laptop with decent specs.', 1, 1, 5, 1, 2, 4, 3, 3, 3),
+('Laptop Sony VAIO', '2023-08-15', 11, 'Elegant and powerful laptop with Sony craftsmanship.',1, 5, 4, 3, 5, 2, 5, 4, 4),
+('Laptop Toshiba Satellite', '2023-08-16', 9, 'Reliable laptop with a traditional design.',  1, 2, 3, 1, 3, 3, 1, 1, 2),
+('Laptop Alienware Area-51m', '2023-08-17', 6, 'High-end gaming laptop with desktop-grade performance.',1, 4, 2, 4, 1, 5, 4, 5, 5),
+('Laptop Panasonic Toughbook', '2023-08-18', 14, 'Rugged laptop built to withstand harsh conditions.',1, 2, 3, 1, 3, 3, 1, 1, 2),
+('Laptop Fujitsu Lifebook', '2023-08-19', 7, 'Business laptop with enterprise-level security features.', 1, 4, 2, 4, 1, 5, 4, 5, 5),
+('Laptop Vaio Z', '2023-08-20', 3, 'Premium and compact laptop with high-resolution display.', 1, 5, 4, 3, 5, 2, 5, 4, 4);
 GO
 
 -- DELETE Product_Images

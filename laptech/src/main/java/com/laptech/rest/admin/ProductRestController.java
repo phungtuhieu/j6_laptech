@@ -1,10 +1,13 @@
 package com.laptech.rest.admin;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -15,9 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.laptech.dao.PriceDAO;
 import com.laptech.dao.ProductDAO;
@@ -43,8 +45,10 @@ public class ProductRestController {
     FileManagerService fileService;
 
     @GetMapping
-    public ResponseEntity<List<Product>> getAll(Model model){
-        return ResponseEntity.ok( dao.findAll());
+    public ResponseEntity<Page<Product>> getAll(@RequestParam("pageNo") Optional<Integer> pageNo){
+        Pageable pageable = PageRequest.of(pageNo.orElse(0), 5);
+        Page<Product> page  = dao.findAll(pageable);
+        return ResponseEntity.ok(page);
     }
 
     @GetMapping("{id}")
