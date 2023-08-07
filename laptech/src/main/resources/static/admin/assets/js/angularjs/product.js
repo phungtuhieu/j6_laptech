@@ -2,6 +2,11 @@
 const host = "http://localhost:8081/api";
 const urlImg = "/files/images";
 const app = angular.module("app", []);
+const statusProduct = {
+    IN_STOCK : 1, // Còn hàng
+    OUT_OF_STOCK : 2,// Hết hàng
+    DISCONTINUED : 3 // Ngừng kinh doanh
+}
 app.controller("list", list)
     .controller("form", form)
 const Toast = Swal.mixin({
@@ -11,6 +16,13 @@ const Toast = Swal.mixin({
   timer: 3000,
   timerProgressBar: true,
   
+})
+const swalWithBootstrapButtons = Swal.mixin({
+  customClass: {
+    confirmButton: 'btn btn-success',
+    cancelButton: 'btn btn-danger'
+  },
+  buttonsStyling: false
 })
 var isCreateSuccess = false;
     // Controller List
@@ -73,6 +85,12 @@ function list($scope, $http,$timeout) {
 
 // Controller form
 function form ($scope, $http,$location,$filter) {
+  $scope.messageError = {
+    nameProd: null,
+    quantity: null,
+    price:null,
+    image:null
+  };
   $scope.isEdit = $location.absUrl().includes('update');
   $scope.priceForms = [
     {
@@ -86,7 +104,7 @@ function form ($scope, $http,$location,$filter) {
     $scope.priceForms = [];
   }
   $scope.listPriceProduct = [];
-  $scope.isLoading = false;
+  $scope.isLoading = true;
   $scope.form = {};
   $scope.isEditImg = false;
 
@@ -111,29 +129,38 @@ function form ($scope, $http,$location,$filter) {
   $scope.load_form = () => {
     getOptions("/category").then(dataOptions => {
       $scope.optionsCat = dataOptions;
+      $scope.form.category = $scope.optionsCat[0];
     });
     getOptions("/cpu").then((dataOptions) => {
       $scope.optionsCPU = dataOptions;
+      $scope.form.cpu = $scope.optionsCPU[0];
     });
     getOptions("/brand").then((dataOptions) => {
       $scope.optionsBrand = dataOptions;
+      $scope.form.brand = $scope.optionsBrand[0];
     });
     getOptions("/ram").then((dataOptions) => {
       $scope.optionsRAM = dataOptions;
+      $scope.form.ram = $scope.optionsRAM[0];
     });
     getOptions("/storage").then((dataOptions) => {
       $scope.optionsStorage = dataOptions;
+      $scope.form.storage = $scope.optionsStorage[0];
     });
     getOptions("/screen-size").then((dataOptions) => {
       $scope.optionsScreen = dataOptions;
+      $scope.form.screenSize = $scope.optionsScreen[0];
     });
     getOptions("/graphics-card").then((dataOptions) => {
       $scope.optionsGraph = dataOptions;
+      $scope.form.graphicsCard= $scope.optionsGraph[0];
     });
     getOptions("/operating-system").then((dataOptions) => {
       $scope.optionsOS = dataOptions;
+      $scope.form.operatingSystem = $scope.optionsOS[0];
+      $scope.isLoading = false;
     });
-  
+   
   }
   function getUrl (url) {
     return `${host}${url}`;
@@ -165,30 +192,75 @@ function form ($scope, $http,$location,$filter) {
       console.log("Err", err);
     })
   }
+  var validationForm = () => {
+    var isError = false;
+    var setError = (fieldName, errorMessage) => {
+      $scope.messageError[fieldName] = errorMessage;
+      isError = true;
+    }
+  
+    var clearError= (fieldName) => {
+      $scope.messageError[fieldName] = null;
+    }
+
+    if ($scope.form.name == null) {
+      setError('nameProd', 'Vui lòng nhập tên sản phẩm!');
+    } else {
+      clearError('nameProd');
+    }
+  
+    if ($scope.form.quantity == null) {
+      setError('quantity', 'Vui lòng nhập số lượng!');
+    } else {
+      if ($scope.form.quantity <= 0) {
+        setError('quantity', 'Số lượng phải lớn hơn 0!');
+      } else {
+        clearError('quantity');
+      }
+    }
+  
+    if ($scope.filenames.length <= 0) {
+      setError('image', 'Vui lòng chọn ảnh');
+    } else {
+      clearError('image');
+    }
+  
+    if ($scope.priceForms[0].price <= 0) {
+      setError('price', 'Giá phải lớn hơn 0!');
+    } else {
+      clearError('price');
+    }
+    return isError ;
+  }
   $scope.create = () => {
     var url = getUrl(`/product`);
     var item = angular.copy($scope.form);
+    var isError = false;
+    isError = validationForm();
+    if(!isError) {
+      $http.post(url,item).then(resp => {
+        console.log("Success-save", resp);
+        $scope.form = resp.data;
+        createProdImg($scope.filenames, $scope.form);
+        createPrice($scope.priceForms, $scope.form);
+        $scope.priceForms = [];
+        $scope.form = {};
+        $scope.filenames.length = 0;
+        window.location.href = "/admin/product/list";
+        window.localStorage.setItem("isCreateSuccess",true)
+      }).catch(err => {
+        console.log("Err", err);
+      })
+    }
     
-    
-    $http.post(url,item).then(resp => {
-      console.log("Success-save", resp);
-      $scope.form = resp.data;
-      createProdImg($scope.filenames, $scope.form);
-      createPrice($scope.priceForms, $scope.form);
-      $scope.priceForms = [];
-      $scope.form = {};
-      $scope.filenames.length = 0;
-    	window.location.href = "/admin/product/list";
-    	window.localStorage.setItem("isCreateSuccess",true)
-    }).catch(err => {
-      console.log("Err", err);
-    })
   }
   $scope.update = ()  => {
     var item = angular.copy($scope.form);
     var url = getUrl(`/product/${item.id}`);
-   
-    $http.put(url,item).then(resp => {
+    var isError = false;
+    isError = validationForm();
+    if(!isError) {
+       $http.put(url,item).then(resp => {
       $scope.form = resp.data;
        $scope.form.createDate = new Date($scope.form.createDate);
        if($scope.priceForms.length > 0) {
@@ -197,22 +269,72 @@ function form ($scope, $http,$location,$filter) {
       if(listImgIdDeleted.length > 0) {
 		   deleteProdImg();
 	  }
+    Toast.fire({
+      icon: 'success',
+      title: 'Đã cập nhật thành công'
+    })
       console.log("Success-", resp);
     }).catch(err => {
       console.log("Err", err);
     })
+    }
+   
   }
   $scope.delete = (id) => {
     var url = getUrl(`/product/${id}`);
     $http.delete(url).then(resp => {
       $scope.form = {};
+      $scope.filenames.length = 0;
       console.log("Success-err", resp);
     }).catch(err => {
       console.log("Err", err);
+      if(err.status === 409) {
+        swalWithBootstrapButtons.fire({
+          title: 'Bạn có muốn ngừng kinh doanh?',
+          text: "Thông tin sản phẩm đã được lưu ở nơi khác không thể xóa!",
+          icon: 'warning',
+          showCancelButton: true,
+          cancelButtonText: 'Không, Hủy bỏ!',
+          confirmButtonText: 'Có, Ngừng kinh doanh!',
+          reverseButtons: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            swalWithBootstrapButtons.fire(
+              'Đã ngừng kinh doanh!',
+              'Sản phẩm đã chuyển trạng thái ngừng kinh doanh.',
+              'success'
+            )
+            var item = angular.copy($scope.form);
+            item.status = statusProduct.DISCONTINUED;
+            $http.put(url,item).then(resp => {
+              $scope.form = resp.data;
+              $scope.form.createDate = new Date($scope.form.createDate);
+               if($scope.priceForms.length > 0) {
+                createPrice($scope.priceForms,$scope.form);
+               }
+              
+              if(listImgIdDeleted.length > 0) {
+               deleteProdImg();
+              }
+              console.log("Success-", resp);
+            }).catch(err => {
+              console.log("Err", err);
+            })
+          } else if (
+            /* Read more about handling dismissals below */
+            result.dismiss === Swal.DismissReason.cancel
+          ) {
+            swalWithBootstrapButtons.fire(
+              'Đã hủy thao tác',
+              'Thao tác đã được hủy',
+              'error'
+            )
+          }
+        })
+      }
     })
   }
   if( $scope.isEdit) {
-    $scope.isLoading = true;
     $scope.edit();
   }
   // HÌNH ẢNH ------------------------
