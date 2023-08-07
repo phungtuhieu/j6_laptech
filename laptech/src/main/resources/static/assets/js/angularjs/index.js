@@ -12,7 +12,8 @@ app
     };
   })
   .controller("index", index)
-  .controller("listCategory", listCategory);
+  .controller("listCategory", listCategory)
+  .controller("account", account);
 
 function index($scope, $http, $interval) {
   $scope.pageCount;
@@ -25,7 +26,7 @@ function index($scope, $http, $interval) {
 
     if (pageCount <= MAX_VISIBLE_PAGES) {
       for (let i = 1; i <= pageCount; i++) {
-        pagination.push({ page: i ,active: i === currentPage });
+        pagination.push({ page: i, active: i === currentPage });
       }
     } else {
       let startPage = currentPage - Math.floor(MAX_VISIBLE_PAGES / 2);
@@ -55,7 +56,7 @@ function index($scope, $http, $interval) {
     }
     //
     $scope.discountPrice = (priceId) => {
-      console.log(priceId)
+      console.log(priceId);
       var url = `${host}/discountPrice/${priceId}`;
       $http({
         method: "GET",
@@ -171,11 +172,11 @@ function index($scope, $http, $interval) {
           dots[$scope.slideIndex - 1].className += " active";
         };
         //
-        if($scope.image.length !==0){
-            var slideInterval = $interval(function () {
-                $scope.showSlides(1);
-                $interval.cancel(slideInterval);
-              }, 0);
+        if ($scope.image.length !== 0) {
+          var slideInterval = $interval(function () {
+            $scope.showSlides(1);
+            $interval.cancel(slideInterval);
+          }, 0);
         }
       })
       .catch((error) => {
@@ -231,8 +232,6 @@ function index($scope, $http, $interval) {
       });
   };
 
-
-
   $scope.notNull = () => {
     var url = `${host}/findPricesWithoutDiscountPrices`;
     $http({
@@ -240,8 +239,7 @@ function index($scope, $http, $interval) {
       url: url,
     })
       .then((resp) => {
-       
-        $scope.notNul = resp.data ;
+        $scope.notNul = resp.data;
 
         console.log("Success_notNull", resp.data);
       })
@@ -250,7 +248,41 @@ function index($scope, $http, $interval) {
       });
   };
 
- 
+  $scope.favoriteLikeUser = (username) => {
+    var url = `${host}/favorite/${username}`;
+    $http({
+      method: "GET",
+      url: url,
+    })
+      .then((resp) => {
+        $scope.favorites = resp.data;
+        console.log("Success_favorite", resp.data);
+      })
+      .catch((error) => {
+        console.log("Error_favorite", error);
+      });
+  };
+
+  $scope.login = function () {
+    $http
+      .get("/api/account")
+      .then(function (userResponse) {
+        $scope.user = userResponse.data;
+        console.log("Dữ liệu user nè1123213123", userResponse.data);
+        $scope.favoriteLikeUser($scope.user.username);
+      })
+      .catch(function (error) {
+        console.error("Lỗi khi lấy thông tin người dùng", error);
+      });
+  };
+
+  $scope.logout = () => {
+    window.sessionStorage.removeItem("user");
+    window.location.href = "/logoff";
+  };
+  $scope.login();
+
+  $scope.login();
   $scope.notNull();
   $scope.load_all_product();
   $scope.load_all_image();
@@ -259,22 +291,12 @@ function index($scope, $http, $interval) {
   $scope.load_all_discountPrice();
 }
 
-
-
-
-
-
-
-
-function listCategory($scope, $http){
-
-
-
+function listCategory($scope, $http) {
   $scope.load_all_productBrand = (name) => {
     var url;
     url = `${host}/product/brand/${name}`;
-    if(name =='xemTatCa'){
-    url = `${host}/productItems`;
+    if (name == "xemTatCa") {
+      url = `${host}/productItems`;
     }
     $http({
       method: "GET",
@@ -292,5 +314,18 @@ function listCategory($scope, $http){
   };
   const id = window.sessionStorage.getItem("brandName");
   $scope.load_all_productBrand(id);
+}
+
+function account($scope, $http) {
+  $scope.login = function () {
+    $http
+      .get("/api/account")
+      .then(function (userResponse) {
+        var user = userResponse.data;
+      })
+      .catch(function (error) {
+        console.error("Lỗi khi lấy thông tin người dùng", error);
+      });
+  };
 
 }

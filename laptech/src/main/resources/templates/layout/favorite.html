@@ -10,7 +10,7 @@
 <body>
 
   <!-- Main -->
-  <main class=" mb-5  ">
+  <main class=" mb-5  " ng-controller="index">
     <!-- Start Slider -->
     <div id="slides-shop">
     </div>
@@ -30,396 +30,175 @@
         <div class="col-lg-12 ">
           <div class="row css-1y2krk0" style="background-color: #f6f6f6; ">
 
-            <div class="css-13w7uog">
-              <div class="css-35xksx"><a class="css-pxdb0j" href="">
-                  <div class="css-4rhdrh">
-                    <div class="css-1v97aik">
-                      <div class="css-798fc">
-                        <div height="100%" width="100%" class="css-1uzm8bv"><img
-                            src="https://lh3.googleusercontent.com/rZVKBiLKn1pZ7rB6uiwSY4JMlCzXdiUlwJpCK3ahPWy6N6mo73tGT-I0keKt3p8cBfcMNK1qjK_rIOfhzRozzw0iNUzd_aw=w230-rw"
-                            alt="USB 32GB KINGSTON DataTraveler Exodia DTX"
-                            style="width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0px; left: 0px;">
+            <div class="col-lg-3 col-md-4 col-sm-6 css-13w7uog" 
+            ng-repeat="fa in favorites |  limitTo:10:begin">
+            <div class="css-35xksx"ng-repeat="pr in prices" ng-if="pr.product.id === fa.product.id">
+              <a class="css-pxdb0j" href="" data-toggle="modal"  ng-click="imageOne(fa.product.id)"data-target="#_{{fa.product.id}}">
+                <div class="css-4rhdrh">
+                  <div class="css-1v97aik">
+                    <div class="css-798fc">
+                      
+                      <div height="100%" width="100%" class="css-1uzm8bv" ng-repeat="ig in images" ng-if="ig.product.id === fa.product.id">
+                        
+                        <img
+                        ng-src="{{ig.name}}"
+                          style="width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0px; left: 0px;">
+                      </div>
+                    </div>
+
+                    <div class="css-14q2k9d"  ng-repeat="dp in discountPrices" ng-if="dp.price.id === pr.id">
+                      <div class="css-zb7zul">
+                        <div class="css-1bqeu8f">TIẾT KIỆM</div>
+                        <div class="css-1rdv2qd">{{ (pr.price*(dp.discount.percentage / 100)) | formatCurrency}}</div>
+                      </div>
+                    </div>
+                    
+                  </div>
+                  <div class="css-68cx5s">
+                    <div class="css-5gl0js" style="text-transform: uppercase; display: inline;">
+                      {{fa.product.brand.name}}
+                      </div>
+                  </div>
+                  <div class="css-1ybkowq">
+                    <div class="att--title css-38w3f2" color="textPrimary">
+                      <h3 class="css-1xdyrhj">{{fa.product.name}}/{{fa.product.id}}</h3>
+                    </div>
+                  </div>
+                  <!--  -->
+                  <div class="css-kgkvir"  ng-repeat="not in notNul" ng-if="not.id === pr.id">
+                    <div class="css-1co26wt" >
+                      <div class="css-nt9nao" >{{ pr.price | formatCurrency }}</div>
+                    </div>
+                  </div>
+
+                  <div class="css-kgkvir" ng-repeat="dp in discountPrices" ng-if="dp.price.id === pr.id">
+                    <div class="css-1co26wt" >
+                      <div class="css-nt9nao" >{{ pr.price - (pr.price * (dp.discount.percentage / 100)) | formatCurrency }}</div>
+                      <div class="css-3mjppt"   >
+                        <div class="css-1gnksc0" color="textSecondary">{{ pr.price | formatCurrency }}</div>
+                        <div t color="primary500" class="css-1qruly8">-{{ dp.discount.percentage }}%</div>
+                      </div>
+                    </div>
+                  </div>
+                    <!--  -->
+                </div>
+              </a></div>
+
+
+            <div class="modal" id="_{{fa.product.id}}">
+              <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                <div class="modal-content">
+
+                  <div class="modal-body">
+                    <div class="quickview_body">
+                      <div class="container">
+                        <div class="row">
+
+                          <div class="col-12 col-lg-5" >
+<!--  -->
+                        <div class="col-lg-12 container_img">
+                          <div class="mySlides" ng-repeat="ig in image.slice().reverse()" ng-if="ig.product.id === fa.product.id">
+                            <img class="zoomable-img" ng-src="{{ig.name}}" style="width:100%; height: 200px;">
+                          </div>
+                          
+                          <a class="prev" ng-click="plusSlides(-1)">❮</a>
+                          <a class="next" ng-click="plusSlides(1)">❯</a>
+                      </div>
+                      <div class="col-lg-12 mt-1 ">
+                      <div class="img_bottom ">
+                          <div class="column " ng-repeat="ig in image.slice().reverse() track by $index" ng-if="ig.product.id === fa.product.id">
+                            <img class="demo-img cursor" ng-src="{{ig.name}}" style="width:100%; height: 50px;" ng-click="currentSlide(($index+1))" alt="The Woods">
+                          </div>
                         </div>
                       </div>
-                      <div class="css-14q2k9d">
-                        <div class="css-zb7zul">
-                          <div class="css-1bqeu8f">TIẾT KIỆM</div>
-                          <div class="css-1rdv2qd">61.000&nbsp;₫</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="css-68cx5s">
-                      <div class="css-5gl0js" style="text-transform: uppercase; display: inline;">KINGSTON</div>
-                    </div>
-                    <div class="css-1ybkowq">
-                      <div class="att--title css-38w3f2" color="textPrimary">
-                        <h3 class="css-1xdyrhj">USB 32GB
-                          KINGSTON DataTraveler Exodia DTX</h3>
-                      </div>
-                    </div>
-                    <div class="css-kgkvir">
-                      <div class="css-1co26wt">
-                        <div class="css-nt9nao">79.000&nbsp;₫</div>
-                        <div class="css-3mjppt">
-                          <div class="css-1gnksc0" color="textSecondary">140.000&nbsp;₫</div>
-                          <div t color="primary500" class="css-1qruly8">-43.57%</div>
+<!--  -->
+
+                          </div>
+                          <!--  -->
+                          <div class="col-12 col-lg-7">
+
+                            <div class="row quickview_pro_des ps-5 ">
+                              <div class="col-lg-12 " style="position: relative;">
+                                <span aria-hidden="true" class="close ml-auto text-right" data-dismiss="modal"
+                                  aria-label="Close"  ><i class="fas fa-xmark"></i></span>
+                              </div>
+                              <div class="col-lg-12 ">
+                                <h4 class="title title_text_t" data-toggle="tooltip" title=""> {{fa.product.name}}
+                                </h4>
+                              </div>
+                              <div class="col-lg-12 mb-2 ">
+                                <span class="status">Trạng thái: </span>
+                                <span
+                                  class="status-title   {{ pr.product.status == 1 ? 'text-warning' :  'text-danger'}}">
+                                  {{ fa.product.status == 1 ? 'còn hàng' : 'hết hàng' }}</span>
+                              </div>
+                              <div class="col-lg-12 mb-2 " style="display: flex;" ng-repeat="pr in prices" ng-if="pr.product.id === fa.product.id">
+                                <span class="pro-title">Giá:</span>
+                                <div class="css-kgkvir pro-price"  ng-repeat="not in notNul" ng-if="not.id === pr.id">
+                                  <div class="css-1co26wt" >
+                                    <div class="css-nt9nao" >{{ pr.price | formatCurrency }}</div>
+                                  </div>
+                                </div>
+                                  <span class="pro-price" ng-repeat="dp in discountPrices" ng-if="dp.price.id === pr.id">
+                                    <div class="css-nt9nao" >{{ pr.price - (pr.price*(dp.discount.percentage / 100)) | formatCurrency}}</div>
+                                    <div class="css-3mjppt"  >
+                                      <div class="css-1gnksc0" color="textSecondary">{{ pr.price | formatCurrency }}</div>
+                                      <div t color="primary500" class="css-1qruly8">-{{dp.discount.percentage}}%</div>
+                                    </div>
+                                  </span>
+                              </div>
+
+                              <div class="col-lg-12 d-flex mb-3">
+                                <span class="quantity-title align-self-center">Số lượng:</span>
+                                <div class="quantity">
+                                  <div class="d-flex align-items-center">
+                                    <input type="number" id="typeNumber" class="form-control" step="1" min="1"
+                                      max="99" value="1">
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="col-lg-12 d-flex" style=" height: 87px;">
+                                <div class="col-lg-3">
+                                  <span class="mota">Mô tả:</span>
+                                </div>
+                                <div class="col-lg-9 custom-scrollbar overflow">
+
+                                  {{fa.product.description}}
+                                </div>
+                              </div>
+
+                              <div class="col-lg-12  ">
+                                <span class="favorite-title">Yêu thích:</span>
+                                <span class="favorite-icon"><i class="fas fa-heart"></i></span>
+                                <span class="favorite-icon"><i class="fas fa-heart-crack"></i></span>
+                              </div>
+
+                              <div class="col-lg-12 mt-4">
+                                <div class="row">
+                                  <div class="col-lg-6"><button type="submit" name="addtocart" value="5"
+                                      class="button btnred add-to-cartProduct">Mua
+                                      ngay</button></div>
+                                  <div class="col-lg-6"> <button type="submit" class="button-cart slide">Thêm vào giỏ
+                                      hàng</button></div>
+                                </div>
+
+                              </div>
+
+
+                            </div>
+
+                          </div>
+                          <!-- Add to Cart Form -->
+
                         </div>
                       </div>
                     </div>
                   </div>
-                </a></div>
+                </div>
+              </div>
             </div>
-            <div class="css-13w7uog">
-              <div class="css-35xksx"><a class="css-pxdb0j" href="">
-                  <div class="css-4rhdrh">
-                    <div class="css-1v97aik">
-                      <div class="css-798fc">
-                        <div height="100%" width="100%" class="css-1uzm8bv"><img
-                            src="https://lh3.googleusercontent.com/4mXSgvBf9fRB9Enjuvm2P9oZ-f-ThyrH9KH6q301FqnN22t4BOBVnNz9lcdfsMyGUuLaHx8JO44uf5PEEO4=w230-rw"
-                            alt="USB 32GB KINGSTON DataTraveler Exodia DTX"
-                            style="width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0px; left: 0px;">
-                        </div>
-                      </div>
-                      <div class="css-14q2k9d">
-                        <div class="css-zb7zul">
-                          <div class="css-1bqeu8f">TIẾT KIỆM</div>
-                          <div class="css-1rdv2qd">61.000&nbsp;₫</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="css-68cx5s">
-                      <div class="css-5gl0js" style="text-transform: uppercase; display: inline;">KINGSTON</div>
-                    </div>
-                    <div class="css-1ybkowq">
-                      <div class="att--title css-38w3f2" color="textPrimary">
-                        <h3 class="css-1xdyrhj">USB 32GB
-                          KINGSTON DataTraveler Exodia DTX</h3>
-                      </div>
-                    </div>
-                    <div class="css-kgkvir">
-                      <div class="css-1co26wt">
-                        <div class="css-nt9nao">79.000&nbsp;₫</div>
-                        <div class="css-3mjppt">
-                          <div class="css-1gnksc0" color="textSecondary">140.000&nbsp;₫</div>
-                          <div t color="primary500" class="css-1qruly8">-43.57%</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </a></div>
-            </div>
-            <div class="css-13w7uog">
-              <div class="css-35xksx"><a class="css-pxdb0j" href="">
-                  <div class="css-4rhdrh">
-                    <div class="css-1v97aik">
-                      <div class="css-798fc">
-                        <div height="100%" width="100%" class="css-1uzm8bv"><img
-                            src="https://lh3.googleusercontent.com/3-5LWXWEbP5x6lu453ZUUEJ5LtBimW-FQHRUsrWGR7Z2c9UCls4AmxRitBgsknW8OKhHBPXLI2oyxBWiKk1qjt8tEgsNjAY=w230-rw"
-                            alt="USB 32GB KINGSTON DataTraveler Exodia DTX"
-                            style="width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0px; left: 0px;">
-                        </div>
-                      </div>
-                      <div class="css-14q2k9d">
-                        <div class="css-zb7zul">
-                          <div class="css-1bqeu8f">TIẾT KIỆM</div>
-                          <div class="css-1rdv2qd">61.000&nbsp;₫</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="css-68cx5s">
-                      <div class="css-5gl0js" style="text-transform: uppercase; display: inline;">KINGSTON</div>
-                    </div>
-                    <div class="css-1ybkowq">
-                      <div class="att--title css-38w3f2" color="textPrimary">
-                        <h3 class="css-1xdyrhj">USB 32GB
-                          KINGSTON DataTraveler Exodia DTX</h3>
-                      </div>
-                    </div>
-                    <div class="css-kgkvir">
-                      <div class="css-1co26wt">
-                        <div class="css-nt9nao">79.000&nbsp;₫</div>
-                        <div class="css-3mjppt">
-                          <div class="css-1gnksc0" color="textSecondary">140.000&nbsp;₫</div>
-                          <div t color="primary500" class="css-1qruly8">-43.57%</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </a></div>
-            </div>
-            <div class="css-13w7uog">
-              <div class="css-35xksx"><a class="css-pxdb0j" href="">
-                  <div class="css-4rhdrh">
-                    <div class="css-1v97aik">
-                      <div class="css-798fc">
-                        <div height="100%" width="100%" class="css-1uzm8bv"><img
-                            src="https://lh3.googleusercontent.com/xxLc1xVlKQq-i3hOZUhzzF3Zo34VrKAKlahxhStkgq9FwNgPDVO_vq5Kguc-R2ZTJi38SCLMejws7I3Jsw=w230-rw"
-                            alt="USB 32GB KINGSTON DataTraveler Exodia DTX"
-                            style="width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0px; left: 0px;">
-                        </div>
-                      </div>
-                      <div class="css-14q2k9d">
-                        <div class="css-zb7zul">
-                          <div class="css-1bqeu8f">TIẾT KIỆM</div>
-                          <div class="css-1rdv2qd">61.000&nbsp;₫</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="css-68cx5s">
-                      <div class="css-5gl0js" style="text-transform: uppercase; display: inline;">KINGSTON</div>
-                    </div>
-                    <div class="css-1ybkowq">
-                      <div class="att--title css-38w3f2" color="textPrimary">
-                        <h3 class="css-1xdyrhj">USB 32GB
-                          KINGSTON DataTraveler Exodia DTX</h3>
-                      </div>
-                    </div>
-                    <div class="css-kgkvir">
-                      <div class="css-1co26wt">
-                        <div class="css-nt9nao">79.000&nbsp;₫</div>
-                        <div class="css-3mjppt">
-                          <div class="css-1gnksc0" color="textSecondary">140.000&nbsp;₫</div>
-                          <div t color="primary500" class="css-1qruly8">-43.57%</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </a></div>
-            </div>
-            <div class="css-13w7uog">
-              <div class="css-35xksx"><a class="css-pxdb0j" href="">
-                  <div class="css-4rhdrh">
-                    <div class="css-1v97aik">
-                      <div class="css-798fc">
-                        <div height="100%" width="100%" class="css-1uzm8bv"><img
-                            src="https://lh3.googleusercontent.com/MYOJBRFBQMv7JqHnahNgogpPImmB-C4dGZE4ZdXZg8lYZRZhRaQNbAk63eCwk-AoHfMjbCwMvvmpkcQg3LM0=w230-rw"
-                            alt="USB 32GB KINGSTON DataTraveler Exodia DTX"
-                            style="width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0px; left: 0px;">
-                        </div>
-                      </div>
-                      <div class="css-14q2k9d">
-                        <div class="css-zb7zul">
-                          <div class="css-1bqeu8f">TIẾT KIỆM</div>
-                          <div class="css-1rdv2qd">61.000&nbsp;₫</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="css-68cx5s">
-                      <div class="css-5gl0js" style="text-transform: uppercase; display: inline;">KINGSTON</div>
-                    </div>
-                    <div class="css-1ybkowq">
-                      <div class="att--title css-38w3f2" color="textPrimary">
-                        <h3 class="css-1xdyrhj">USB 32GB
-                          KINGSTON DataTraveler Exodia DTX</h3>
-                      </div>
-                    </div>
-                    <div class="css-kgkvir">
-                      <div class="css-1co26wt">
-                        <div class="css-nt9nao">79.000&nbsp;₫</div>
-                        <div class="css-3mjppt">
-                          <div class="css-1gnksc0" color="textSecondary">140.000&nbsp;₫</div>
-                          <div t color="primary500" class="css-1qruly8">-43.57%</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </a></div>
-            </div>
-            <div class="css-13w7uog">
-              <div class="css-35xksx"><a class="css-pxdb0j" href="">
-                  <div class="css-4rhdrh">
-                    <div class="css-1v97aik">
-                      <div class="css-798fc">
-                        <div height="100%" width="100%" class="css-1uzm8bv"><img
-                            src="https://lh3.googleusercontent.com/JBp0up2VpXkHwlsh4_xnkOarz-8lObGwedkTNBbDPwRcEjZCPpBNUWrgFeKsy5apG7FunSplWiE4IUMLyD-mQ4sTLA5MZ7GiOQ=w230-rw"
-                            alt="USB 32GB KINGSTON DataTraveler Exodia DTX"
-                            style="width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0px; left: 0px;">
-                        </div>
-                      </div>
-                      <div class="css-14q2k9d">
-                        <div class="css-zb7zul">
-                          <div class="css-1bqeu8f">TIẾT KIỆM</div>
-                          <div class="css-1rdv2qd">61.000&nbsp;₫</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="css-68cx5s">
-                      <div class="css-5gl0js" style="text-transform: uppercase; display: inline;">KINGSTON</div>
-                    </div>
-                    <div class="css-1ybkowq">
-                      <div class="att--title css-38w3f2" color="textPrimary">
-                        <h3 class="css-1xdyrhj">USB 32GB
-                          KINGSTON DataTraveler Exodia DTX</h3>
-                      </div>
-                    </div>
-                    <div class="css-kgkvir">
-                      <div class="css-1co26wt">
-                        <div class="css-nt9nao">79.000&nbsp;₫</div>
-                        <div class="css-3mjppt">
-                          <div class="css-1gnksc0" color="textSecondary">140.000&nbsp;₫</div>
-                          <div t color="primary500" class="css-1qruly8">-43.57%</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </a></div>
-            </div>
-            <div class="css-13w7uog">
-              <div class="css-35xksx"><a class="css-pxdb0j" href="">
-                  <div class="css-4rhdrh">
-                    <div class="css-1v97aik">
-                      <div class="css-798fc">
-                        <div height="100%" width="100%" class="css-1uzm8bv"><img
-                            src="https://lh3.googleusercontent.com/413qbLSbUeKYrH0hM0knF5sFFW1OrZluD7aMSFaESoCF5aIOdpBKv5uZBMW4-2-kyxnaxDmUOvddnANBz3msQCOvnzB9JAdx=w230-rw"
-                            alt="USB 32GB KINGSTON DataTraveler Exodia DTX"
-                            style="width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0px; left: 0px;">
-                        </div>
-                      </div>
-                      <div class="css-14q2k9d">
-                        <div class="css-zb7zul">
-                          <div class="css-1bqeu8f">TIẾT KIỆM</div>
-                          <div class="css-1rdv2qd">61.000&nbsp;₫</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="css-68cx5s">
-                      <div class="css-5gl0js" style="text-transform: uppercase; display: inline;">KINGSTON</div>
-                    </div>
-                    <div class="css-1ybkowq">
-                      <div class="att--title css-38w3f2" color="textPrimary">
-                        <h3 class="css-1xdyrhj">USB 32GB
-                          KINGSTON DataTraveler Exodia DTX</h3>
-                      </div>
-                    </div>
-                    <div class="css-kgkvir">
-                      <div class="css-1co26wt">
-                        <div class="css-nt9nao">79.000&nbsp;₫</div>
-                        <div class="css-3mjppt">
-                          <div class="css-1gnksc0" color="textSecondary">140.000&nbsp;₫</div>
-                          <div t color="primary500" class="css-1qruly8">-43.57%</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </a></div>
-            </div>
-            <div class="css-13w7uog">
-              <div class="css-35xksx"><a class="css-pxdb0j" href="">
-                  <div class="css-4rhdrh">
-                    <div class="css-1v97aik">
-                      <div class="css-798fc">
-                        <div height="100%" width="100%" class="css-1uzm8bv"><img
-                            src="https://lh3.googleusercontent.com/GZ3igXol6qP3Z42Wlaab-z1BH-mkD-yhCDp5B1M3xHzLPERrFzh9Y0VtSwc3cPSzRyOLlXIo44Wwc9WWH1E=w230-rw"
-                            alt="USB 32GB KINGSTON DataTraveler Exodia DTX"
-                            style="width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0px; left: 0px;">
-                        </div>
-                      </div>
-                      <div class="css-14q2k9d">
-                        <div class="css-zb7zul">
-                          <div class="css-1bqeu8f">TIẾT KIỆM</div>
-                          <div class="css-1rdv2qd">61.000&nbsp;₫</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="css-68cx5s">
-                      <div class="css-5gl0js" style="text-transform: uppercase; display: inline;">KINGSTON</div>
-                    </div>
-                    <div class="css-1ybkowq">
-                      <div class="att--title css-38w3f2" color="textPrimary">
-                        <h3 class="css-1xdyrhj">USB 32GB
-                          KINGSTON DataTraveler Exodia DTX</h3>
-                      </div>
-                    </div>
-                    <div class="css-kgkvir">
-                      <div class="css-1co26wt">
-                        <div class="css-nt9nao">79.000&nbsp;₫</div>
-                        <div class="css-3mjppt">
-                          <div class="css-1gnksc0" color="textSecondary">140.000&nbsp;₫</div>
-                          <div t color="primary500" class="css-1qruly8">-43.57%</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </a></div>
-            </div>
-            <div class="css-13w7uog">
-              <div class="css-35xksx"><a class="css-pxdb0j" href="">
-                  <div class="css-4rhdrh">
-                    <div class="css-1v97aik">
-                      <div class="css-798fc">
-                        <div height="100%" width="100%" class="css-1uzm8bv"><img
-                            src="https://lh3.googleusercontent.com/ttSWKqs7VAhJcT_9poiqP8VR5gHDEx-d2u0yJPcbGug-dbITMboz1SXEFz_fnH1a_-qxkAtT9SaSSOVR-lI=w230-rw"
-                            alt="USB 32GB KINGSTON DataTraveler Exodia DTX"
-                            style="width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0px; left: 0px;">
-                        </div>
-                      </div>
-                      <div class="css-14q2k9d">
-                        <div class="css-zb7zul">
-                          <div class="css-1bqeu8f">TIẾT KIỆM</div>
-                          <div class="css-1rdv2qd">61.000&nbsp;₫</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="css-68cx5s">
-                      <div class="css-5gl0js" style="text-transform: uppercase; display: inline;">KINGSTON</div>
-                    </div>
-                    <div class="css-1ybkowq">
-                      <div class="att--title css-38w3f2" color="textPrimary">
-                        <h3 class="css-1xdyrhj">USB 32GB
-                          KINGSTON DataTraveler Exodia DTX</h3>
-                      </div>
-                    </div>
-                    <div class="css-kgkvir">
-                      <div class="css-1co26wt">
-                        <div class="css-nt9nao">79.000&nbsp;₫</div>
-                        <div class="css-3mjppt">
-                          <div class="css-1gnksc0" color="textSecondary">140.000&nbsp;₫</div>
-                          <div t color="primary500" class="css-1qruly8">-43.57%</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </a></div>
-            </div>
-            <div class="css-13w7uog">
-              <div class="css-35xksx"><a class="css-pxdb0j" href="">
-                  <div class="css-4rhdrh">
-                    <div class="css-1v97aik">
-                      <div class="css-798fc">
-                        <div height="100%" width="100%" class="css-1uzm8bv"><img
-                            src="https://lh3.googleusercontent.com/ttSWKqs7VAhJcT_9poiqP8VR5gHDEx-d2u0yJPcbGug-dbITMboz1SXEFz_fnH1a_-qxkAtT9SaSSOVR-lI=w230-rw"
-                            alt="USB 32GB KINGSTON DataTraveler Exodia DTX"
-                            style="width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0px; left: 0px;">
-                        </div>
-                      </div>
-                      <div class="css-14q2k9d">
-                        <div class="css-zb7zul">
-                          <div class="css-1bqeu8f">TIẾT KIỆM</div>
-                          <div class="css-1rdv2qd">61.000&nbsp;₫</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="css-68cx5s">
-                      <div class="css-5gl0js" style="text-transform: uppercase; display: inline;">KINGSTON</div>
-                    </div>
-                    <div class="css-1ybkowq">
-                      <div class="att--title css-38w3f2" color="textPrimary">
-                        <h3 class="css-1xdyrhj">USB 32GB
-                          KINGSTON DataTraveler Exodia DTX</h3>
-                      </div>
-                    </div>
-                    <div class="css-kgkvir">
-                      <div class="css-1co26wt">
-                        <div class="css-nt9nao">79.000&nbsp;₫</div>
-                        <div class="css-3mjppt">
-                          <div class="css-1gnksc0" color="textSecondary">140.000&nbsp;₫</div>
-                          <div t color="primary500" class="css-1qruly8">-43.57%</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </a></div>
-            </div>
+          </div>
           </div>
           <!-- pagination -->
           <div class="row mt-5 ">

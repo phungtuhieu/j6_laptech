@@ -21,7 +21,7 @@ public interface ProductDAO extends JpaRepository<Product,Long>{
 
 
 
-    @Query("SELECT p FROM Product p WHERE p.brand.name LIKE %:name%")
+    @Query("SELECT p FROM Product p JOIN p.prices pr WHERE p.status = 1 AND CURRENT_TIMESTAMP BETWEEN pr.startDate AND pr.endDate  AND p.brand.name LIKE %:name%")
     List<Product> findByProductBrandName(@Param("name") String name);
 
     
