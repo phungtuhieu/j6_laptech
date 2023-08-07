@@ -2,7 +2,10 @@ package com.laptech.dao;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,8 +17,10 @@ import com.laptech.model.ReportProductSold;
 
 public interface ProductDAO extends JpaRepository<Product,Long>{
 
-
-    
+    @Query("SELECT p FROM Product p WHERE p.name LIKE CONCAT('%', :keyword, '%') "+
+    "or p.category.name LIKE CONCAT('%',:keyword,'%') "+ 
+    "or p.brand.name LIKE CONCAT('%',:keyword,'%')")
+    Page<Product> findByName(@Param("keyword") String keyword, Pageable pageable);
 
      @Query("SELECT new com.laptech.model.ReportFavoriteProduct(p.name, p.category.name, COUNT(f), MIN(f.likedDate), MAX(f.likedDate)) "
         + " FROM Product p JOIN p.favorites f "

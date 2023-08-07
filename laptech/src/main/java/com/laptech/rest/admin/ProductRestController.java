@@ -45,9 +45,15 @@ public class ProductRestController {
     FileManagerService fileService;
 
     @GetMapping
-    public ResponseEntity<Page<Product>> getAll(@RequestParam("pageNo") Optional<Integer> pageNo){
+    public ResponseEntity<Page<Product>> getAll(@RequestParam("pageNo") Optional<Integer> pageNo,
+    @RequestParam("keyword") Optional<String> keyword){
         Pageable pageable = PageRequest.of(pageNo.orElse(0), 5);
-        Page<Product> page  = dao.findAll(pageable);
+         Page<Product> page = null;
+        if(keyword.isPresent()) {
+             page = dao.findByName(keyword.orElse(""),pageable);
+              return ResponseEntity.ok(page);
+        } 
+         page = dao.findAll(pageable);
         return ResponseEntity.ok(page);
     }
 
@@ -58,7 +64,7 @@ public class ProductRestController {
        }
         return ResponseEntity.ok(dao.findById(id).get());
     }
- 
+    
 
     @PostMapping
     public ResponseEntity<Product> post(@RequestBody Product product){
