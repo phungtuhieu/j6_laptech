@@ -82,6 +82,10 @@ public class Product {
     @JsonIgnore
     @OneToMany(mappedBy =  "product")
     List<ProductImages> productImages;
+    
+    @JsonIgnore
+    @OneToMany(mappedBy =  "product")
+    List<OrderDetail> orderDetails;
 
 
    
