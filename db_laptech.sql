@@ -168,6 +168,7 @@ CREATE TABLE Cart (
     id BIGINT IDENTITY(1,1) NOT NULL,
     user_id NVARCHAR(50) NOT NULL,
     product_id BIGINT NOT NULL,
+	price FLOAT NOT NULL,
     quantity INT NOT NULL
 )
 GO 
@@ -189,6 +190,7 @@ CREATE TABLE Order_Details (
     id BIGINT IDENTITY(1,1) NOT NULL,
     order_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
+	price FLOAT NOT NULL,
     quantity INT NOT NULL
 )
 GO 
@@ -621,7 +623,7 @@ GO
 
 
 
-SELECT * FROM Cart
+
 -- DELETE Orders
 -- DBCC CHECKIDENT ('Orders', RESEED, 9999);
 INSERT INTO Orders (user_id, order_date, completion_date, delivery_date, cancellation_date, cancellation_reason, payment_method, [status])
@@ -635,13 +637,13 @@ GO
 SELECT * FROM Orders
 -- DELETE Order_Details
 -- DBCC CHECKIDENT ('Order_Details', RESEED, 0);
-INSERT INTO Order_Details (order_id, product_id, quantity)
+INSERT INTO Order_Details (order_id, product_id,price, quantity)
 VALUES
-    (10000, 1000, 2),
-    (10001, 1002, 1),
-    (10002, 1001, 1),
-    (10003, 1004, 3),
-    (10004, 1003, 2);
+    (10000, 1000,12000.0, 2),
+    (10001, 1002,13000.0, 1),
+    (10002, 1001,11000.0, 1),
+    (10003, 1004,81000.0, 3),
+    (10004, 1003,24000.0, 2);
 
 GO
 

@@ -21,6 +21,7 @@ public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+    Double price;
     Integer quantity;
 
     @ManyToOne
