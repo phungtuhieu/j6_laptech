@@ -46,7 +46,12 @@
                         </div>
                     </div>
                     <div class="table-center">
-                        <div class="table-responsive">
+                        <div class="loading-page"  ng-if="isLoading">
+                            <div class="spinner-border text-warning "  role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                        <div class="table-responsive" ng-if="!isLoading">
                             <table class="table table-hover">
                               <thead>
                                 <tr class="tb-header">
@@ -56,17 +61,22 @@
                                   <th scope="col">Danh mục</th>
                                   <th scope="col">Mô tả</th>
                                   <th scope="col">Ngày tạo</th>
+                                  <th scope="col">Trạng thái</th>
                                   <th scope="col">Thao tác</th>
                                 </tr>
                               </thead>
                               <tbody>
-                                <tr class="" ng-repeat="item in items">
+								  {{isNewProductAdded}}
+                                <tr class="table-row-added" ng-repeat="item in items" >
                                   <td>{{item.name}}</td>
                                   <td>{{item.quantity}}</td>
                                   <td>{{item.brand.name}}</td>
                                   <td>{{item.category.name}}</td>
                                   <td class="reduce-td">{{item.description}}</td>
-                                  <td>{{item.createDate}}</td>
+                                  <td>{{ item.createDate  | date:'dd/MM/yyyy' }}</td>
+                                  <td  ng-if="item.status == 1">Còn hàng</td>
+                                  <td  ng-if="item.status == 2">Hết hàng</td>
+                                  <td  ng-if="item.status == 3">Ngừng kinh doành</td>
                                   <td class="td-action ">
                                      <div class="wordset">
                                         <ul>
@@ -74,7 +84,7 @@
                                                 <a  ng-click="edit(item.id  )" class="text-secondary-emphasis"><i class="fa-solid fa-pen-to-square"></i></a>
                                             </li>
                                             <li>
-                                                <a href="" class="text-danger"><i class="fa-solid fa-trash"></i></a>
+                                                <a href="" ng-click="delete(item.id)" class="text-danger"><i class="fa-solid fa-trash"></i></a>
                                             </li>
                                         </ul>
                                     </div>
@@ -83,6 +93,7 @@
                               </tbody>
                             </table>
                           </div>
+                          
                     </div>
                     <div class="table-bottom d-flex justify-content-end align-items-center pt-4">
                         <span class="pagination-info me-2">1 - 10 of <span >11</span> items</span>

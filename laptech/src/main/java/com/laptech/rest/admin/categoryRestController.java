@@ -30,23 +30,23 @@ public class categoryRestController {
         return ResponseEntity.ok(dao.findAll());
     }
 
-     @GetMapping("/api/category/{id}")
-    public ResponseEntity<Category> getOne(@PathVariable("id") Long id){
-        if(!dao.existsById(id)){
+    @GetMapping("/api/category/{id}")
+    public ResponseEntity<Category> getOne(@PathVariable("id") Long id) {
+        if (!dao.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(dao.findById(id).get());
     }
 
     @PostMapping("/api/category")
-    public ResponseEntity<Category> post(@RequestBody Category category){
-       dao.save(category);
+    public ResponseEntity<Category> post(@RequestBody Category category) {
+        dao.save(category);
         return ResponseEntity.ok(category);
     }
 
     @PutMapping("/api/category/{id}")
-    public ResponseEntity<Category> update(@PathVariable("id") Long id, @RequestBody Category category){
-        if(!dao.existsById(id)){
+    public ResponseEntity<Category> update(@PathVariable("id") Long id, @RequestBody Category category) {
+        if (!dao.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
         dao.save(category);
@@ -54,9 +54,9 @@ public class categoryRestController {
     }
 
     @DeleteMapping("/api/category/{id}")
-    public ResponseEntity<Boolean> delete(@PathVariable("id") Long id){
-          Category category = dao.findById(id).get();
-          if(category == null){
+    public ResponseEntity<Boolean> delete(@PathVariable("id") Long id) {
+        Category category = dao.findById(id).get();
+        if (category == null) {
             return ResponseEntity.notFound().build();
           }
         //   if(!category.getProducts().isEmpty()){ 
@@ -68,8 +68,8 @@ public class categoryRestController {
     }
 
     @GetMapping("/api/category/search/{name}")
-    public ResponseEntity<List<Category>> search(@PathVariable("name") String name){
+    public ResponseEntity<List<Category>> search(@PathVariable("name") String name) {
         return ResponseEntity.ok(dao.findByNameLike(name));
     }
-    
+
 }

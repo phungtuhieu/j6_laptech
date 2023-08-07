@@ -9,138 +9,152 @@
 </head>
 
 <body>
-    <div class="content-page"  th:attr="ng-controller=${#ctx.springRequestContext.requestUri.contains('create') ? 'create' : 'edit'}">
+    <div ></div>
+    <div class="content-page" ng-controller="form"
+        >
+
         <div class="page-header d-flex justify-content-between align-items-center">
             <ul class="page-info">
-                <li class=" page-title">[[${#ctx.springRequestContext.requestUri.contains('create')} ? 'Tạo sản phẩm' :'Cập nhật sản phẩm']]</li>
-                <li class=" page-description">[[${#ctx.springRequestContext.requestUri.contains('create')} ? 'Thêm sản phẩm mới' :'Thay đổi thông tin sản phẩm']]</li>
+                <li class=" page-title">[[${#ctx.springRequestContext.requestUri.contains('create')} ? 'Tạo sản phẩm'
+                    :'Cập nhật sản phẩm']]</li>
+                <li class=" page-description">[[${#ctx.springRequestContext.requestUri.contains('create')} ? 'Thêm sản
+                    phẩm mới' :'Thay đổi thông tin sản phẩm']]</li>
             </ul>
             <!-- <a href="#" class="btn btn-added">
-                <i class="fa-solid fa-plus"></i>
-                Thêm sản phẩm
-            </a> -->
+                    <i class="fa-solid fa-plus"></i>
+                    Thêm sản phẩm
+                </a> -->
         </div>
         <div class="card">
             <div class="card-body page-body">
-
-                <form action="">
+                <div class="loading-page" ng-if="isLoading" ng-cloak>
+                    <div class="spinner-border text-warning" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                
+                <form action="" ng-if="!isLoading || !isEdit">
                     <div class="row">
+                        <div class="mb-4 col-lg-3 form-group d-none" >
+                            <!-- <input type="hidden" class="form-control" ng-model="form.id"  id="product-name"> -->
+                        </div>
                         <div class="mb-4 col-lg-3 form-group">
                             <label for="product-name" class="form-label">Tên sản phẩm</label>
                             <input type="text" class="form-control" ng-model="form.name" id="product-name">
                         </div>
                         <div class="mb-4 col-lg-3 form-group">
                             <label for="" class="form-label">Số lượng</label>
-                            <input type="text" class="form-control" id="" ng-model="form.quantity" >
+                            <input type="text" class="form-control" id="" ng-model="form.quantity">
                         </div>
                         <div class="mb-4 col-lg-3 form-group">
                             <label for="" class="form-label">Danh mục</label>
-                            <select class="form-select"  ng-model="form.category" ng-options="cat.name for cat in optionsCat">
+                            <select class="form-select" ng-model="form.category" ng-options="cat.name for cat in optionsCat track by cat.id">
                             </select>
                             
+
                         </div>
                         <div class="mb-4 col-lg-3 form-group">
                             <label for="" class="form-label">CPU</label>
-                            <select class="form-select" aria-label="Default select example">
-                                <option selected>Chọn CPU</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
+                            <select class="form-select" ng-model="form.cpu" ng-options="cpu.name for cpu in optionsCPU  track by cpu.id">
+                                <!-- <option selected>Chọn CPU</option> -->
+
                             </select>
                         </div>
                         <div class="mb-4 col-lg-3 form-group">
                             <label for="" class="form-label">RAM</label>
-                            <select class="form-select" aria-label="Default select example">
-                                <option selected>Chọn RAM</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
+                            <select class="form-select" ng-model="form.ram" ng-options="ram.name for ram in optionsRAM track by ram.id">
                             </select>
                         </div>
                         <div class="mb-4 col-lg-3 form-group">
                             <label for="" class="form-label">Bộ nhớ</label>
-                            <select class="form-select" aria-label="Default select example">
-                                <option selected>Chọn bộ nhớ</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
+                            <select class="form-select" ng-model="form.storage"
+                                ng-options="storage.capacity for storage in optionsStorage track by storage.id">
                             </select>
                         </div>
                         <div class="mb-4 col-lg-3 form-group">
                             <label for="" class="form-label">Màn hình</label>
-                            <select class="form-select" aria-label="Default select example">
-                                <option selected>Chọn màn hình</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
+                            <select class="form-select" ng-model="form.screenSize"
+                                ng-options="screenSize.size for screenSize in optionsScreen  track by screenSize.id">
+
                             </select>
                         </div>
                         <div class="mb-4 col-lg-3 form-group">
-                            <label for="" class="form-label" >Card đồ hoạ</label>
-                            <input class="form-control" list="products" id="exampleDataList" placeholder="Tìm card đồ hoạ...">
-                            <datalist id="products">
-                                <option value="CARD1">
-                                <option value="CARD1">
-                                <option value="CARD1">
-                                <option value="CARD1">
-                            </datalist>
+                            <label for="" class="form-label">Card đồ hoạ</label>
+                            <select class="form-select" ng-model="form.graphicsCard"
+                                ng-options="graphicsCard.name for graphicsCard in optionsGraph track by graphicsCard.id">
+                            </select>
                         </div>
                         <div class="mb-4 col-lg-3 form-group">
                             <label for="" class="form-label">Hệ điều hành</label>
-                            <select class="form-select" aria-label="Default select example">
-                                <option selected>Chọn hệ điều hành</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
+                            <select class="form-select" ng-model="form.operatingSystem"
+                                ng-options="operatingSystem.name for operatingSystem in optionsOS track by operatingSystem.id">
                             </select>
                         </div>
-                        
+
                         <div class="mb-4 col-lg-3 form-group">
                             <label for="" class="form-label">Nhà sản xuất</label>
-                            <select class="form-select" aria-label="Default select example">
-                                <option selected>Chọn nhà sản xuất</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
+                            <select class="form-select" ng-model="form.brand"
+                                ng-options="brand.name for brand in optionsBrand  track by brand.id">
                             </select>
                         </div>
                         <div class="mb-4 col-lg-3 form-group">
                             <label for="" class="form-label">Trạng thái</label>
-                            <select class="form-select" aria-label="Default select example">
-                                <option selected value="1">Còn hàng</option>
-                                <option value="2">Hết hàng</option>
+                            <select class="form-select" ng-model="form.status" ng-options="option.id as option.name for option in optionsStatus" >
+
                             </select>
                         </div>
                         <div class="mb-4 col-lg-3 form-group">
                             <label for="" class="form-label">Ngày tạo</label>
-                            <input type="text" class="form-control" id="">
+                            <input type="date" ng-model="form.createDate" readonly  class="form-control" id="">
                         </div>
                         <div class="mb-4 col-lg-12 form-group">
                             <label for="prod-desciption" class="form-label">Mô tả</label>
-                            <textarea class="form-control" id="prod-desciption" rows="3"></textarea>
+                            <textarea class="form-control" ng-model="form.description" id="prod-desciption"
+                                rows="3"></textarea>
                         </div>
                         <div class="mb-4 col-lg-12 form-group">
-                            <label for="prod-desciption" class="form-label">Hình ảnh <span>[img-name]</span></label>
-                            <div class="image-upload">
-                                <input type="file">
-                                <div class="image-uploads ">
-                                    <i class="fa-solid fa-cloud-arrow-up icon-upload"></i>
-                                    <h4>Drag and drop a file to upload</h4>
-                                </div>
+                            <label for="prod-desciption" class="form-label">Hình ảnh </label>
+                            <!--<div class="form-check form-switch my-2 " ng-show="isEdit">
+							  <input class="form-check-input" type="checkbox" ng-model="isEditImg" id="edit-img">
+							  <label class="form-check-label" for="edit-img">Chỉnh sửa ảnh</label>
+							</div>-->
+                            <div class="row" >
+                                <div class="mb-4 col-lg-2 " ng-cloak ng-repeat="filename in filenames">
+                                    <div class="img-box " >
+                                        <div class="img-remove" >
+                                           <a href="" ng-click="removeImg(filename)"><i class="fa-solid fa-circle-xmark"></i></a> 
+                                        </div>
+                                            <img ng-src="{{urlImg(filename)}}" alt="">
+                                    </div>
+                                    
+                                </div>  
+                                <div class="mb-4 col-lg-2 " ng-hide="filenames.length > 4 ">
+                                    <label class="add-img" >
+                                        <input type="file" accept="image/*"  multiple
+                                        onchange="angular.element(this).scope().upload(this.files)">
+                                        <i class="fa-sharp fa-solid fa-plus"></i>
+                                    </label>
+                                </div>  
                             </div>
-                            
                         </div>
+                   
                         <div class="mb-4 col-lg-12 ">
-                                <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('create')}" class="btn btn-submit me-2">Lưu</a>
-                                <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('update')}" class="btn btn-submit me-2">Cập nhật</a>
-                                <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('update')}" class="btn btn-remove me-2">Xoá</a>
-                                <a th:href="@{/admin/product/list}" class="btn btn-cancel" >Huỷ bỏ</a>
+                            <a href="" ng-if="!isEdit"
+                                class="btn btn-submit me-2"  ng-click="create()">Lưu</a>
+                            <a href="" ng-if="isEdit"
+                                class="btn btn-submit me-2" ng-cloak  ng-click="update()">Cập nhật</a>
+                            <a href="" ng-if="isEdit"
+                                class="btn btn-remove me-2"ng-cloak  ng-click="delete(form.id)">Xoá</a>
+                            <a th:href="@{/admin/product/list}" class="btn btn-cancel">Huỷ bỏ</a>
                         </div>
                     </div>
                 </form>
+
             </div>
+
         </div>
     </div>
+    
 </body>
 
 </html>
