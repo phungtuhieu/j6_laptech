@@ -73,18 +73,23 @@ function list($scope, $http,$timeout) {
 
 // Controller form
 function form ($scope, $http,$location,$filter) {
+  $scope.isEdit = $location.absUrl().includes('update');
   $scope.priceForms = [
     {
-      price: null,
+      price: 0.0,
       product: {},
-      startDate: new Date(),
-      endDate: null,
+      startDate: new Date() ,
+      endDate:  null,
     }
   ];
+  if($scope.isEdit) {
+    $scope.priceForms = [];
+  }
+  $scope.listPriceProduct = [];
   $scope.isLoading = false;
   $scope.form = {};
   $scope.isEditImg = false;
-  $scope.isEdit = $location.absUrl().includes('update');
+
    var listImgIdDeleted = [];
    var listProdImg = [];
   $scope.optionsStatus = [
@@ -150,6 +155,7 @@ function form ($scope, $http,$location,$filter) {
     var url = getUrl(`/product/${id}`);
     $http.get(url).then(resp => {
       $scope.form = resp.data;
+      load_price($scope.form.id)
       $scope.form.createDate = new Date($scope.form.createDate);
       console.log("Success", resp);
       loadProdImgUpdate(angular.copy($scope.form));
@@ -162,10 +168,14 @@ function form ($scope, $http,$location,$filter) {
   $scope.create = () => {
     var url = getUrl(`/product`);
     var item = angular.copy($scope.form);
+    
+    
     $http.post(url,item).then(resp => {
       console.log("Success-save", resp);
       $scope.form = resp.data;
       createProdImg($scope.filenames, $scope.form);
+      createPrice($scope.priceForms, $scope.form);
+      $scope.priceForms = [];
       $scope.form = {};
       $scope.filenames.length = 0;
     	window.location.href = "/admin/product/list";
@@ -181,6 +191,9 @@ function form ($scope, $http,$location,$filter) {
     $http.put(url,item).then(resp => {
       $scope.form = resp.data;
        $scope.form.createDate = new Date($scope.form.createDate);
+       if($scope.priceForms.length > 0) {
+        createPrice($scope.priceForms,$scope.form);
+       }
       if(listImgIdDeleted.length > 0) {
 		   deleteProdImg();
 	  }
@@ -299,22 +312,54 @@ function form ($scope, $http,$location,$filter) {
 
   // GIÁ
   $scope.addPriceForm = () => {
-    $scope.priceForms.push({
-      price: null,
-      product: {},
-      startDate: new Date(),
-      endDate: null,
-    })
-    console.log($scope.priceForms);
+    if($scope.priceForms.length < 1) {
+      $scope.priceForms.push({
+        price: 0.0,
+        product: {},
+        startDate: new Date() ,
+        endDate:  null,
+      })
+    }
   }
   $scope.removePriceForm = (index) => {
     $scope.priceForms.splice(index,1)
   }
-  var createPrice = (listPrice) => {
-    $http.post(getUrl(`/price`),listPrice).then(resp => {
-      
+  var createPrice = (listPrice,product) => {
+    listPrice.map(price => price.product = product);
+    if($scope.isEdit) {
+      var price = {};
+      price = $scope.listPriceProduct.find(price => price.endDate == null);
+     if(new Date(listPrice[0].startDate) <=  new Date(price.startDate)) {
+      alert('Sai') 
+      return;
+     }
+     console.log(price) 
+     if(price != null) {
+      price.endDate = new Date(listPrice[0].startDate);
+        $http.put(getUrl(`/product/price/${price.id}`),price).then(resp => {
+          console.log("Giá-", resp.data);
+        }).catch(err => {
+          console.log("Giá-", err);
+        })
+     }
+     
+    }
+    
+    $http.post(getUrl(`/product/price`),listPrice).then(resp => {
+       $scope.listPriceProduct.push(... resp.data ) ;
+       console.log(resp.data);
+       $scope.priceForms.length = 0;
     }).catch(err => {
-
+    })
+  }
+  var load_price = (idProd) => {
+    // listPrice.map(price => price.product = product);
+    // console.log("+++++0"+listPrice);
+    $http.get(getUrl(`/product/price/${idProd}`)).then(resp => {
+      $scope.listPriceProduct = resp.data;  
+      console.log("price_",resp.data);
+    }).catch(err => {
+      
     })
   }
   // /GIÁ

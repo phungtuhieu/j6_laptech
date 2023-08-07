@@ -572,7 +572,7 @@ body {
 }
 .list-price  
 {
-   overflow-x: hidden;
+    overflow-x: hidden;
     max-height: 500px; 
     padding: 10px 10px;
     margin-bottom: 20px;

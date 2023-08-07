@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.laptech.dao.PriceDAO;
 import com.laptech.dao.ProductDAO;
 import com.laptech.dao.ProductImagesDAO;
 import com.laptech.model.Price;
@@ -33,6 +34,9 @@ public class ProductRestController {
 
     @Autowired
     ProductImagesDAO pImgDao;
+
+    @Autowired
+    PriceDAO priceDao;
 
     @Autowired
     FileManagerService fileService;
@@ -108,9 +112,29 @@ public class ProductRestController {
         return ResponseEntity.ok().build()  ;
     }
     @PostMapping("/price")
-    public ResponseEntity<Void> createPrice(List<Price> prices) {
-        System.out.println(prices.get(0).getPrice());
-        return ResponseEntity.ok().build()  ;
+    public ResponseEntity<List<Price>> createPrice(@RequestBody List<Price> listPrice) {
+        List<Price> list = new ArrayList<>();
+        for (Price price : listPrice) {
+            System.out.println(price.getPrice());
+            list.add(priceDao.save(price)); 
+        }
+       
+        return ResponseEntity.ok(list)  ;
+    }
+    @GetMapping ("/price/{idProd}")
+    public ResponseEntity<List<Price>> getlistPrice(@PathVariable("idProd") Long id) {
+        if(!dao.existsById(id)) {
+            ResponseEntity.notFound().build() ;
+        } 
+        Product prod = dao.findById(id).get();
+        return ResponseEntity.ok(priceDao.findByProduct(prod)) ;
+    }
+    @PutMapping ("/price/{id}")
+    public ResponseEntity<Price> updatePrice(@PathVariable("id") Long id,@RequestBody Price price) {
+        if(!priceDao.existsById(id)) {
+            ResponseEntity.notFound().build() ;
+        } 
+        return ResponseEntity.ok(priceDao.save(price)) ;
     }
 }
 

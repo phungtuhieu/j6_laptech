@@ -119,20 +119,40 @@
                                   <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#price-product-tab">
                                     <div class="accordion-body">
                                         <div class=" list-price">
-                                            <div class="row" ng-repeat="p in priceForms track by $index">
+                                            <div class="row" ng-if="isEdit" >
+                                                <div class="table-responsive" ng-if="!isLoading">
+                                                    <table class="table table-hover">
+                                                      <thead>
+                                                        <tr class="tb-header">
+                                                          <th scope="col">Giá</th>
+                                                          <th scope="col">Ngày áp dụng</th>
+                                                          <th scope="col">Ngày kết thúc</th>
+                                                        </tr>
+                                                      </thead>
+                                                      <tbody>
+                                                        <tr class="table-row-added" ng-repeat="p in listPriceProduct " >
+                                                          <td>{{p.price}}</td>
+                                                          <td> {{p.startDate  | date:'dd/MM/yyyy  HH:mm:ss' }}</td>
+                                                          <td> {{p.endDate == null?'Còn áp dụng':p.endDate | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                                                        </tr>
+                                                      </tbody>
+                                                    </table>
+                                                  </div>
+                                            </div>
+                                            <div class="row" ng-repeat="p in priceForms ">
                                                 <div class="mb-4 col-lg-3 form-group">
                                                     <label for="" class="form-label">Giá </label>
                                                     <input type="text" class="form-control" placeholder="Nhập giá (VND)" ng-model="p.price" id="">
                                                 </div>
                                                 <div class="mb-4 col-lg-3 form-group">
                                                     <label for="" class="form-label">Ngày áp dụng</label>
-                                                    <input type="date"   class="form-control" ng-model="p.startDate"  id="">
+                                                    <input type="date"   class="form-control"  ng-model="p.startDate"  id="">
                                                 </div>
-                                                <div class="mb-4 col-lg-3 form-group">
+                                                <input type="date"   class="form-control d-none"  ng-model="p.endDate"  id="">
+                                                <!-- <div class="mb-4 col-lg-3 form-group">
                                                     <label for="" class="form-label">Ngày kết thúc</label>
-                                                    <input type="date"   class="form-control"  ng-model="p.endDate"  id="">
-                                                </div>
-                                                <div class="mb-4 col-lg-3 form-group d-flex">
+                                                </div> -->
+                                                <div class="mb-4 col-lg-3 form-group d-flex" ng-if="isEdit">
                                                     <a href=""class="btn btn-danger me-2 mt-auto mb-0" ng-click="removePriceForm($index)" >
                                                         <i class="fa-solid fa-trash-can"></i>
                                                    </a>
@@ -140,8 +160,8 @@
                                                 
                                             </div>
                                         </div>
-                                        <div class="mb-4 col-lg-12" style="padding-left:  12px;">
-                                            <a href=""class="btn btn-outline-secondary me-2" ng-click="addPriceForm()" >
+                                        <div class="mb-4 col-lg-12" style="padding-left:  12px;" ng-if="isEdit && priceForms.length < 1">
+                                            <a href=""class="btn btn-outline-secondary me-2"  ng-click="addPriceForm()" >
                                                  <i class="fa-solid fa-plus"></i> Thêm giá mới
                                             </a>
                                         </div>

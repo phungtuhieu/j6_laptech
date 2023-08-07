@@ -27,12 +27,12 @@ public class Price {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     Double price;
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "start_date")
     Date startDate = new Date();
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "end_date")
-    Date enDate = new Date();
+    Date endDate ;
     
     @ManyToOne
     @JoinColumn(name = "product_id")
