@@ -54,7 +54,7 @@ public class Order {
     
     @ManyToOne
     @JoinColumn(name = "user_id")
-    User user;
+    Account user;
 
     @JsonIgnore
     @OneToMany(mappedBy = "order")

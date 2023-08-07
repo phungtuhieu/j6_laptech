@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "Users")
-public class User {
+public class Account {
 
     @Id
     String username ;

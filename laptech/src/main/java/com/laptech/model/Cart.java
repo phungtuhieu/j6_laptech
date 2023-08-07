@@ -29,6 +29,6 @@ public class Cart {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    User user;
+    Account user;
 }
 
