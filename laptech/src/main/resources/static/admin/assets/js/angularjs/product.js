@@ -27,7 +27,7 @@ const swalWithBootstrapButtons = Swal.mixin({
 var isCreateSuccess = false;
     // Controller List
 function list($scope, $http,$timeout) {
-
+  $scope.keyword = "";
   const url = `${host}/product`;
   $scope.isLoading = true;
   $scope.page = [];
@@ -48,6 +48,22 @@ function list($scope, $http,$timeout) {
     });
   }
   
+
+  $scope.search = (keyword) => {
+    var urlGet = `${url}?keyword=${keyword}`;
+    if(keyword == null || keyword == "" ) {
+      urlGet = url;
+    } 
+    
+    $http.get(urlGet).then(resp => {
+      $scope.page = resp.data;
+      $scope.isLoading = false;
+    }).catch(err => {
+      console.log("Errors", err);
+      $scope.isLoading = false;
+    });
+  }
+
   $scope.load_all = () => {
     $http.get(url).then(
       (resp) => {
@@ -61,12 +77,7 @@ function list($scope, $http,$timeout) {
 			  icon: 'success',
 			  title: 'Tạo mới thành công'
 			})
-			$scope.isNewProductAdded = true;
-
-	      $timeout(function() {
-	        $scope.isNewProductAdded = false;
-	        
-	      }, 5000);
+			
 			
 		}
         $scope.isLoading = false;
