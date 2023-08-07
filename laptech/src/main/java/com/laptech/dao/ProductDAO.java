@@ -7,8 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.laptech.model.Brand;
-import com.laptech.model.Category;
 import com.laptech.model.Product;
 import com.laptech.model.ReportFavoriteProduct;
 import com.laptech.model.ReportProductSold;
@@ -16,6 +14,11 @@ import com.laptech.model.ReportProductSold;
 public interface ProductDAO extends JpaRepository<Product,Long>{
 
     
+    @Query("SELECT p FROM Product p JOIN p.prices price WHERE p.status = 1 AND p.id = price.product AND CURRENT_TIMESTAMP BETWEEN price.startDate AND price.endDate")
+    List<Product> findByProductInDateAndStatus();
+
+    
+
 
 
     @Query("SELECT p FROM Product p WHERE p.brand.name LIKE %:name%")

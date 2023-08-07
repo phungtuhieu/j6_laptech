@@ -25,7 +25,7 @@ function index($scope, $http, $interval) {
 
     if (pageCount <= MAX_VISIBLE_PAGES) {
       for (let i = 1; i <= pageCount; i++) {
-        pagination.push({ page: i });
+        pagination.push({ page: i ,active: i === currentPage });
       }
     } else {
       let startPage = currentPage - Math.floor(MAX_VISIBLE_PAGES / 2);

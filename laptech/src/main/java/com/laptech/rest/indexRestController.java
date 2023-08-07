@@ -43,12 +43,12 @@ public class indexRestController {
     
     @GetMapping("/api/productItems")
     public ResponseEntity<List<Product>> getAll(Model model){
-        return ResponseEntity.ok(pdDao.findAll());
+        return ResponseEntity.ok(pdDao.findByProductInDateAndStatus());
     }
 
     @GetMapping("/api/price")
     public ResponseEntity<List<Price>> getAllPrice(Model model){
-        return ResponseEntity.ok(prDao.findAll());
+        return ResponseEntity.ok(prDao.findByPriceInDate());
     }
 
     @GetMapping("/api/findPricesWithoutDiscountPrices")

@@ -37,7 +37,7 @@ public class Price {
     Date startDate = new Date();
     @Temporal(TemporalType.DATE)
     @Column(name = "end_date")
-    Date enDate = new Date();
+    Date endDate = new Date();
     
     @ManyToOne
     @JoinColumn(name = "product_id")
