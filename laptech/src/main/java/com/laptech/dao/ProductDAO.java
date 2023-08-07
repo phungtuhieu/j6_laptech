@@ -15,6 +15,8 @@ import com.laptech.model.ReportProductSold;
 
 public interface ProductDAO extends JpaRepository<Product,Long>{
 
+    
+
 
     @Query("SELECT p FROM Product p WHERE p.brand.name LIKE %:name%")
     List<Product> findByProductBrandName(@Param("name") String name);
@@ -23,56 +25,56 @@ public interface ProductDAO extends JpaRepository<Product,Long>{
 
      @Query("SELECT new com.laptech.model.ReportFavoriteProduct(p.name, p.category.name, COUNT(f), MIN(f.likedDate), MAX(f.likedDate)) "
         + " FROM Product p JOIN p.favorites f "
-        + " GROUP BY p.category.name, p"
+        + " GROUP BY p.category.name, p.name"
         + " ORDER BY COUNT(f) DESC")
     List<ReportFavoriteProduct> getFavoriteBook();
 
     @Query("SELECT new com.laptech.model.ReportFavoriteProduct(p.name, p.category.name, COUNT(f), MIN(f.likedDate), MAX(f.likedDate)) "
             + " FROM Product p JOIN p.favorites f "
             + " WHERE p.name LIKE CONCAT('%', :name, '%') "
-            + " GROUP BY p.category.name, p"
+            + " GROUP BY p.category.name, p.name"
             + " ORDER BY COUNT(f) DESC")
     List<ReportFavoriteProduct> getFavoriteBookName(@Param("name") String name);
 
     @Query("SELECT new com.laptech.model.ReportFavoriteProduct(p.name, p.category.name, COUNT(f), MIN(f.likedDate), MAX(f.likedDate)) "
             + " FROM Product p JOIN p.favorites f "
             + " WHERE f.likedDate BETWEEN :startDate AND :endDate "
-            + " GROUP BY p.category.name, p"
+            + " GROUP BY p.category.name, p.name"
             + " ORDER BY COUNT(f) DESC")
     List<ReportFavoriteProduct> getFavoriteDate(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
 
 
-    @Query("SELECT new com.laptech.model.ReportProductSold(p.name, CAST(o.orderDate AS DATE), SUM(od.quantity), SUM(od.quantity * price.price)) "
+    @Query("SELECT new com.laptech.model.ReportProductSold(p.name,o.orderDate , SUM(od.quantity), SUM(od.quantity * price.price)) "
     + " FROM OrderDetail od "
     + " JOIN od.product p "
     + " JOIN od.order o "
     + " JOIN p.prices price "
     + " WHERE o.status = 3 "
-    + " GROUP BY p.name, CAST(o.orderDate AS DATE)"
-    + " ORDER BY CAST(o.orderDate AS DATE) DESC")
+    + " GROUP BY p.name,o.orderDate "
+    + " ORDER BY o.orderDate  DESC")
 List<ReportProductSold> getProductSold();
 
-    @Query("SELECT new com.laptech.model.ReportProductSold(p.name, CAST(o.orderDate AS DATE), SUM(od.quantity), SUM(od.quantity * price.price)) "
+    @Query("SELECT new com.laptech.model.ReportProductSold(p.name,o.orderDate , SUM(od.quantity), SUM(od.quantity * price.price)) "
     + " FROM OrderDetail od "
     + " JOIN od.product p "
     + " JOIN od.order o "
     + " JOIN p.prices price "
     + " WHERE o.status = 3 AND "
     + " p.name LIKE CONCAT('%', :name, '%') " 
-    + " GROUP BY p.name, CAST(o.orderDate AS DATE)"
-    + " ORDER BY CAST(o.orderDate AS DATE) DESC")
+    + " GROUP BY p.name,o.orderDate "
+    + " ORDER BY o.orderDate  DESC")
 List<ReportProductSold> getProductSoldName(@Param("name") String name);
 
-    @Query("SELECT new com.laptech.model.ReportProductSold(p.name, CAST(o.orderDate AS DATE), SUM(od.quantity), SUM(od.quantity * price.price)) "
+    @Query("SELECT new com.laptech.model.ReportProductSold(p.name,o.orderDate , SUM(od.quantity), SUM(od.quantity * price.price)) "
     + " FROM OrderDetail od "
     + " JOIN od.product p "
     + " JOIN od.order o "
     + " JOIN p.prices price "
     + " WHERE o.status = 3 AND "
-    + " CAST(o.orderDate AS DATE) BETWEEN :startDate AND :endDate"
-    + " GROUP BY p.name, CAST(o.orderDate AS DATE)"
-    + " ORDER BY CAST(o.orderDate AS DATE) DESC")
+    + "o.orderDate  BETWEEN :startDate AND :endDate"
+    + " GROUP BY p.name,o.orderDate "
+    + " ORDER BY o.orderDate  DESC")
 List<ReportProductSold> getProductSoldDate(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
 
