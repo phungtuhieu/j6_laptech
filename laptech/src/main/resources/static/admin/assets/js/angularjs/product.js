@@ -64,7 +64,7 @@ function list($scope, $http,$timeout) {
     });
   }
 
-  $scope.load_all = () => {
+  var load_all = () => {
     $http.get(url).then(
       (resp) => {
         $scope.page = resp.data;
@@ -110,7 +110,7 @@ function list($scope, $http,$timeout) {
             icon: 'success',
             title: 'Đã xóa thành công'
           })
-          $scope.load_all();
+          load_all();
         }).catch(err => {
           console.log("Err", err);
           if(err.status === 409) {
@@ -135,7 +135,7 @@ function list($scope, $http,$timeout) {
                     'Sản phẩm đã chuyển trạng thái ngừng kinh doanh.',
                     'success'
                   )
-                  $scope.load_all();
+                  load_all();
                 }).catch(err => {
                   console.log("Err", err);
                 })
@@ -166,7 +166,7 @@ function list($scope, $http,$timeout) {
    
   }
 
-  $scope.load_all();
+  load_all();
 };
 // /Controller List
 

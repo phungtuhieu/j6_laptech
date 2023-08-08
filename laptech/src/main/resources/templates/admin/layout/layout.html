@@ -113,8 +113,11 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.7.20/dist/sweetalert2.min.css
     <th:block th:if="${#ctx.springRequestContext.requestUri.contains('storage')}">
         <script th:src="@{/admin/assets/js/angularjs/storage-ctrl.js}"></script>
     </th:block>
+    <th:block th:if="${#ctx.springRequestContext.requestUri.contains('order')}">
+        <script th:src="@{/admin/assets/js/angularjs/order-ctrl.js}"></script>
+    </th:block>
 
-
+    <script th:src="@{/admin/assets/js/global/eff-active-sidebar.js}"></script>
 
 
 </body>
