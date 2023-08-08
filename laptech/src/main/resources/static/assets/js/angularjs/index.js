@@ -1,6 +1,6 @@
 
 let host = "http://localhost:8081/api";
-const app = angular.module("app", []);
+// const app = angular.module("app", []);
 app
   .filter("formatCurrency", function () {
     return function (input) {
@@ -14,7 +14,7 @@ app
   })
   .controller("index", index)
   .controller("listCategory", listCategory)
-  .controller("account", account);
+ 
 
 function index($scope, $http, $interval) {
   $scope.pageCount;
@@ -248,13 +248,17 @@ function index($scope, $http, $interval) {
         console.log("Error_notNull", error);
       });
   };
+
   $scope.login = function () {
     $http
       .get("/api/account")
       .then(function (userResponse) {
+
         $scope.user = userResponse.data;
-        console.log("Dữ liệu user nè1123213123", $scope.user);
+        console.log("Dữ liệu user nè:", $scope.user);
         $scope.favoriteLikeUser($scope.user.username);
+        window.sessionStorage.setItem("user", JSON.stringify($scope.user));
+        
       })
       .catch(function (error) {
         console.error("Lỗi khi lấy thông tin người dùng", error);
@@ -289,7 +293,6 @@ function index($scope, $http, $interval) {
       toast.addEventListener('mouseleave', Swal.resumeTimer)
     }
   });
-
 
   $scope.andFavorite = (productId) => {
 
@@ -352,15 +355,10 @@ function index($scope, $http, $interval) {
         console.log("Error_favorite", error);
       })
 
-
-
-   
-
     
   } 
 
   $scope.deleteFavorite = (favoriteId) => {
-    alert(favoriteId);
     $http
         .delete(`${host}/favorite/${favoriteId}`)
         .then(function (resp) {
@@ -417,21 +415,3 @@ function listCategory($scope, $http) {
   $scope.load_all_productBrand(id);
 }
 
-function account($scope, $http) {
-
- 
-
-  $scope.login = function () {
-    window.location.href = "/perform_login"
-    $http
-      .get("/api/account")
-      .then(function (userResponse) {
-        var user = userResponse.data;
-        console.log(user);
-      })
-      .catch(function (error) {
-        console.error("Lỗi khi lấy thông tin người dùng", error);
-      });
-  };
-
-}

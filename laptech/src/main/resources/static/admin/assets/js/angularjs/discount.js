@@ -1,7 +1,7 @@
 import { toastMixin, confirmationDialog } from "../global/custom-sweetalert.js";
 let host = "http://localhost:8081/api";
 
-const app = angular.module("app", []);
+// const app = angular.module("app", []);
 app
   .controller("list", list)
   .controller("create", formCreate)

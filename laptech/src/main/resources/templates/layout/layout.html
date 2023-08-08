@@ -40,13 +40,15 @@
 
     
     
-    <nav th:insert="~{layout/_header.html:: header}"></nav>
+    <nav  th:insert="~{layout/_header.html:: header}"></nav>
 
     <main th:replace="${view}"></main>
 
     <footer th:insert="~{/layout/_footer.html:: footer}"></footer>
 
-    
+    <script  th:src="@{/assets/js/angularjs/header.js}"></script>
+
+    <script  th:src="@{/assets/js/angularjs/header.js}"></script>
     <th:block th:if="${#ctx.springRequestContext.requestUri.contains('index')}">
         <script  th:src="@{/assets/js/angularjs/index.js}"></script>
     </th:block>

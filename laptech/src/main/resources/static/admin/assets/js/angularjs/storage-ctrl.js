@@ -1,6 +1,6 @@
 let host = "http://localhost:8081/api";
 var i = 0;
-const app = angular.module("app", []);
+// const app = angular.module("app", []);
 app.controller("list", list)
     .controller("create", formCreate)
     .controller("update", formUpdate)

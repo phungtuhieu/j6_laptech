@@ -47,9 +47,9 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.7.20/dist/sweetalert2.min.css
 
 </head>
 
-<body ng-app="app">
+<body ng-app="app" >
     <main>
-        <header id="header" th:replace="~{/admin/layout/header.html :: header}"></header>
+        <header ng-controller="admin" id="header" th:replace="~{/admin/layout/header.html :: header}"></header>
 
 
         <div id="content">
@@ -86,6 +86,9 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.7.20/dist/sweetalert2.min.css
         });
 
     </script>
+
+        <script th:src="@{/admin/assets/js/angularjs/header.js}"></script>
+        
     <th:block th:if="${#ctx.springRequestContext.requestUri.contains('category')}">
         <script type="module" th:src="@{/admin/assets/js/angularjs/category.js}"></script>
     </th:block>

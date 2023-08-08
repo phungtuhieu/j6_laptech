@@ -1459,16 +1459,16 @@ nav.navbar.bootsnav ul.nav > li > a{
   padding-right: 30px;
 }
 nav.navbar.bootsnav ul.nav li.active > a{
-  color: #d33b33;
+  color: #1435c3;
 }
 nav.navbar.bootsnav ul.nav li.active > a:hover{
-  color: #d33b33;
+  color: #1435c3;
 }
 nav.navbar.bootsnav ul.nav li > a:hover{
-  color: #d33b33;
+  color: #1435c3;
 }
 nav.navbar.bootsnav ul.nav li.megamenu-fw > a:hover{
-  color: #d33b33;
+  color: #1435c3;
 }
 @media (min-width: 1024px) {
   nav.navbar.navbar-inverse ul.nav .dropdown-menu{
@@ -1702,15 +1702,15 @@ ul.cart-list > li .price_total{
   height: 100vh;
 }
 .slides-navigation a {
-  background: #d33b33;
+  background: #1435c3;
   position: absolute;
   height: 70px;
-  width: 70px;
+  width: 50px;
   top: 50%;
   font-size: 20px;
   display: block;
   color: #fff;
-  line-height: 90px;
+  /* line-height: 90px; */
   text-align: center;
   transition: all .3s ease-in-out;
 }
@@ -1757,8 +1757,8 @@ ul.cart-list > li .price_total{
   border: 2px solid #ffffff;
 }
 .slides-pagination a.current{
-  background: #d33b33;
-  border: 2px solid #d33b33;
+  background: #1435c3;
+  border: 2px solid #1435c3;
 }
 .cover-slides p a{
   font-size: 24px;
@@ -1940,7 +1940,7 @@ img {
 }
 .quickview_pro_des .favorite-icon i:hover{
   transform: scale(1.2);
-    color: red;
+    color: #112EA7;
     cursor: pointer;
 }
 
@@ -2541,12 +2541,23 @@ img {
   position: relative;
 }
 
+.container_img  img{
+  margin-left: 55px;
+  width: 70%;
+  height: 200px;
+}
+
 .mySlides {
   display: none;
 }
 
 .cursor {
   cursor: pointer;
+}
+
+.info-laptop li{
+  font-size: 14px;
+  color: #333333;
 }
 
 .prev,
@@ -2565,7 +2576,7 @@ img {
 }
 
 .next {
-  right: 12px;
+  right: 0px;
   border-radius: 3px 0 0 3px;
 }
 
@@ -2601,60 +2612,3 @@ img {
 
 /*  */
 
-
-/* The Modal (background) */
-.modal-img {
-display: none; /* Hidden by default */
-position: fixed; /* Stay in place */
-z-index: 1; /* Sit on top */
-padding-top: 100px; /* Location of the box */
-left: 0;
-top: 0;
-width: 100%; /* Full width */
-height: 100%; /* Full height */
-overflow: auto; /* Enable scroll if needed */
-background-color: rgb(0,0,0); /* Fallback color */
-background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
-transform: scale(0); /* Start with no scale */
-}
-
-/* Modal Content (image) */
-.modal-content-img {
-margin: auto;
-display: block;
-width: 80%;
-max-width: 700px;
-animation: zoom 0.6s;
-}
-
-
-/* Add Animation */
-@keyframes zoom {
-from {transform: scale(0);} /* Start with no scale */
-to {transform: scale(1);} /* Zoom to actual size */
-}
-
-/* The Close Button */
-.close-img {
-position: absolute;
-top: 15px;
-right: 35px;
-color: #f1f1f1;
-font-size: 40px;
-font-weight: bold;
-transition: 0.3s;
-}
-
-.close-img:hover,
-.close-img:focus {
-color: #bbb;
-text-decoration: none;
-cursor: pointer;
-}
-
-/* 100% Image Width on Smaller Screens */
-@media only screen and (max-width: 700px){
-.modal-content {
-  width: 100%;
-}
-}

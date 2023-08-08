@@ -1,5 +1,5 @@
  <!-- Start Main Top -->
- <header class="main-header">
+ <header class="main-header" ng-controller="header">
     <!-- Start Main Top -->
     <div class="main-top">
       <div class="container-fluid">
@@ -49,7 +49,7 @@
 
               <!-- TH khi đăng nhập thành công -->
               <div class="d-flex align-items-center pe-5 fw-bold"  th:if="${#request.remoteUser}" >
-              <div class="text-truncate me-3 " style="width: 130px;  " th:object="${#request.userPrincipal}"><a href="#" class="text-danger"  > [[*{name}]] </a></div>
+              <div class="text-truncate me-3 " style="width: 100px; color: #1435c3;" ><a href="#" style="color: #1435c3;"  th:text="${session.account.fullname}" >  </a></div>
               <div class="dropdown">
                 <a class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#"
                   id="navbarDropdownMenuAvatar" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
@@ -64,11 +64,12 @@
                     <a class="dropdown-item" href="#" th:unless="${#request.remoteUser}">Đăng nhập</a>
                   </li>
                   <li>
-                    <a class="dropdown-item"  href="/logoff">Đăng xuất</a>
+                    <a class="dropdown-item"  href="/logoff" >Đăng xuất</a>
                   </li>
-                  
+                 
                 </ul>
               </div>
+              
             </div>
               <!-- TH khi đăng nhập thành công -->
             </div>
@@ -97,7 +98,8 @@
         <div class="collapse navbar-collapse" id="navbar-menu">
           <ul class="nav navbar-nav ml-auto" data-in="fadeInDown" data-out="fadeOutUp">
             <li class="nav-item active"><a class="nav-link" th:href="@{/client/index}">Trang chủ</a></li>
-            <li class="nav-item"><a class="nav-link" th:href="@{/about}">Giới thiệu</a></li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/client/about}">Giới thiệu</a></li>
+            <!--  
             <li class="dropdown megamenu-fw">
               <a href="#" class="nav-link arrow" data-toggle="dropdown">Sản phẩm</a>
               <ul class="dropdown-menu megamenu-content" role="menu">
@@ -114,7 +116,6 @@
                         </ul>
                       </div>
                     </div>
-                    <!-- end col-3 -->
                     <div class="col-menu col-md-3">
                       <h6 class="title">Bottom</h6>
                       <div class="content">
@@ -126,7 +127,6 @@
                         </ul>
                       </div>
                     </div>
-                    <!-- end col-3 -->
                     <div class="col-menu col-md-3">
                       <h6 class="title">Clothing</h6>
                       <div class="content">
@@ -149,12 +149,11 @@
                         </ul>
                       </div>
                     </div>
-                    <!-- end col-3 -->
                   </div>
-                  <!-- end row -->
                 </li>
               </ul>
             </li>
+          -->
             <!-- <li class="dropdown">
               <a href="#" class="nav-link  arrow" data-toggle="dropdown">SHOP</a>
               <ul class="dropdown-menu">
@@ -165,8 +164,9 @@
                 <li><a href="shop-detail.html">Shop Detail</a></li>
               </ul>
             </li> -->
-            <li class="nav-item"><a class="nav-link" th:href="@{/contact}">Liên hệ</a></li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/client/contact}">Liên hệ</a></li>
             <li class="nav-item" th:if="${#request.remoteUser}"><a class="nav-link" th:href="@{/client/favorite}">Yêu thích</a></li>
+            <li class="nav-item"><a class="nav-link" ng-if="user.admin == true" th:href="@{/admin/index}">ADMIN</a></li>
           </ul>
         </div>
         <!-- /.navbar-collapse -->

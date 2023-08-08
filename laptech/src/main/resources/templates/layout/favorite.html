@@ -98,7 +98,7 @@
 <!--  -->
                         <div class="col-lg-12 container_img">
                           <div class="mySlides" ng-repeat="ig in image.slice().reverse()" ng-if="ig.product.id === fa.product.id">
-                            <img class="zoomable-img" ng-src="{{ig.name}}" style="width:100%; height: 200px;">
+                            <img class="zoomable-img" ng-src="{{ig.name}}" >
                           </div>
                           
                           <a class="prev" ng-click="plusSlides(-1)">❮</a>
@@ -111,7 +111,17 @@
                           </div>
                         </div>
                       </div>
-<!--  -->
+<!--  -->           
+                          <div class="col-lg-12  px-3 pt-3">
+                            <ul class="info-laptop">
+                              <li>- CPU: {{fa.product.cpu.name}}</li>
+                              <li>- Màn hình: {{fa.product.screenSize.size}}" {{fa.product.screenSize.panelType}} ({{fa.product.screenSize.resolution}}),144hz</li>
+                              <li>- RAM: {{fa.product.ram.capacity}}GB {{fa.product.ram.type}} 3200MHz {{fa.product.ram.manufacturer}}</li>
+                              <li>- Đồ họa: {{fa.product.graphicsCard.name}}</li>
+                              <li>- Lưu trữ: {{fa.product.storage.capacity}}GB {{fa.product.storage.type}}</li>
+                              <li>- Hệ điều hành: {{fa.product.operatingSystem.name}}</li>
+                          </ul>
+                          </div>
 
                           </div>
                           <!--  -->
@@ -170,11 +180,11 @@
 
                               <div class="col-lg-12  ">
                                 <span class="favorite-title">Yêu thích:</span>
-                                <span class="favorite-icon"><i class="fas fa-heart"></i></span>
+                                <!-- <span class="favorite-icon"><i class="fas fa-heart"></i></span> -->
                                 <span class="favorite-icon" ng-click="deleteFavorite(fa.id)"><i class="fas fa-heart-crack"></i></span>
                               </div>
 
-                              <div class="col-lg-12 mt-4">
+                              <div class="col-lg-12 mt-5">
                                 <div class="row">
                                   <div class="col-lg-6"><button type="submit" name="addtocart" value="5"
                                       class="button btnred add-to-cartProduct">Mua
@@ -222,108 +232,6 @@
     </section>
     <!-- List -->
 
-    <!-- Model chi tiết sản phẩm  -->
-    <!-- Model chi tiết sản phẩm  -->
-    <div class="modal" id="a1">
-      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-content">
-
-          <div class="modal-body">
-            <div class="quickview_body">
-              <div class="container">
-                <div class="row">
-
-                  <div class="col-12 col-lg-5">
-                    <div class="col-lg-12 ">
-                      <div class="quickview_pro_img ">
-                        <img src="https://laptopxachtayshop.com/thumb.php?src=/uploads/2021/10/255-g7.jpg&w=300&zc=1"
-                          alt="">
-                      </div>
-                    </div>
-                    <div class="col-lg-12 mt-5 ">
-                      <button type="submit" name="addtocart" value="5" class="button btnred add-to-cartProduct">Mua
-                        ngay</button>
-                    </div>
-                  </div>
-                  <!--  -->
-                  <div class="col-12 col-lg-7">
-
-                    <div class="row quickview_pro_des">
-                      <div class="col-lg-12 " style="position: relative;">
-                        <span aria-hidden="true" class="close ml-auto text-right" data-dismiss="modal"
-                          aria-label="Close"><i class="fas fa-xmark"></i></span>
-                      </div>
-                      <div class="col-lg-12 ">
-                        <h4 class="title title_text_t" data-toggle="tooltip" title="">[New 100%] Lenovo Legion 5 Pro
-                          Y9000P (Core i9-12900H, 16GB, 512GB, RTX 3060 6GB, 16'' WQXGA 165Hz) [New 100%] Lenovo Legion
-                          5
-                          Pro Y9000P (Core i9-12900H, 16GB, 512GB, RTX 3060 6GB, 16'' WQXGA 165Hz) [New 100%] Lenovo
-                          Legion 5 Pro Y9000P (Core i9-12900H, 16GB, 512GB, RTX 3060 6GB, 16'' WQXGA 165Hz)
-                        </h4>
-                      </div>
-                      <div class="col-lg-12 mb-2 ">
-                        <span class="status">Trạng thái: </span>
-                        <span class="status-title">còn hàng</span>
-                      </div>
-                      <div class="col-lg-12 mb-2 ">
-                        <span class="pro-title">Giá:</span>
-                        <span class="pro-price">9,690,000₫</span>
-                      </div>
-
-                      <div class="col-lg-12 d-flex mb-3">
-                        <span class="quantity-title align-self-center">Số lượng:</span>
-                        <div class="quantity">
-                          <div class="d-flex align-items-center">
-                            <span class="qty-minus "
-                              onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty ) && qty > 1 ) effect.value--;return false;">
-                              <i class="fa fa-minus " aria-hidden="true"></i>
-                            </span>
-                            <input type="number" class="qty-text " id="qty" step="1" min="1" max="12" name="quantity"
-                              value="1" readonly>
-                            <span class="qty-plus"
-                              onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty ) && qty < 12 ) effect.value++;return false;">
-                              <i class="fa fa-plus" aria-hidden="true"></i>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="col-lg-12 d-flex">
-                        <div class="col-lg-3">
-                          <span class="mota">Mô tả:</span>
-                        </div>
-                        <div class="col-lg-9 custom-scrollbar overflow">
-                          <p>Mô tả sản phẩm của bạ vượt quá kích thước của khung. Với thanh cuộn, bạn có thể kéo xuống
-                            để
-                            xem toàn bộ mô tả sản phẩm của mình.</p>
-                        </div>
-                      </div>
-
-                      <div class="col-lg-12 mt-3 ">
-                        <span class="favorite-title">Yêu thích:</span>
-                        <span class="favorite-icon"><i class="fas fa-heart"></i></span>
-                        <span class="favorite-icon"><i class="fas fa-heart-crack"></i></span>
-                      </div>
-
-                      <div class="col-lg-12 mt-4">
-                        <button type="submit" class="button-cart slide">Thêm vào giỏ hàng</button>
-                      </div>
-
-
-                    </div>
-
-                  </div>
-                  <!-- Add to Cart Form -->
-
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Model chi tiết sản phẩm  -->
-    <!-- Model chi tiết sản phẩm  -->
 
   </main>
   <!-- Main -->
