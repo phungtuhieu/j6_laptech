@@ -268,7 +268,7 @@ function index($scope, $http, $interval) {
       .get("/api/account")
       .then(function (userResponse) {
         $scope.user = userResponse.data;
-        console.log("Dữ liệu user nè1123213123", userResponse.data);
+        console.log("Dữ liệu user nè1123213123", $scope.user);
         $scope.favoriteLikeUser($scope.user.username);
       })
       .catch(function (error) {
@@ -276,13 +276,9 @@ function index($scope, $http, $interval) {
       });
   };
 
-  $scope.logout = () => {
-    window.sessionStorage.removeItem("user");
-    window.location.href = "/logoff";
-  };
+ 
   $scope.login();
 
-  $scope.login();
   $scope.notNull();
   $scope.load_all_product();
   $scope.load_all_image();
@@ -317,11 +313,16 @@ function listCategory($scope, $http) {
 }
 
 function account($scope, $http) {
+
+ 
+
   $scope.login = function () {
+    window.location.href = "/perform_login"
     $http
       .get("/api/account")
       .then(function (userResponse) {
         var user = userResponse.data;
+        console.log(user);
       })
       .catch(function (error) {
         console.error("Lỗi khi lấy thông tin người dùng", error);

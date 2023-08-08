@@ -11,7 +11,7 @@ import com.laptech.model.Favorite;
 
 public interface FavoriteDAO extends JpaRepository<Favorite,Long> {
 
-     @Query("SELECT f FROM Favorite f WHERE f.user.username = :name ")
+     @Query("SELECT f FROM Favorite f JOIN f.product.prices pr WHERE f.product.status = 1 AND CURRENT_TIMESTAMP BETWEEN pr.startDate AND pr.endDate  AND f.user.username = :name ")
     List<Favorite> findByFavoriteLikeUser(@Param("name") String name);
     
 }
