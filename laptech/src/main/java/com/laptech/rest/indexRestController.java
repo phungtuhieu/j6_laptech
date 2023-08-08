@@ -79,7 +79,7 @@ public class indexRestController {
     public ResponseEntity<List<DiscountPrice>> getAllDiscount(Model model){
         return ResponseEntity.ok(dcDao.findByDiscountAndPriceId());
     }
-
+    
 
 
     

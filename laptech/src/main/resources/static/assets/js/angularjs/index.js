@@ -1,3 +1,4 @@
+
 let host = "http://localhost:8081/api";
 const app = angular.module("app", []);
 app
@@ -247,6 +248,18 @@ function index($scope, $http, $interval) {
         console.log("Error_notNull", error);
       });
   };
+  $scope.login = function () {
+    $http
+      .get("/api/account")
+      .then(function (userResponse) {
+        $scope.user = userResponse.data;
+        console.log("Dữ liệu user nè1123213123", $scope.user);
+        $scope.favoriteLikeUser($scope.user.username);
+      })
+      .catch(function (error) {
+        console.error("Lỗi khi lấy thông tin người dùng", error);
+      });
+  };
 
   $scope.favoriteLikeUser = (username) => {
     var url = `${host}/favorite/${username}`;
@@ -263,22 +276,114 @@ function index($scope, $http, $interval) {
       });
   };
 
-  $scope.login = function () {
-    $http
-      .get("/api/account")
-      .then(function (userResponse) {
-        $scope.user = userResponse.data;
-        console.log("Dữ liệu user nè1123213123", $scope.user);
-        $scope.favoriteLikeUser($scope.user.username);
+  const toastMixin =  Swal.mixin({
+    toast: true,
+    title: 'General Title',
+    animation: false,
+    position: 'top-right',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener('mouseenter', Swal.stopTimer)
+      toast.addEventListener('mouseleave', Swal.resumeTimer)
+    }
+  });
+
+
+  $scope.andFavorite = (productId) => {
+
+    var username = $scope.user.username;
+
+    var url = `${host}/favorite/${username}`;
+    $http({
+      method: "GET",
+      url: url,
+    })
+      .then((resp) => {
+        $scope.favorites = resp.data;
+        console.log("Success_favorite", resp.data);
+
+        var index = $scope.favorites.findIndex((faId) => faId.product.id === productId  )
+        if (index !== -1) {
+
+          toastMixin.fire({
+            animation: true,
+            icon: "error",
+            title:
+              "Sản phẩm đã được yêu thích",
+            position: "top-right",
+            width: 350,
+          });
+        }else{
+          $http
+          .get(`${host}/productOne/${productId}`)
+          .then(function (resp) {
+            $scope.productOne =  resp.data;
+            $scope.dataFavorite = {
+              user: $scope.user,
+              product: $scope.productOne,
+              likedDate: new Date()
+            }
+            $http
+            .post(`${host}/favoriteAdd`,$scope.dataFavorite)
+            .then(function (userResponse) {
+              console.log("ok rồi");
+               toastMixin.fire({
+                  animation: true,
+                  icon: "success",
+                  title:
+                    "Đã thêm vào yêu thích",
+                  position: "top-right",
+                  width: 300,
+                });
+            })
+            .catch(function (error) {
+              console.error("", error);
+            });
+          })
+          .catch(function (error) {
+            console.error("", error);
+          });
+        }
+
       })
-      .catch(function (error) {
-        console.error("Lỗi khi lấy thông tin người dùng", error);
-      });
-  };
+      .catch((error) => {
+        console.log("Error_favorite", error);
+      })
+
+
+
+   
+
+    
+  } 
+
+  $scope.deleteFavorite = (favoriteId) => {
+    alert(favoriteId);
+    $http
+        .delete(`${host}/favorite/${favoriteId}`)
+        .then(function (resp) {
+           toastMixin.fire({
+              animation: true,
+              icon: "success",
+              title:
+                "Đã xóa yêu thích thành công",
+              position: "top-right",
+              width: 350,
+            });
+            $scope.favoriteLikeUser($scope.user.username);
+
+        })
+        .catch(function (error) {
+          console.error("", error);
+        });
+  }
+
+
 
  
   $scope.login();
-
   $scope.notNull();
   $scope.load_all_product();
   $scope.load_all_image();

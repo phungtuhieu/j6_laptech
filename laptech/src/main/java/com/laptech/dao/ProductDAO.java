@@ -2,6 +2,7 @@ package com.laptech.dao;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,6 +13,11 @@ import com.laptech.model.ReportFavoriteProduct;
 import com.laptech.model.ReportProductSold;
 
 public interface ProductDAO extends JpaRepository<Product,Long>{
+
+
+
+    
+    Optional<Product> findById(Long id);
 
     
     @Query("SELECT p FROM Product p JOIN p.prices price WHERE p.status = 1 AND p.id = price.product AND CURRENT_TIMESTAMP BETWEEN price.startDate AND price.endDate")
