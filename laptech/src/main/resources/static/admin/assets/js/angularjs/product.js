@@ -95,57 +95,75 @@ function list($scope, $http,$timeout) {
   };   
   $scope.delete = (id) => {
     var urlDel = url+`/${id}`;
-    $http.delete(urlDel).then(resp => {
-      Toast.fire({
-        icon: 'success',
-        title: 'Đã Xóa thành công'
-      })
-      $scope.load_all();
-    }).catch(err => {
-      console.log("Err", err);
-      if(err.status === 409) {
-        swalWithBootstrapButtons.fire({
-          title: 'Bạn có muốn ngừng kinh doanh?',
-          text: "Thông tin sản phẩm đã được lưu ở nơi khác không thể xóa!",
-          icon: 'warning',
-          showCancelButton: true,
-          cancelButtonText: 'Không, Hủy bỏ!',
-          confirmButtonText: 'Có, Ngừng kinh doanh!',
-          reverseButtons: true
-        }).then((result) => {
-          if (result.isConfirmed) {
-            $http.get(urlDel).then(resp => {
-            $scope.isLoading = false;
-            var item = resp.data;
-            item.status = statusProduct.DISCONTINUED;
-            $http.put(urlDel,item).then(resp => {
-              console.log("Success-", resp);
-              swalWithBootstrapButtons.fire(
-                'Đã ngừng kinh doanh!',
-                'Sản phẩm đã chuyển trạng thái ngừng kinh doanh.',
-                'success'
-              )
-              $scope.load_all();
-            }).catch(err => {
-              console.log("Err", err);
+    swalWithBootstrapButtons.fire({
+      title: 'Bạn chắc muốn xóa?',
+      text: "Bạn không thể hoàn tác nó!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Có, tôi muốn xóa!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $http.delete(urlDel).then(resp => {
+          Toast.fire({
+            icon: 'success',
+            title: 'Đã xóa thành công'
+          })
+          $scope.load_all();
+        }).catch(err => {
+          console.log("Err", err);
+          if(err.status === 409) {
+            swalWithBootstrapButtons.fire({
+              title: 'Bạn có muốn ngừng kinh doanh?',
+              text: "Thông tin sản phẩm đã được lưu ở nơi khác không thể xóa!",
+              icon: 'warning',
+              showCancelButton: true,
+              cancelButtonText: 'Không, Hủy bỏ!',
+              confirmButtonText: 'Có, Ngừng kinh doanh!',
+              reverseButtons: true
+            }).then((result) => {
+              if (result.isConfirmed) {
+                $http.get(urlDel).then(resp => {
+                $scope.isLoading = false;
+                var item = resp.data;
+                item.status = statusProduct.DISCONTINUED;
+                $http.put(urlDel,item).then(resp => {
+                  console.log("Success-", resp);
+                  swalWithBootstrapButtons.fire(
+                    'Đã ngừng kinh doanh!',
+                    'Sản phẩm đã chuyển trạng thái ngừng kinh doanh.',
+                    'success'
+                  )
+                  $scope.load_all();
+                }).catch(err => {
+                  console.log("Err", err);
+                })
+                
+                }).catch(err => {
+                  console.log("Err", err);
+                })
+                
+              } else if (
+                result.dismiss === Swal.DismissReason.cancel
+              ) {
+                swalWithBootstrapButtons.fire(
+                  'Đã hủy thao tác',
+                  'Thao tác đã được hủy',
+                  'error'
+                )
+              }
             })
-            
-            }).catch(err => {
-              console.log("Err", err);
-            })
-            
-          } else if (
-            result.dismiss === Swal.DismissReason.cancel
-          ) {
-            swalWithBootstrapButtons.fire(
-              'Đã hủy thao tác',
-              'Thao tác đã được hủy',
-              'error'
-            )
           }
         })
+        // Swal.fire(
+        //   'Deleted!',
+        //   'Your file has been deleted.',
+        //   'success'
+        // )
       }
     })
+   
   }
 
   $scope.load_all();
@@ -160,6 +178,14 @@ function form ($scope, $http,$location,$filter) {
     price:null,
     image:null
   };
+  var isDeleteSuccess = window.localStorage.getItem("isDeleteSuccess");
+  if(isDeleteSuccess) {
+    Toast.fire({
+      icon: 'success',
+      title: 'Đã xóa thành công'
+    })
+    window.localStorage.removeItem("isDeleteSuccess");
+  }
   $scope.isEdit = $location.absUrl().includes('update');
   $scope.priceForms = [
     {
@@ -352,14 +378,24 @@ function form ($scope, $http,$location,$filter) {
    
   }
   $scope.delete = (id) => {
-    var url = getUrl(`/product/${id}`);
+    swalWithBootstrapButtons.fire({
+      title: 'Bạn có chắc muốn xóa?',
+      text: "Bạn không thể hoàn tác nó!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Có, Tôi muốn xóa!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        var url = getUrl(`/product/${id}`);
     $http.delete(url).then(resp => {
       $scope.form = {};
+      $scope.isEdit = false;
       $scope.filenames.length = 0;
-      Toast.fire({
-        icon: 'success',
-        title: 'Đã Xóa thành công'
-      })
+     
+      window.localStorage.setItem("isDeleteSuccess",true);
+      window.location.href = "/admin/product/create";
     }).catch(err => {
       console.log("Err", err);
       if(err.status === 409) {
@@ -407,6 +443,9 @@ function form ($scope, $http,$location,$filter) {
         })
       }
     })
+      }
+    })
+   
   }
 
 
