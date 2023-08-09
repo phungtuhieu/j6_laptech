@@ -23,4 +23,8 @@ public class OrderCtrl {
     public String orderCanceled(Model model) {
         return "/admin/orders/canceled";
     }
+    @RequestMapping("/order-details")
+    public String orderDetails(Model model) {
+        return "/admin/orders/order-details";
+    }
 }

@@ -10,6 +10,7 @@
 
 <body >
     <div class="content-page" ng-controller="list">
+
         <div class="page-header d-flex justify-content-between align-items-center">
             <ul class="page-info">
                 <li class=" page-title">Đơn hàng đã huỷ</li>
@@ -46,6 +47,11 @@
                         </div>
                     </div>
                     <div class="table-center">
+                        <div class="loading-page"  ng-if="isLoading">
+                            <div class="spinner-border text-warning "  role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
                         <div class="table-responsive">
                             <table class="table table-hover">
                               <thead>
@@ -60,36 +66,40 @@
                                 </tr>
                               </thead>
                               <tbody>
-                                <tr class="" ng-repeat="order in orders">
-                                  <td scope="row"></td>
-                                  <td> </td>
-                                  <td> </td>
-                                  <td> </td>
-                                  <td> </td>
-                                  <td><span class="badges bg-lightred">Đã huỷ</span></td>
-                                  <td class="td-action ">
-                                     <div class="wordset">
-                                        <ul>
-                                            <li>
-                                                <a href="" class="text-success-emphasis"><i class="fa-solid fa-eye"></i></a>
-                                            </li>
-                                            
-                                        </ul>
-                                    </div>/
-                                  </td>
+                                <tr class=""  ng-repeat="o in page.content">
+                                    <td scope="row">{{o.id}}</td>
+                                    <td>{{o.paymentMethod ? 'Online' : 'Tiền mặt'}}</td>
+                                    <td>{{o.orderDate  | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                                    <td>{{o.cancellationDate  | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                                    <td class="reduce-td">{{o.cancellationReason}}</td>
+                                    <td><span class="badges bg-lightred">{{o.status == 3 ?'Đã hủy': ''}}</span></td>
+                                    <td class="td-action ">
+                                        <div class="wordset">
+                                            <ul>
+                                                <li>
+                                                    <a href="" ng-click="viewOrderDetails(o.id)"  class="text-success-emphasis"><i class="fa-solid fa-eye"></i></a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                    
                                 </tr>
                               </tbody>
+                             
                             </table>
+                            <div ng-if="page.content.length == 0" class="d-flex justify-content-center py-5">
+                                <span> Không có đơn hàng nào</span>
+                             </div>
                           </div>
                     </div>
                     <div class="table-bottom d-flex justify-content-end align-items-center pt-4">
-                        <span class="pagination-info me-2">1 - 10 of <span >11</span> items</span>
+                        <span class="pagination-info me-2">{{page.number + 1}} trên <span >{{page.totalPages}}</span></span>
                         <nav aria-label="Page navigation " >
                             <ul class="pagination mb-0">
-                              <li class="page-item"><a class="page-link" href="#"><i class="fa-solid fa-backward-step"></i></a></li>
-                              <li class="page-item"><a class="page-link" href="#"><i class="fa-solid fa-backward"></i></a></li>
-                              <li class="page-item"><a class="page-link" href="#"><i class="fa-solid fa-forward"></i></a></li>
-                              <li class="page-item"><a class="page-link" href="#"><i class="fa-solid fa-forward-step"></i></a></li>
+                              <li class="page-item"><a class="page-link" href=""  ng-class="{'disabled' : page.first}" ng-click="getPage(0)"><i class="fa-solid fa-backward-step"></i></a></li>
+                              <li class="page-item"><a class="page-link" href="" ng-class="{'disabled' :  page.number <= 0 ||  page.first}" ng-click="getPage(page.number - 1)"><i class="fa-solid fa-backward"></i></a></li>
+                              <li class="page-item"><a class="page-link" href="" ng-class="{'disabled' : page.number >= page.totalPages - 1 ||  page.last}" ng-click="getPage(page.number + 1)"><i class="fa-solid fa-forward"></i></a></li>
+                              <li class="page-item"><a class="page-link" href="" ng-class="{'disabled' : page.last}" ng-click="getPage(page.totalPages-1)"><i class="fa-solid fa-forward-step"></i></a></li>
                             </ul>
                           </nav>
                     </div>

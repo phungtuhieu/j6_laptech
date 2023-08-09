@@ -76,7 +76,7 @@
                                      <div class="wordset">
                                         <ul>
                                             <li>
-                                                <a th:href="@{/admin}" class="text-success-emphasis"><i class="fa-solid fa-eye"></i></a>
+                                                <a href="" ng-click="viewOrderDetails(o.id)"  class="text-success-emphasis"><i class="fa-solid fa-eye"></i></a>
                                             </li>
                                             <!-- <li>
                                                 <a th:href="@{/admin}" class="text-success"><i class="fa-sharp fa-solid fa-truck-fast"></i></a>
@@ -90,17 +90,20 @@
                                 </tr>
                               </tbody>
                             </table>
+                            <div ng-if="page.content.length == 0" class="d-flex justify-content-center py-5">
+                                <span> Không có đơn hàng nào</span>
+                             </div>
                           </div>
                     </div>
                     <div class="table-bottom d-flex justify-content-end align-items-center pt-4">
                         <span class="pagination-info me-2">{{page.number + 1}} trên <span >{{page.totalPages}}</span></span>
                         <nav aria-label="Page navigation " >
                             <ul class="pagination mb-0">
-                                <li class="page-item"><a class="page-link" href=""  ng-class="{'disabled' : page.first}" ng-click="getPage(0)"><i class="fa-solid fa-backward-step"></i></a></li>
-                                <li class="page-item"><a class="page-link" href="" ng-class="{'disabled' :  page.number <= 0 ||  page.first}" ng-click="getPage(page.number - 1)"><i class="fa-solid fa-backward"></i></a></li>
-                                <li class="page-item"><a class="page-link" href="" ng-class="{'disabled' : page.number >= page.totalPages - 1 ||  page.last}" ng-click="getPage(page.number + 1)"><i class="fa-solid fa-forward"></i></a></li>
-                                <li class="page-item"><a class="page-link" href="" ng-class="{'disabled' : page.last}" ng-click="getPage(page.totalPages-1)"><i class="fa-solid fa-forward-step"></i></a></li>
-                              </ul>
+                              <li class="page-item"><a class="page-link" href=""  ng-class="{'disabled' : page.first}" ng-click="getPage(0)"><i class="fa-solid fa-backward-step"></i></a></li>
+                              <li class="page-item"><a class="page-link" href="" ng-class="{'disabled' :  page.number <= 0 ||  page.first}" ng-click="getPage(page.number - 1)"><i class="fa-solid fa-backward"></i></a></li>
+                              <li class="page-item"><a class="page-link" href="" ng-class="{'disabled' : page.number >= page.totalPages - 1 ||  page.last}" ng-click="getPage(page.number + 1)"><i class="fa-solid fa-forward"></i></a></li>
+                              <li class="page-item"><a class="page-link" href="" ng-class="{'disabled' : page.last}" ng-click="getPage(page.totalPages-1)"><i class="fa-solid fa-forward-step"></i></a></li>
+                            </ul>
                           </nav>
                     </div>
                 </div>
