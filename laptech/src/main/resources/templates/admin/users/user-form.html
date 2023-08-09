@@ -22,28 +22,42 @@
         </div>
         <div class="card">
             <div class="card-body page-body">
-
+                <div class="loading-page" ng-show="isLoading">
+                    <div class="spinner-border" role=" status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
                 <form action="">
                     <div class="row">
                         <div class="mb-4 col-lg-4 form-group">
                             <label for="product-name" class="form-label">Họ và tên</label>
                             <input type="text" ng-model="form.fullname" class="form-control" id="product-name">
+                            <span ng-show="showFullname"  class="text-danger">{{MessageFullname}}</span>
+
                         </div>
                         <div class="mb-4 col-lg-4 form-group">
                             <label for="" class="form-label">Số điện thoại</label>
                             <input type="text" ng-model="form.phone" class="form-control" id="">
+                            <span ng-show="showPhone"  class="text-danger">{{MessagePhone}}</span>
+
                         </div>
                         <div class="mb-4 col-lg-4 form-group">
                             <label for="" class="form-label">Email</label>
                             <input type="text" ng-model="form.email" class="form-control" id="">
+                            <span ng-show="showEmail"  class="text-danger">{{MessageEmail}}</span>
+
                         </div>
                         <div class="mb-4 col-lg-4 form-group">
                             <label for="product-name" class="form-label">Tên người dùng</label>
                             <input type="text" ng-model="form.username" class="form-control" id="product-name">
+                            <span ng-show="showUsername"  class="text-danger">{{MessageUsername}}</span>
+
                         </div>
                         <div class="mb-4 col-lg-4 form-group">
                             <label for="product-name" class="form-label">Mật khẩu</label>
                             <input type="password" ng-model="form.password" class="form-control" id="product-name">
+                            <span ng-show="showPassword"  class="text-danger">{{MessagePassword}}</span>
+
                         </div>
                         <div class="mb-4 col-lg-4 form-group">
                             <label for="" class="form-label">Trạng thái</label>
@@ -56,19 +70,40 @@
                         <div class="mb-4 col-lg-12 form-group">
                             <label for="prod-desciption" class="form-label">Địa chỉ</label>
                             <textarea class="form-control" ng-model="form.address" id="prod-desciption" rows="3"></textarea>
+                            <span ng-show="showAddress"  class="text-danger">{{MessageAddress}}</span>
+
                         </div>
                         
-                        <div class="mb-4 col-lg-12 form-group">
-                            <label for="prod-desciption" class="form-label">Hình ảnh <span>[img-name]</span></label>
-                            <div class="image-upload">
-                                <input type="file">
-                                <div class="image-uploads ">
-                                    <i class="fa-solid fa-cloud-arrow-up icon-upload"></i>
-                                    <h4>Drag and drop a file to upload</h4>
-                                </div>
+                       <!-- Giao diện upload hình ảnh -->
+                       <div class="mb-4 col-lg-12 form-group">
+                        <label for="prod-desciption" class="form-label">Hình ảnh <span>[img-name]</span></label>
+                        <div class="image-upload">
+                            <input type="file" accept="image/*" class="form-control" multiple
+                            onchange="angular.element(this).scope().upload(this.files)">
+                            <div class="image-uploads mt-3">
+                                <i class="fas fa-cloud-upload-alt icon-upload"></i>
+                              
                             </div>
+                            <hr>
+                            <label ng-repeat="filename in filenames" title="Double click to delete" class="form-label">
+                                <div class="image-preview">
+                                    
+                                    <img ng-src="{{url(filename)}}" ng-dblclick="delete(filename)" style="max-width: 200px;">
+                                </div>
+                            </label>
                         </div>
-                        <div class="mb-4 col-lg-12 ">
+                      
+                    </div>
+                        
+                        <!-- Hiển thị ảnh từ cơ sở dữ liệu (nếu đã tải lên) -->
+                        <!-- <div class="mb-4 col-lg-12 form-group" ng-show="form.image">
+                            
+                            <label for="prod-desciption" class="form-label">Ảnh đã tải lên</label>
+                            <div class="image-preview">
+                                <img ng-src="{{ 'http://localhost:8081/admin/assets/image/' + form.image }}" alt="Uploaded Image" style="max-width: 200px;">
+                            </div>
+                        </div> -->
+                            <div class="mb-4 col-lg-12 ">
                                 <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('create')}" class="btn btn-submit me-2" ng-click="create()">Lưu</a>
                                 <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('update')}" class="btn btn-submit me-2" ng-click="update(form.username)">Cập nhật</a>
                                 <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('update')}" class="btn btn-remove me-2" ng-click="delete(form.username)">Xoá</a>
@@ -79,6 +114,6 @@
             </div>
         </div>
     </div>
-</body>
 
+</body>
 </html>

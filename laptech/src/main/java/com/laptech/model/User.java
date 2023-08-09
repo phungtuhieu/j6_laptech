@@ -11,6 +11,7 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,7 +21,7 @@ import lombok.NoArgsConstructor;
 public class User {
 
     @Id
-    String username ;
+    String username;
     String password;
     String fullname;
     String phone;
@@ -28,6 +29,7 @@ public class User {
     String address;
     Boolean admin;
     Boolean active;
+    String image;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user")

@@ -20,15 +20,16 @@ public class FileManagerService {
     @Autowired
     ServletContext app;
 
-    private Path getPath(String folder,String filename){
-        File dir = Paths.get(app.getRealPath("/files/"),folder).toFile();
-        if(!dir.exists()){
+    private Path getPath(String folder, String filename) {
+        File dir = Paths.get(app.getRealPath("/files/"), folder).toFile();
+        if (!dir.exists()) {
             dir.mkdirs();
         }
-        return Paths.get(dir.getAbsolutePath(),filename);
+        return Paths.get(dir.getAbsolutePath(), filename);
     }
+
     public byte[] read(String folder, String filename) {
-        Path path  = this.getPath(folder, filename);
+        Path path = this.getPath(folder, filename);
         try {
             return Files.readAllBytes(path);
         } catch (IOException e) {
@@ -38,11 +39,11 @@ public class FileManagerService {
 
     public List<String> save(String folder, MultipartFile[] files) {
         List<String> filenames = new ArrayList<>();
-        for(MultipartFile file : files) {
+        for (MultipartFile file : files) {
             String name = System.currentTimeMillis() + file.getOriginalFilename();
             String filename = Integer.toHexString(name.hashCode()) + name.substring(name.lastIndexOf("."));
             Path path = this.getPath(folder, filename);
-            System.out.println("--- Save"+path.toFile().getAbsolutePath());
+            System.out.println("--- Save" + path.toFile().getAbsolutePath());
             try {
                 file.transferTo(path);
                 filenames.add(filename);
@@ -56,20 +57,25 @@ public class FileManagerService {
 
     public List<String> list(String folder) {
         List<String> filenames = new ArrayList<>();
-        File dir =  Paths.get(app.getRealPath("/file/"),folder).toFile();
-        System.out.println("--- List"+dir.getAbsolutePath());
-        if(dir.exists()) {
-        	System.out.println("--- if"+dir.getAbsolutePath());
+        File dir = Paths.get(app.getRealPath("/file/"), folder).toFile();
+        System.out.println("--- List" + dir.getAbsolutePath());
+        if (dir.exists()) {
+            System.out.println("--- if" + dir.getAbsolutePath());
             File[] files = dir.listFiles();
             for (File file : files) {
                 filenames.add(file.getName());
             }
-           
+
         }
-         return filenames;
+        return filenames;
     }
-    public void delete (String folder,String filename) {
+
+    public void delete(String folder, String filename) {
         Path path = this.getPath(folder, filename);
         path.toFile().delete();
+    }
+
+    public String saveImage(String image) {
+        return null;
     }
 }

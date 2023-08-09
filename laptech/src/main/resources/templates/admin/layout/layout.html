@@ -113,9 +113,9 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.7.20/dist/sweetalert2.min.css
     <th:block th:if="${#ctx.springRequestContext.requestUri.contains('storage')}">
         <script th:src="@{/admin/assets/js/angularjs/storage-ctrl.js}"></script>
     </th:block>
-
-
-
+    <th:block th:if="${#ctx.springRequestContext.requestUri.contains('screen-size')}">
+        <script th:src="@{/admin/assets/js/angularjs/screensize-ctrl.js}"></script>
+    </th:block>
 
 </body>
 </html>

@@ -1,5 +1,6 @@
 package com.laptech.rest.admin;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.laptech.dao.UserDAO;
 import com.laptech.model.User;
+import com.laptech.service.FileManagerService;
 
 @CrossOrigin("*")
 @RestController
@@ -23,6 +25,9 @@ public class UserRestController {
 
     @Autowired
     UserDAO dao;
+
+    @Autowired
+    FileManagerService fileService;
 
     @GetMapping("/api/user")
     public ResponseEntity<List<User>> getAll(Model model) {
@@ -39,15 +44,14 @@ public class UserRestController {
 
     @PostMapping("/api/user")
     public ResponseEntity<User> post(@RequestBody User user) {
+
         dao.save(user);
         return ResponseEntity.ok(user);
     }
 
     @PutMapping("/api/user/{username}")
     public ResponseEntity<User> update(@PathVariable("username") String username, @RequestBody User user) {
-        if (!dao.existsById(username)) {
-            return ResponseEntity.notFound().build();
-        }
+
         dao.save(user);
         return ResponseEntity.ok(user);
     }
@@ -76,4 +80,5 @@ public class UserRestController {
         List<User> user = dao.findByFullnameOrUsernameLike(keyword);
         return ResponseEntity.ok(user);
     }
+
 }

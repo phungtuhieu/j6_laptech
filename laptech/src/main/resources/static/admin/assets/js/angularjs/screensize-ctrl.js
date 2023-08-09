@@ -17,7 +17,7 @@ function list($scope, $http) {
 
     //load lữ liệu lên
     $scope.load_all = () => {
-        var url = `${host}/storage`;
+        var url = `${host}/screen-size`;
 
         $http({
             method: "GET",
@@ -49,11 +49,11 @@ function list($scope, $http) {
         // Lưu id vào session
         window.sessionStorage.setItem("editId", id);
         // Chuyển hướng tới trang form cập nhật thông tin người dùng
-        window.location.href = "/admin/storage/update";
+        window.location.href = "/admin/screen-size/update";
     };
 
     $scope.delete = (id) => {
-        var url = `${host}/storage/${id}`;
+        var url = `${host}/screen-size/${id}`;
 
         $http({
             method: "delete",
@@ -104,9 +104,9 @@ function list($scope, $http) {
     //search
     $scope.search = (keyword) => {
         if (keyword != "") {
-            var url = `${host}/storage/search/${keyword}`;
+            var url = `${host}/screen-size/search/${keyword}`;
         } else {
-            var url = `${host}/storage`;
+            var url = `${host}/screen-size`;
         }
         $http({
             method: "GET",
@@ -125,35 +125,12 @@ function list($scope, $http) {
 }
 
 function formCreate($scope, $http) {
-    $scope.optionActive = [
-
-        {
-            value: "SSD",
-            name: "SSD"
-        },
-        {
-            value: "HDD",
-            name: "HDD"
-        },
-        {
-            value: "SSHD",
-            name: "SSHD"
-        },
-        {
-            value: "NVMe",
-            name: "NVMe"
-        },
-        {
-            value: "eMMC",
-            name: "eMMC"
-        }
-
-    ]
+    
     $scope.form = {};
     $scope.items = [];
     $scope.create = () => {
         var item = angular.copy($scope.form);
-        var url = `${host}/storage`;
+        var url = `${host}/screen-size`;
         $http({
             method: "post",
             url: url,
@@ -162,7 +139,7 @@ function formCreate($scope, $http) {
             .then((resp) => {
                 $scope.items.push(item);
                 console.log("Success", resp);
-                window.location.href = "/admin/storage/list";
+                window.location.href = "/admin/screen-size/list";
             })
             .catch((error) => {
                 console.log("Error", error);
@@ -172,38 +149,13 @@ function formCreate($scope, $http) {
 
 function formUpdate($scope, $http) {
 
-    $scope.optionActive = [
-
-        {
-            value: "SSD",
-            name: "SSD"
-        },
-        {
-            value: "HDD",
-            name: "HDD"
-        },
-        {
-            value: "SSHD",
-            name: "SSHD"
-        },
-        {
-            value: "NVMe",
-            name: "NVMe"
-        },
-        {
-            value: "eMMC",
-            name: "eMMC"
-        }
-
-    ]
-
     $scope.form = {
     };
     $scope.items = [];
 
     $scope.edit = (id) => {
 
-        var url = `${host}/storage/${id}`;
+        var url = `${host}/screen-size/${id}`;
         $http({
             method: "GET",
             url: url,
@@ -221,7 +173,7 @@ function formUpdate($scope, $http) {
 
     $scope.update = () => {
         var item = angular.copy($scope.form);
-        var url = `${host}/storage/${$scope.form.id}`;
+        var url = `${host}/screen-size/${$scope.form.id}`;
         $http({
             method: "put",
             url: url,
@@ -233,21 +185,21 @@ function formUpdate($scope, $http) {
                 );
                 $scope.items[index] = resp.data;
                 console.log("Success", resp);
-                window.location.href = "/admin/storage/list";
+                window.location.href = "/admin/screen-size/list";
             })
             .catch((error) => {
                 console.log("Error", error);
                 if (error.status === 422) {
                     alert(
-                        "storage đã tồn tại trong sản phẩm. Cập nhật không thành công."
+                        "Màn hình đã tồn tại trong sản phẩm. Cập nhật không thành công."
                     );
                 } else {
-                    alert("Đã xảy ra lỗi khi cập nhật storage.");
+                    alert("Đã xảy ra lỗi khi cập nhật.");
                 }
             });
     };
     $scope.delete = (id) => {
-        var url = `${host}/storage/${id}`;
+        var url = `${host}/screen-size/${id}`;
         $http({
             method: "delete",
             url: url,
@@ -257,7 +209,7 @@ function formUpdate($scope, $http) {
                 $scope.items.splice(index, 1);
                 $scope.form = {};
                 console.log("Success", resp);
-                window.location.href = "/admin/storage/list";
+                window.location.href = "/admin/screen-size/list";
             })
             .catch((error) => {
                 console.log("Error", error);
@@ -279,7 +231,7 @@ function dataFileHandler($scope, $http) {
         reader.onloadend = async () => {
           var workbook = new ExcelJS.Workbook();
           await workbook.xlsx.load(reader.result);
-          const worksheet = workbook.getWorksheet("storage_data");
+          const worksheet = workbook.getWorksheet("ScreenSize_data");
           if (!worksheet) {
             alert("Tên worksheet không đúng. Vui lòng sửa lại tên worksheet.");
             return;
@@ -287,13 +239,13 @@ function dataFileHandler($scope, $http) {
           worksheet.eachRow((row, index) => {
             if (index > 1) {
               let student = {
-                type: row.getCell(1).value, // 1
-                capacity: row.getCell(2).value,
-                manufacturer: row.getCell(3).value, // 2
-              
+                size: row.getCell(1).value, // 1
+                resolution: row.getCell(2).value,
+                panelType: row.getCell(3).value, // 2
+                touchScreen: row.getCell(4).value,
                
               };
-              let url = `${host}/storage`;
+              let url = `${host}/screen-size`;
               $http
                 .post(url, student)
                 .then((resp) => {
@@ -317,11 +269,11 @@ function dataFileHandler($scope, $http) {
       var confirmImport = confirm("Bạn có muốn export file Excel?");
       if (confirmImport) {
         var tableData = [];
-        var headers = ["Dung lượng", "Loại bộ nhớ", "Nhà sản xuất"]; //1
+        var headers = ["Kích thước", "Độ phân giải", "Loại màn hình", "Cảm ứng"]; //1
   
         // Thêm dữ liệu của từng hàng (row) trong bảng vào mảng tableData
         angular.forEach($scope.items, function (item) {
-          var rowData = [item.type, item.capacity, item.manufacturer]; //2
+          var rowData = [item.size, item.resolution, item.panelType, item.touchScreen]; //2
           tableData.push(rowData);
         });
   
@@ -332,11 +284,11 @@ function dataFileHandler($scope, $http) {
         var worksheet = XLSX.utils.aoa_to_sheet([headers].concat(tableData));
   
         // Thêm trang tính vào workbook
-        XLSX.utils.book_append_sheet(workbook, worksheet, "storage_data"); // 3
+        XLSX.utils.book_append_sheet(workbook, worksheet, "ScreenSize_data"); // 3
   
         // Xuất file Excel
         var excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
-        saveAsExcel(excelBuffer, "Storage.xlsx");
+        saveAsExcel(excelBuffer, "ScreenSize.xlsx");
       }
     };
   
@@ -353,7 +305,7 @@ function dataFileHandler($scope, $http) {
       var confirmImport = confirm("Bạn có muốn export file PDF?");
       if (confirmImport) {
         var tableData = [];
-        var headers = ["Dung lượng", "Loại bộ nhớ", "Nhà sản xuất"]; //1
+        var headers =["Kích thước", "Độ phân giải", "Loại màn hình", "Cảm ứng"]; //1
   
         // Thêm dữ liệu của từng hàng (row) trong bảng vào mảng tableData
         angular.forEach($scope.items, function (item) {
@@ -364,11 +316,11 @@ function dataFileHandler($scope, $http) {
         //
         var docDefinition = {
           content: [
-            { text: "Danh sách storage", style: "header" },
+            { text: "Danh sách màn hình", style: "header" },
             {
               table: {
                 headerRows: 1,
-                widths: ["auto", "auto", "auto"], //3 "auto", "auto",....
+                widths: ["auto", "auto", "auto", "auto"], //3 "auto", "auto",....
                 body: [headers].concat(tableData),
               },
               style: "table",
@@ -382,7 +334,7 @@ function dataFileHandler($scope, $http) {
         };
   
         // Xuất PDF
-        pdfMake.createPdf(docDefinition).download("storage.pdf");
+        pdfMake.createPdf(docDefinition).download("ScreenSize.pdf");
       }
     };
     // /PDF

@@ -90,7 +90,7 @@
                                     <th ng-click="sortBy('email')" scope="col">Email</th>
                                     <th ng-click="sortBy('phone')" scope="col">Số điện thoại</th>
                                     <th ng-click="sortBy('username')" scope="col">Tên người dùng</th>
-                                    <th ng-click="sortBy('passwork')" scope="col">Mật khẩu</th>
+                                    <th ng-click="sortBy('image')" scope="col">Hình ảnh</th>
                                     <th ng-click="sortBy('address')" scope="col">Địa chỉ</th>
                                     <th scope="col">Thao tác</th>
                                 </tr>
@@ -101,7 +101,8 @@
                                   <td>{{us.email}}</td>
                                   <td>{{us.phone}}</td>
                                   <td>{{us.username}}</td>
-                                  <td>{{us.password}}</td>
+                                  <!-- <td>{{us.image}}</td> -->
+                                  <td><img src="http://localhost:8081/admin/assets/image/{{us.image}}" alt="Image" style="max-width: 70px;"></td>
                                   <td>{{us.address}}</td>
                                   <td class="td-action ">
                                      <div class="wordset">
