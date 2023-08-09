@@ -28,7 +28,7 @@
                                 <i class="fa-solid fa-magnifying-glass"></i>
                             </div>
                             <form class="d-flex">
-                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                                <input class="form-control me-2" ng-model="keyword" ng-change="search(keyword)" style="width: 400px;" type="search" placeholder="Tìm theo tên, danh mục, nhà sản xuất" >
                             </form>
                         </div>
                         <div class="wordset">
@@ -46,27 +46,36 @@
                         </div>
                     </div>
                     <div class="table-center">
-                        <div class="table-responsive">
+                        <div class="loading-page"  ng-if="isLoading">
+                            <div class="spinner-border text-warning "  role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                        <div class="table-responsive" >
                             <table class="table table-hover">
                               <thead>
                                 <tr class="tb-header">
-                                  <th scope="col">Tên sản phẩm</th>
-                                  <th scope="col">Số lượng</th>
-                                  <th scope="col">Nhà sản xuất</th>
-                                  <th scope="col">Danh mục</th>
-                                  <th scope="col">Mô tả</th>
-                                  <th scope="col">Ngày tạo</th>
+                                  <th scope="col" ng-click="sortBy('name')">Tên sản phẩm</th>
+                                  <th scope="col" ng-click="sortBy('quantity')">Số lượng</th>
+                                  <th scope="col" ng-click="sortBy('brand.name')">Nhà sản xuất</th>
+                                  <th scope="col"ng-click="sortBy('category.name')">Danh mục</th>
+                                  <th scope="col" ng-click="sortBy('createDate')">Mô tả</th>
+                                  <th scope="col"ng-click="sortBy('createDate')">Ngày tạo</th>
+                                  <th scope="col"ng-click="sortBy('status')">Trạng thái</th>
                                   <th scope="col">Thao tác</th>
                                 </tr>
                               </thead>
                               <tbody>
-                                <tr class="" ng-repeat="item in items">
+                                <tr class="table-row-added" ng-repeat="item in page.content | orderBy:prop" >
                                   <td>{{item.name}}</td>
                                   <td>{{item.quantity}}</td>
                                   <td>{{item.brand.name}}</td>
                                   <td>{{item.category.name}}</td>
                                   <td class="reduce-td">{{item.description}}</td>
-                                  <td>{{item.createDate}}</td>
+                                  <td>{{ item.createDate  | date:'dd/MM/yyyy' }}</td>
+                                  <td  ng-if="item.status == 1">Còn hàng</td>
+                                  <td  ng-if="item.status == 2">Hết hàng</td>
+                                  <td  ng-if="item.status == 3">Ngừng kinh doanh</td>
                                   <td class="td-action ">
                                      <div class="wordset">
                                         <ul>
@@ -74,7 +83,7 @@
                                                 <a  ng-click="edit(item.id  )" class="text-secondary-emphasis"><i class="fa-solid fa-pen-to-square"></i></a>
                                             </li>
                                             <li>
-                                                <a href="" class="text-danger"><i class="fa-solid fa-trash"></i></a>
+                                                <a href="" ng-click="delete(item.id)" class="text-danger"><i class="fa-solid fa-trash"></i></a>
                                             </li>
                                         </ul>
                                     </div>
@@ -83,15 +92,16 @@
                               </tbody>
                             </table>
                           </div>
+                          
                     </div>
                     <div class="table-bottom d-flex justify-content-end align-items-center pt-4">
-                        <span class="pagination-info me-2">1 - 10 of <span >11</span> items</span>
+                        <span class="pagination-info me-2">{{page.number + 1}} trên <span >{{page.totalPages}}</span></span>
                         <nav aria-label="Page navigation " >
                             <ul class="pagination mb-0">
-                              <li class="page-item"><a class="page-link" href="#"><i class="fa-solid fa-backward-step"></i></a></li>
-                              <li class="page-item"><a class="page-link" href="#"><i class="fa-solid fa-backward"></i></a></li>
-                              <li class="page-item"><a class="page-link" href="#"><i class="fa-solid fa-forward"></i></a></li>
-                              <li class="page-item"><a class="page-link" href="#"><i class="fa-solid fa-forward-step"></i></a></li>
+                              <li class="page-item"><a class="page-link" href=""  ng-class="{'disabled' : page.first}" ng-click="getPage(0)"><i class="fa-solid fa-backward-step"></i></a></li>
+                              <li class="page-item"><a class="page-link" href="" ng-class="{'disabled' :  page.number <= 0 ||  page.first}" ng-click="getPage(page.number - 1)"><i class="fa-solid fa-backward"></i></a></li>
+                              <li class="page-item"><a class="page-link" href="" ng-class="{'disabled' : page.number >= page.totalPages - 1 ||  page.last}" ng-click="getPage(page.number + 1)"><i class="fa-solid fa-forward"></i></a></li>
+                              <li class="page-item"><a class="page-link" href="" ng-class="{'disabled' : page.last}" ng-click="getPage(page.totalPages-1)"><i class="fa-solid fa-forward-step"></i></a></li>
                             </ul>
                           </nav>
                     </div>

@@ -143,7 +143,7 @@ CREATE TABLE Price (
     price FLOAT NOT NULL,
     product_id BIGINT NOT NULL,
     [start_date] DATETIME NOT NULL,
-    [end_date] DATETIME NOT NULL
+    [end_date] DATETIME  
 )
 GO 
 

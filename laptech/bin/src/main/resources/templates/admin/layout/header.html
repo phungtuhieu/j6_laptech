@@ -1,6 +1,12 @@
-<header id="header">
+<header id="header" ng-controller="admin">
   <div class="row m-0" style="height: 60px !important;">
-    <div class="header-left col-2 ps-3 pe-0  ">aa</div>
+    <div class="header-left col-2 ps-3 pe-0  ">
+      <div class="box-logo-header">
+        <!-- th:src="@{/assets/image/logo_ngang.png} -->
+       <a th:href="@{/admin/index}"><img class="logo-header" alt="" th:src="@{/assets/image/logo_ngang.png}" ></a>  
+      </div>
+      
+    </div>
     <div class="header-right col-10 ps-0 pe-3 ">
         <div class="row h-100 m-0">
           <div class="header-menu menu-left col-lg-8 text-uppercase "><a th:href="@{/admin/index}" class="title-page"> administration</a></div>
@@ -28,14 +34,16 @@
                             <img src="" alt="">
                           </div>
                           <ul class="list-info">
-                            <li class="user-info user-name">Name</li>
-                            <li class="user-info user-role">Role</li>
+                            <li></li>
+                            <li class="user-info user-name">{{user.fullname}}</li>
+                            <li class="user-info user-role">{{user.fullname ? "ADMIN":""}}</li>
                           </ul>
                         </a>
                         <ul class="dropdown-menu"  style="margin-top: 7px;">
-                          <li><a class="dropdown-item" href="#">Action</a></li>
-                          <li><a class="dropdown-item" href="#">Another action</a></li>
-                          <li><a class="dropdown-item" href="#">Something else here</a></li>
+
+                          <li><a class="dropdown-item" href="#">Hồ sơ cá nhân</a></li>
+                          
+                          <li><a class="dropdown-item" href="/logoff">Đăng xuất</a></li>
                         </ul>
                       </li>
                     </ul>

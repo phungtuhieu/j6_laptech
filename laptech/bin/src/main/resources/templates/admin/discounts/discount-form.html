@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+    th:replace="~{/admin/layout/layout.html :: admin(~{::title},~{:: .content-page}) }">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product</title>
+</head>
+
+<body>
+    <div class="content-page "
+        th:attr="ng-controller=${#ctx.springRequestContext.requestUri.contains('create') ? 'create' : 'update'}">
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <ul class="page-info">
+                <li class=" page-title">[[${#ctx.springRequestContext.requestUri.contains('create')} ? 'Tạo khuyến mãi'
+                    :'Cập nhật khuyến mãi']]</li>
+                <li class=" page-description">[[${#ctx.springRequestContext.requestUri.contains('create')} ? 'Thêm
+                    khuyến mãi mới' :'Thay đổi thông tin khuyến mãi']]</li>
+            </ul>
+            <!-- <a href="#" class="btn btn-added">
+                <i class="fa-solid fa-plus"></i>
+                Thêm sản phẩm
+            </a> -->
+        </div>
+        <div class="card">
+            <div class="card-body page-body">
+
+                <form action="">
+                    <div class="row" id="jqueryExample">
+                        <div class="mb-4 col-lg-4  form-group">
+                            <label for="product-name" class="form-label">Mã khuyến mãi</label>
+                            <input type="text" ng-model="form.id" class="form-control" id="product-name">
+                            <span ng-show="showId" class="text-danger">{{MessageId}}</span>
+                        </div>
+                        <div class="mb-4 col-lg-4  form-group">
+                            <label for="" class="form-label">Tên khuyến mãi</label>
+                            <input type="text" ng-model="form.title" class="form-control" id="">
+                            <span ng-show="showTitle" class="text-danger">{{MessageTitle}}</span>
+                        </div>
+                        <div class="mb-4 col-lg-4  form-group">
+                            <label for="" class="form-label">% khuyến mãi</label>
+                            <input type="text" ng-model="form.percentage" class="form-control" id="">
+                            <span ng-show="showPercentage" class="text-danger">{{MessagePercentage}}</span>
+                        </div>
+                        <div class="mb-4 col-lg-4 form-group">
+                            <label for="" class="form-label">Từ ngày</label>
+                            <div class="row">
+                                <div class="col-lg-6"><input type="date" ng-model="form.startDate" class="form-control">
+                                </div>
+                                <div class="col-lg-6"><input type="text" ng-model="startTime" placeholder="HH:mm:ss"
+                                        class=" time form-control"></div>
+                            </div>
+                            <span ng-show="showStartDate" class="text-danger">{{MessageStartDate}}</span>
+                        </div>
+
+                        <div class="mb-4 col-lg-4 form-group">
+                            <label for="" class="form-label">Đến ngày</label>
+                            <div class="row">
+                                <div class="col-lg-6"><input type="text" ng-model="endTime" placeholder="HH:mm:ss"
+                                        class=" time form-control" /></div>
+                                <div class="col-lg-6"> <input type="date" ng-model="form.endDate"
+                                        class="form-control" /></div>
+                            </div>
+                            <span ng-show="showEndDate" class="text-danger">{{MessageEndDate}}</span>
+                        </div>
+                        <div class="mb-4 col-lg-4 form-group">
+                            <label for="" class="form-label">Hoạt động</label>
+                            <select class="form-select" ng-model="form.active" aria-label="Default select example"
+                                ng-options="option.id as option.value for option in optionActive">
+
+                            </select>
+                            <span ng-show="showActive" class="text-danger">{{MessageActive}}</span>
+                        </div>
+                        <div class="mb-4 col-lg-12 form-group">
+                            <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('create')}"
+                                class="btn btn-submit me-2" data-bs-toggle="modal" data-bs-target="#modalAuthors">Áp
+                                dụng giảm giá sản phẩm</a>
+                               
+                        </div>
+                        <div class="mb-4 col-lg-12 form-group">
+                            <label for="prod-desciption" class="form-label">Mô tả</label>
+                            <textarea ng-model="form.description" class="form-control" id="prod-desciption"
+                                rows="3"></textarea>
+                            <span ng-show="showDescription" class="text-danger">{{MessageDescription}}</span>
+                        </div>
+                    </div>
+                    <div class="mb-4 col-lg-12 ">
+                        <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('create')}"
+                            class="btn btn-submit me-2" ng-click="create()">Lưu</a>
+                        <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('update')}"
+                            class="btn btn-submit me-2" ng-click="update(form.id)">Cập nhật</a>
+                        <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('update')}"
+                            class="btn btn-remove me-2" ng-click="delete(form.id)">Xoá</a>
+                        <a th:href="@{/admin/discount/list}" class="btn btn-cancel">Huỷ bỏ</a>
+                    </div>
+                </form>
+                <!--  -->
+                <div class="modal fade" id="modalAuthors" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">
+                                   
+                                    <span>Áp dụng khuyễn mãi</span>
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <nav>
+                                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                        <!-- <button class="nav-link active " id="nav-delete-author-tab" data-bs-togg   le="tab" data-bs-target="#nav-delete-author" type="button" role="tab" aria-controls="nav-delete-author" aria-selected="false" >Xóa tác giả</button> -->
+                                        <button class="nav-link active" id="nav-add-author-tab" data-bs-toggle="tab"
+                                            data-bs-target="#nav-add-author" type="button" role="tab"
+                                            aria-controls="nav-add-author" aria-selected="false"></button>
+                                    </div>
+                                </nav>
+                                <div class="tab-content" id="nav-tabContent">
+                                    <!-- Tab xóa tác giả 
+                              <div class="tab-pane fade show active " id="nav-delete-author" role="tabpanel" aria-labelledby="nav-delete-author-tab">
+                               
+                                <div class="table-responsive py-2">
+                                  <table class="table w-100 table-hover">
+                                    <thead>
+                                      <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Tên tác giả</th>
+                                        <th scope="col">Thao tác</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr >
+                                        <td >1</td>
+                                        <td >2</td>
+                                        <td > 
+                                          <a class="btn btn-primary w-100"   data-bs-toggle="modal" data-bs-target="#modal_accept" role="button">Xóa khỏi sách</a>
+                                        </td>
+              
+                                      
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                                
+                              </div>
+                             /Tab xóa tác giả -->
+                                    <!-- Tab Thêm tác giả -->
+                                    <div class="tab-pane fade show active " id="nav-add-author" role="tabpanel"
+                                        aria-labelledby="nav-add-author-tab">
+                                        <!-- Table -->
+                                        <div class="table-responsive ">
+                                            <table class="table w-100 table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">#</th>
+                                                        <th >Mã sản phẩm</th>
+                                                        <th scope="col">Tên sản phẩm</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr ng-repeat="price in PriceByProduct" >
+                                                        <td scope="row">
+                                                            <div class="form-check">
+                                                                <label class="form-check-label" for="{{price.id}}"
+                                                                    style="width: 100%; height: 100%;">
+                                                                    <input class="form-check-input" name="authors"
+                                                                        type="checkbox" value="123" ng-click="laydulieu(price.id)" id="{{price.id}}">
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                        <td><label for="{{price.id}}">{{price.product.id}}</label></td>
+                                                        <td><span data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top">
+                                                            <label for="{{price.id}}" class="text-truncate" style="width: 200px;">{{price.product.name}}</label>
+                                                        </span></td>
+                                                    </tr>
+                                                   
+                                               
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <!-- /Table -->
+                                    </div>
+                                    <!-- /Tab thêm tác giả -->
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--  -->
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

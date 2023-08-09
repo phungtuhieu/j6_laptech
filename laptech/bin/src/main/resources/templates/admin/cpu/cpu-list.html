@@ -5,11 +5,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product</title>
+    <title>CPU</title>
 </head>
 
 <body>
-    <div class="content-page">
+    <div class="content-page" ng-app="app" ng-controller="list">
+        
+         <!-- modal excel -->
+         <div class="modal" id="myModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header" ng-controller="dataFileHandler">
+                        <div class="container d-flex justify-content-center">
+                            <!-- import -->
+                            <label for="file-input-import" class="file-label">
+                                <i class="fas fa-file-import fa-3x"></i>
+                            </label>
+                            <input type="file" id="file-input-import" class="file-input"
+                                onchange="angular.element(this).scope().import(this.files)" accept=".xls, .xlsx" />
+                            <!-- import -->
+                    
+                            <!-- export -->
+                            <label for="file-input-export" class="file-label">
+                                <i class="fas fa-file-export fa-3x" ng-click="export()"></i>
+                            </label>
+                            
+                            <!-- export -->
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- /model excel -->
+
         <div class="page-header d-flex justify-content-between align-items-center">
             <ul class="page-info">
                 <li class=" page-title">Danh sách CPU</li>
@@ -25,19 +57,23 @@
                     <div class="table-top d-flex justify-content-between align-items-center">
                         <div class="search-input">
                             <div class="btn-searchset">
-                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <i ng-click="search(searchKeyword)" class="fa-solid fa-magnifying-glass"></i>
                             </div>
                             <form class="d-flex">
-                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"
+                                ng-model="searchKeyword" ng-change="search(searchKeyword)">
                             </form>
                         </div>
-                        <div class="wordset">
+                        <div class="wordset"  ng-controller="dataFileHandler">
                             <ul>
                                 <li>
-                                   <a href="" class="text-danger"><i class="fa-solid fa-file-pdf"></i></a>
+                                   <a href=""  class="text-danger" ng-click="exportToPDF()">
+                                    <i class="fa-solid fa-file-pdf"></i>
+                                </a>
                                 </li>
                                 <li>
-                                    <a href="" class="text-success"><i class="fa-solid fa-file-excel"></i></a>
+                                    <a href=""  data-bs-toggle="modal" data-bs-target="#myModal" class="text-success">
+                                        <i class="fa-solid fa-file-excel"></i></a>
                                 </li>
                                 <li>
                                     <a href="" class="text-secondary"><i class="fa-solid fa-print"></i></a>
@@ -50,27 +86,37 @@
                             <table class="table table-hover">
                               <thead>
                                 <tr class="tb-header">
-                                  <th scope="col">Tên CPU</th>
-                                  <th scope="col">Dung lượng</th>
-                                  <th scope="col">Loại CPU</th>
-                                  <th scope="col">Nhà sản xuất</th>
+                                  <th ng-click="sortBy('id')"  hidden scope="col">ID</th>
+                                  <th ng-click="sortBy('name')" scope="col">Tên CPU</th>
+                                  <th ng-click="sortBy('cores')" scope="col">Số nhân</th>
+                                  <th ng-click="sortBy('threads')" scope="col">Số luồng</th>
+                                  <th ng-click="sortBy('socket')" scope="col">Loại CPU</th>
+                                  <th ng-click="sortBy('clockSpeed')" scope="col">Xung nhịp cơ bản</th>
+                                  <th ng-click="sortBy('turboSpeed')" scope="col">Xung nhịp tối đa</th>
+                                  <th ng-click="sortBy('cache')" scope="col">Bộ nhớ</th>
+                                  <th ng-click="sortBy('manufacturer')" scope="col">Nhà sản xuất</th>
                                   <th scope="col">Thao tác</th>
                                 </tr>
                               </thead>
                               <tbody>
-                                <tr class="">
-                                  <td scope="row">1</td>
-                                  <td>2</td>
-                                  <td>3</td>
-                                  <td>4</td>
+                                <tr class="mt" ng-repeat="cp in items |  orderBy:sortColumn:reverseSort | limitTo:5:begin">
+                                  <td scope="row" hidden>{{cp.id}}</td>
+                                  <td>{{cp.name}}</td>
+                                  <td>{{cp.cores}}</td>
+                                  <td>{{cp.threads}}</td>
+                                  <td>{{cp.socket}}</td>
+                                  <td>{{cp.clockSpeed}}</td>
+                                  <td>{{cp.turboSpeed}}</td>
+                                  <td>{{cp.cache}}</td>
+                                  <td>{{cp.manufacturer}}</td>
                                   <td class="td-action ">
                                      <div class="wordset">
                                         <ul>
                                             <li>
-                                                <a th:href="@{/admin/cpu/update}" class="text-secondary-emphasis"><i class="fa-solid fa-pen-to-square"></i></a>
+                                                <a th:href="@{/admin/cpu/update}" ng-click="formEdit(cp.id)" class="text-secondary-emphasis"><i class="fa-solid fa-pen-to-square"></i></a>
                                             </li>
                                             <li>
-                                                <a href="" class="text-danger"><i class="fa-solid fa-trash"></i></a>
+                                                <a href="" class="text-danger" ng-click="delete(cp.id)"><i class="fa-solid fa-trash"></i></a>
                                             </li>
                                         </ul>
                                     </div>
@@ -81,13 +127,17 @@
                           </div>
                     </div>
                     <div class="table-bottom d-flex justify-content-end align-items-center pt-4">
-                        <span class="pagination-info me-2">1 - 10 of <span >11</span> items</span>
+                        <span class="pagination-info me-2">{{begin / 5 + 1}} of <span >{{pageCount}}</span></span>
                         <nav aria-label="Page navigation " >
                             <ul class="pagination mb-0">
-                              <li class="page-item"><a class="page-link" href="#"><i class="fa-solid fa-backward-step"></i></a></li>
-                              <li class="page-item"><a class="page-link" href="#"><i class="fa-solid fa-backward"></i></a></li>
-                              <li class="page-item"><a class="page-link" href="#"><i class="fa-solid fa-forward"></i></a></li>
-                              <li class="page-item"><a class="page-link" href="#"><i class="fa-solid fa-forward-step"></i></a></li>
+                                <li class="page-item"><a class="page-link" ng-click="first()" href="#"><i
+                                            class="fa-solid fa-backward-step"></i></a></li>
+                                <li class="page-item"><a class="page-link" ng-click="prev()" href="#"><i
+                                            class="fa-solid fa-backward"></i></a></li>
+                                <li class="page-item"><a class="page-link" ng-click="next()" href="#"><i
+                                            class="fa-solid fa-forward"></i></a></li>
+                                <li class="page-item"><a class="page-link" ng-click="last()" href="#"><i
+                                            class="fa-solid fa-forward-step"></i></a></li>
                             </ul>
                           </nav>
                     </div>

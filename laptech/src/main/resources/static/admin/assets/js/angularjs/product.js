@@ -596,7 +596,7 @@ function form ($scope, $http,$location,$filter) {
       $scope.listPriceProduct = resp.data;  
       console.log("price_",resp.data);
     }).catch(err => {
-      
+      console.log("price_",err);
     })
   }
   // /GIÁ

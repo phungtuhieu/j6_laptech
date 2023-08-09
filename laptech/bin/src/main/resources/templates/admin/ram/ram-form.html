@@ -9,11 +9,14 @@
 </head>
 
 <body>
-    <div class="content-page">
+    <div class="content-page"
+        th:attr="ng-controller=${#ctx.springRequestContext.requestUri.contains('create') ? 'create' : 'update'}">
         <div class="page-header d-flex justify-content-between align-items-center">
             <ul class="page-info">
-                <li class=" page-title">[[${#ctx.springRequestContext.requestUri.contains('create')} ? 'Tạo RAM' :'Cập nhật RAM']]</li>
-                <li class=" page-description">[[${#ctx.springRequestContext.requestUri.contains('create')} ? 'Thêm RAM mới' :'Thay đổi thông tin RAM xuất']]</li>
+                <li class=" page-title">[[${#ctx.springRequestContext.requestUri.contains('create')} ? 'Tạo RAM' :'Cập
+                    nhật RAM']]</li>
+                <li class=" page-description">[[${#ctx.springRequestContext.requestUri.contains('create')} ? 'Thêm RAM
+                    mới' :'Thay đổi thông tin RAM xuất']]</li>
             </ul>
             <!-- <a href="#" class="btn btn-added">
                 <i class="fa-solid fa-plus"></i>
@@ -22,41 +25,66 @@
         </div>
         <div class="card">
             <div class="card-body page-body">
-
+                <div class="loading-page" ng-show="isLoading">
+                    <div class="spinner-border" role=" status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
                 <form action="">
                     <div class="row">
                         <div class="mb-4 col-lg-4 offset-2 form-group">
                             <label for="product-name" class="form-label">Tên RAM</label>
-                            <input type="text" class="form-control" id="product-name">
+                            <input type="text" ng-model="form.name" class="form-control" list="name" id="product-name">
+                            <span ng-show="showName" class="text-danger">{{MessageName}}</span>
+                            <datalist id="name">
+                                <option value="Crucial DDR4 16GB">
+                                <option value="Corsair DDR4 32GB">
+
+                            </datalist>
                         </div>
                         <div class="mb-4 col-lg-4  form-group">
                             <label for="" class="form-label">Dung lượng</label>
-                            <input type="text" class="form-control" id="">
-                        </div>
-                        <div class="mb-4 col-lg-4 offset-2 form-group">
-                            <label for="" class="form-label">Loại RAM</label>
-                            <select class="form-select" aria-label="Default select example">
-                                <option selected>Chọn thương hiệu</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
+                            <select ng-model="form.capacity" class="form-select" aria-label="Default select example"
+                                ng-options="option.id as option.value for option in optionCapacity">
                             </select>
+                            <span ng-show="showCapacity" class="text-danger">{{MessageCapacity}}</span>
+                            
                         </div>
+
+                        <div class="mb-4 col-lg-4 offset-2 form-group">
+                            <label for="" class="form-label">Loại ram</label>
+                            <input type="text" ng-model="form.type" class="form-control" list="loairam" id="">
+                            <span ng-show="showType" class="text-danger">{{MessageType}}</span>
+                            <datalist id="loairam">
+                                <option value="SRAM">
+                                <option value="DRAM">
+                                <option value="SDRAM">
+                                <option value="DDR3">
+                                <option value="DDR4">
+                            </datalist>
+                        </div>
+
                         <div class="mb-4 col-lg-4  form-group">
                             <label for="" class="form-label">Nhà sản xuất</label>
-                            <select class="form-select" aria-label="Default select example">
-                                <option selected>Chọn nhà sản xuất</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
-                            </select>
+                            <input type="text" ng-model="form.manufacturer" class="form-control" list="nhasanxuat">
+                            <span ng-show="showManufacturer" class="text-danger">{{MessageManufacturer}}</span>
+                            <datalist id="nhasanxuat">
+                                <option value="Kingston">
+                                <option value="Crucial">
+                                <option value="G.Skill">
+                                <option value="ADATA">
+                            </datalist>
                         </div>
                     </div>
-                        <div class="mb-4 col-lg-12 offset-2 ">
-                                <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('create')}" class="btn btn-submit me-2">Lưu</a>
-                                <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('update')}" class="btn btn-submit me-2">Cập nhật</a>
-                                <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('update')}" class="btn btn-remove me-2">Xoá</a>
-                                <a th:href="@{/admin/ram/list}" class="btn btn-cancel" >Huỷ bỏ</a>
-                        </div>
+                    <div class="mb-4 col-lg-12 offset-2 ">
+                        <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('create')}"
+                            class="btn btn-submit me-2" ng-click="create()">Lưu</a>
+                        <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('update')}"
+                            class="btn btn-submit me-2" ng-click="update(form.id)">Cập nhật</a>
+                        <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('update')}"
+                            class="btn btn-remove me-2" ng-click="delete(form.id)">Xoá</a>
+                        <a th:href="@{/admin/ram/list}" class="btn btn-cancel">Huỷ bỏ</a>
+                    </div>
                 </form>
             </div>
         </div>

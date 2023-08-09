@@ -7,15 +7,15 @@
     <th:block th:include="layout/library/css-links.html"></th:block>
 
     <th:block th:if="${#ctx.springRequestContext.requestUri.contains('contact')}">
-        <link rel="stylesheet" href="assets/css/lienhe.css">
+        <link rel="stylesheet" th:href="@{/assets/css/contact.css}">
     </th:block>
 
     <th:block th:if="${#ctx.springRequestContext.requestUri.contains('about')}">
-        <link rel="stylesheet" href="assets/css/lienhe.css">
+        <link rel="stylesheet" th:href="@{/assets/css/about.css}">
     </th:block>
 
     <th:block th:if="${#ctx.springRequestContext.requestUri.contains('profile')}">
-        <link rel="stylesheet" th:href="@{/assets/css/canhan.css}">
+        <link rel="stylesheet" th:href="@{/assets/css/profile.css}">
     </th:block>
 
     <th:block th:if="${#ctx.springRequestContext.requestUri.contains('account')}">
@@ -30,21 +30,40 @@
     <th:block th:if="${#ctx.springRequestContext.requestUri.contains('cart')}">
         <link rel="stylesheet" th:href="@{/assets/css/cart.css}">
     </th:block>
+        <!-- Đảm bảo rằng bạn đã bao gồm thư viện Swal -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+ 
 </head>
-<body>
+<body ng-app="app">
 
 
     
     
-    <nav th:insert="~{layout/_header.html:: header}"></nav>
+    <nav  th:insert="~{layout/_header.html:: header}"></nav>
 
     <main th:replace="${view}"></main>
 
     <footer th:insert="~{/layout/_footer.html:: footer}"></footer>
 
+    <script  th:src="@{/assets/js/angularjs/header.js}"></script>
+
+    <script  th:src="@{/assets/js/angularjs/header.js}"></script>
+    <th:block th:if="${#ctx.springRequestContext.requestUri.contains('index')}">
+        <script  th:src="@{/assets/js/angularjs/index.js}"></script>
+    </th:block>
+    <th:block th:if="${#ctx.springRequestContext.requestUri.contains('ListCategory')}">
+        <script  th:src="@{/assets/js/angularjs/index.js}"></script>
+    </th:block>
+    <th:block th:if="${#ctx.springRequestContext.requestUri.contains('/account/login')}">
+        <script  th:src="@{/assets/js/angularjs/index.js}"></script>
+    </th:block>
+    <th:block th:if="${#ctx.springRequestContext.requestUri.contains('favorite')}">
+        <script  th:src="@{/assets/js/angularjs/index.js}"></script>
+    </th:block>
 
     <th:block th:include="layout/library/script-links.html"></th:block>
-    
+
 
 </body>
 </html>

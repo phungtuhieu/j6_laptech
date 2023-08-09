@@ -1,5 +1,5 @@
  <!-- Start Main Top -->
- <header class="main-header">
+ <header class="main-header" ng-controller="header">
     <!-- Start Main Top -->
     <div class="main-top">
       <div class="container-fluid">
@@ -36,10 +36,10 @@
               </div>
             </div>
           </div>
-          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" >
             <div class="right-phone-box">
               <!-- TH khi chưa đăng nhập  -->
-              <div class="d-flex align-items-center me-5">
+              <div class="d-flex align-items-center me-5" th:unless="${#request.remoteUser}">
                 <a type="button" th:href="@{/account/login}" class="btn btn-dark t me-3 fw-bold" style="background-color: #d33b33; color: #ffffff; ">
                   Đăng nhập
                 </a>
@@ -48,8 +48,8 @@
               <!-- TH khi chưa đăng nhập  -->
 
               <!-- TH khi đăng nhập thành công -->
-              <!-- <div class="d-flex align-items-center pe-5 fw-bold">
-              <div class="text-truncate me-3 " style="width: 130px;  "><a href="#" class="text-danger"> Trần tấn khanh </a></div>
+              <div class="d-flex align-items-center pe-5 fw-bold"  th:if="${#request.remoteUser}" >
+              <div class="text-truncate me-3 " style="width: 100px; color: #1435c3;" ><a href="#" style="color: #1435c3;"  th:text="${session.account.fullname}" >  </a></div>
               <div class="dropdown">
                 <a class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#"
                   id="navbarDropdownMenuAvatar" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
@@ -61,11 +61,16 @@
                     <a class="dropdown-item" href="#">Hồ sơ cá nhân</a>
                   </li>
                   <li>
-                    <a class="dropdown-item" href="#">Đăng nhập</a>
+                    <a class="dropdown-item" href="#" th:unless="${#request.remoteUser}">Đăng nhập</a>
                   </li>
+                  <li>
+                    <a class="dropdown-item"  href="/logoff" >Đăng xuất</a>
+                  </li>
+                 
                 </ul>
               </div>
-            </div> -->
+              
+            </div>
               <!-- TH khi đăng nhập thành công -->
             </div>
 
@@ -76,7 +81,7 @@
     </div>
     <!-- End Main Top -->
     <!-- Start Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-default bootsnav">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-default bootsnav" style="height: 60px;">
       <div class="container">
         <!-- Start Header Navigation -->
         <div class="navbar-header">
@@ -84,7 +89,7 @@
             aria-controls="navbars-rs-food" aria-expanded="false" aria-label="Toggle navigation">
             <i class="fa fa-bars"></i>
           </button>
-          <a class="navbar-brand" href="index.html"><img src="https://i.ibb.co/T1sr8y2/logo-1-removebg-preview.png" width="200" style="height: 81px;"
+          <a class="navbar-brand" href="index.html"><img th:src="@{/assets/image/logo_new.png}" width="200" style="height: 81px;"
               class="logo" alt=""></a>
         </div>
         <!-- End Header Navigation -->
@@ -92,8 +97,9 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="navbar-menu">
           <ul class="nav navbar-nav ml-auto" data-in="fadeInDown" data-out="fadeOutUp">
-            <li class="nav-item active"><a class="nav-link" th:href="@{/index}">Trang chủ</a></li>
-            <li class="nav-item"><a class="nav-link" th:href="@{/about}">Giới thiệu</a></li>
+            <li class="nav-item active"><a class="nav-link" th:href="@{/client/index}">Trang chủ</a></li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/client/about}">Giới thiệu</a></li>
+            <!--  
             <li class="dropdown megamenu-fw">
               <a href="#" class="nav-link arrow" data-toggle="dropdown">Sản phẩm</a>
               <ul class="dropdown-menu megamenu-content" role="menu">
@@ -110,7 +116,6 @@
                         </ul>
                       </div>
                     </div>
-                    <!-- end col-3 -->
                     <div class="col-menu col-md-3">
                       <h6 class="title">Bottom</h6>
                       <div class="content">
@@ -122,7 +127,6 @@
                         </ul>
                       </div>
                     </div>
-                    <!-- end col-3 -->
                     <div class="col-menu col-md-3">
                       <h6 class="title">Clothing</h6>
                       <div class="content">
@@ -145,12 +149,11 @@
                         </ul>
                       </div>
                     </div>
-                    <!-- end col-3 -->
                   </div>
-                  <!-- end row -->
                 </li>
               </ul>
             </li>
+          -->
             <!-- <li class="dropdown">
               <a href="#" class="nav-link  arrow" data-toggle="dropdown">SHOP</a>
               <ul class="dropdown-menu">
@@ -161,8 +164,9 @@
                 <li><a href="shop-detail.html">Shop Detail</a></li>
               </ul>
             </li> -->
-            <li class="nav-item"><a class="nav-link" th:href="@{/contact}">Liên hệ</a></li>
-            <li class="nav-item"><a class="nav-link" th:href="@{/favorite}">Yêu thích</a></li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/client/contact}">Liên hệ</a></li>
+            <li class="nav-item" th:if="${#request.remoteUser}"><a class="nav-link" th:href="@{/client/favorite}">Yêu thích</a></li>
+            <li class="nav-item"><a class="nav-link" ng-if="user.admin == true" th:href="@{/admin/index}">ADMIN</a></li>
           </ul>
         </div>
         <!-- /.navbar-collapse -->
