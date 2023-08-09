@@ -1,5 +1,5 @@
 const host = "http://localhost:8081/api/order";
-const app = angular.module("app", []);
+// const app = angular.module("app", []);
 const statusOrder = {
   PENDING : 0, 
   SHIPPING : 1,

@@ -15,7 +15,7 @@ function APICountry1($http) {
     });
 }
 
-const app = angular.module("app", []);
+// const app = angular.module("app", []);
 app
   .controller("list", list)
   .controller("create", formCreate)

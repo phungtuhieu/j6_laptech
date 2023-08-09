@@ -1,9 +1,7 @@
 import { toastMixin, confirmationDialog } from "../global/custom-sweetalert.js";
 let host = "http://localhost:8081/api";
 
-
-
-const app = angular.module("app", []);
+// const app = angular.module("app", []);
 app
   .controller("list", list)
   .controller("create", formCreate)
@@ -99,7 +97,7 @@ function list($scope, $http) {
               animation: true,
               icon: "error",
               title:
-                "Hãng đã tồn tại trong sản phẩm. Cập nhật không thành công.",
+                "Khuyễn mãi đang áp dụng. Xóa không thành công",
               position: "top",
               width: 600,
             });
@@ -160,21 +158,18 @@ function list($scope, $http) {
   $scope.load_all();
   $scope.check();
 }
-function formCreate($scope, $http) {
-
-  
-    
-    $scope.optionActive = [
-        {
-          id: true,
-          value: "Hoạt động",
-        },
-        {
-          id: false,
-          value: "Không hoạt động",
-        }  
-      ];
-
+function formCreate($scope, $http,$filter) {
+  $scope.MessageStartDate = "Vui lòng chọn Đến ngày";
+  $scope.optionActive = [
+    {
+      id: true,
+      value: "Hoạt động",
+    },
+    {
+      id: false,
+      value: "Không hoạt động",
+    },
+  ];
   //
   $scope.form = { active: true };
   $scope.items = [];
@@ -184,68 +179,134 @@ function formCreate($scope, $http) {
   };
 
 
-  $scope.ten =(ten) =>{
-    alert(ten);
-  }
+  $scope.mang = []; 
 
-
+  $scope.laydulieu = (id) => {
+    const index = $scope.mang.indexOf(id);
+    if (index === -1) {
+      $scope.mang.push(id);
+      
+    } else {
+      $scope.mang.splice(index, 1);
+    }
+  };
 
   $scope.create = () => {
+    if (validation($scope, $scope.form,$filter)) {
+       if (validationCreate($scope.form)) {
+      confirmationDialog(
+        "Xác nhận thêm?",
+        "Bạn có chắc chắn muốn thêm dữ liệu?",
+        "question",
+        "Thêm",
+        "Hủy"
+      ).then((result) => {
+        if (result.isConfirmed) {
+          $scope.form.startDate = new Date($filter("date")($scope.form.startDate, "yyyy-MM-dd")+"T"+$scope.startTime).toISOString();
+          $scope.form.endDate = new Date($filter("date")($scope.form.endDate, "yyyy-MM-dd")+"T"+$scope.endTime).toISOString(); 
+          var item = angular.copy($scope.form);
+          var url = `${host}/discount`;
+          $http({
+            method: "post",
+            url: url,
+            data: item,
+          })
+            .then((resp) => {
+              $scope.items.push(item);
+              $scope.discount = resp.data;
+              console.log("Success_taogiamgia", $scope.discount);
+          
+              $scope.mang.forEach((value, index) => {
+                // price
+                $http({
+                  method: "get",
+                  url: `${host}/discount/price/${value}`,
+                })
+                  .then((respp) => {
+                    $scope.price = respp.data;
+                    console.log("price nè: " + respp.data);
+          
+                    // discountPrice
+                    var data = {
+                      discount: $scope.discount,
+                      price: $scope.price,
+                    };
+                    $http({
+                      method: "post", 
+                      url: `${host}/discount-price`, 
+                      data: data,
+                    }).then((resp) => {
+                      alert("thành công rồi");
+                      window.location.href = "/admin/discount/list";
+                      window.sessionStorage.setItem("name", "create");
+                    }).catch((error) => {
+                      console.log("Error_discountPrice", error);
+                    });
+                    // discountPrice
 
-    console.log($scope.abc)
-    console.log($scope.startTime)
+                  })
+                  .catch((error) => {
+                    console.log("Error_price", error);
+                  });
+                  // price
+              });
+             
+            })
+            .catch((error) => {
+              console.log("Error_discount", error);
+            });
+          
 
-    console.log($scope.cba)
-    console.log($scope.endTime)
+
+
+
+
+            // 
+        }
+      });
+       }
+    }
+  };
+
 
   
-    
-   // if (validation($scope, $scope.form)) {
-     // if (validationCreate($scope.form)) {
-        confirmationDialog(
-          "Xác nhận thêm?",
-          "Bạn có chắc chắn muốn thêm dữ liệu?",
-          "question",
-          "Thêm",
-          "Hủy"
-        ).then((result) => {
-          if (result.isConfirmed) {
-            $scope.form.website = "https://www." + $scope.form.website;
-            var item = angular.copy($scope.form);
-            var url = `${host}/discount`;
-            $http({
-              method: "post",
-              url: url,
-              data: item,
-            })
-              .then((resp) => {
-                $scope.items.push(item);
-                console.log("Success", resp);
-                window.location.href = "/admin/discount/list";
-                window.sessionStorage.setItem("name", "create");
-              })
-              .catch((error) => {
-                console.log("Error", error);
-              });
-          }
-        });
-    //  }
-   // }
+ 
+
+
+
+  
+
+
+  $scope.PriceByProduct = () => {
+    var url = `${host}/discount/PriceByProduct`;
+    //var url = host+'/students.json';
+    $http({
+      method: "GET",
+      url: url,
+    })
+      .then((resp) => {
+        $scope.PriceByProduct = resp.data;
+        console.log("Success_PriceByProduct", resp);
+      })
+      .catch((error) => {
+        console.log("Error_PriceByProduct", error);
+      });
   };
+
+  $scope.PriceByProduct();
+
 }
-function formUpdate($scope, $http, $filter) {
-
-    $scope.optionActive = [
-        {
-          id: true,
-          value: "Hoạt động",
-        },
-        {
-          id: false,
-          value: "Không hoạt động",
-        }  
-      ];
-
+function formUpdate($scope, $http,$filter) {
+  $scope.optionActive = [
+    {
+      id: true,
+      value: "Hoạt động",
+    },
+    {
+      id: false,
+      value: "Không hoạt động",
+    },
+  ];
   //
   $scope.isLoading = true;
   $scope.form = {};
@@ -257,12 +318,12 @@ function formUpdate($scope, $http, $filter) {
       url: url,
     })
       .then((resp) => {
-      
-       
         $scope.form = resp.data;
-        $scope.form.startDate =$filter("date")($scope.form.startDate, "dd/MM/yyyy")
-        $scope.form.endDate =$filter("date")($scope.form.endDate, "dd/MM/yyyy")
-        
+        $scope.form.startDate = new Date($scope.form.startDate);
+        $scope.form.endDate = new Date($scope.form.endDate);
+
+        $scope.startTime = $filter("date")($scope.form.startDate, "HH:mm:ss");
+        $scope.endTime = $filter("date")($scope.form.endDate, "HH:mm:ss");
         console.log("Success_edit", resp);
         $scope.isLoading = false;
       })
@@ -271,39 +332,42 @@ function formUpdate($scope, $http, $filter) {
       });
     window.sessionStorage.removeItem("editId");
   };
-
   $scope.update = () => {
-  //  if (validation($scope, $scope.form)) {
-      confirmationDialog(
-        "Xác nhận sửa?",
-        "Bạn có chắc chắn muốn sửa dữ liệu?",
-        "question",
-        "Sửa",
-        "Hủy"
-      ).then((result) => {
-        if (result.isConfirmed) {
-          var item = angular.copy($scope.form);
-          var url = `${host}/discount/${$scope.form.id}`;
-          $http({
-            method: "put",
-            url: url,
-            data: item,
+      if (validation($scope, $scope.form, $filter)) {
+    confirmationDialog(
+      "Xác nhận sửa?",
+      "Bạn có chắc chắn muốn sửa dữ liệu?",
+      "question",
+      "Sửa",
+      "Hủy"
+    ).then((result) => {
+      if (result.isConfirmed) {
+        $scope.form.startDate = new Date($filter("date")($scope.form.startDate, "yyyy-MM-dd")+"T"+$scope.startTime).toISOString();
+        $scope.form.endDate = new Date($filter("date")($scope.form.endDate, "yyyy-MM-dd")+"T"+$scope.endTime).toISOString();
+        var item = angular.copy($scope.form);
+
+        var url = `${host}/discount/${$scope.form.id}`;
+
+        $http({
+          method: "put",
+          url: url,
+          data: item,
+        })
+          .then((resp) => {
+            var index = $scope.items.findIndex(
+              (item) => item.id == $scope.form.id
+            );
+            $scope.items[index] = resp.data;
+            console.log("Success", resp);
+            window.location.href = "/admin/discount/list";
+            window.sessionStorage.setItem("name", "update");
           })
-            .then((resp) => {
-              var index = $scope.items.findIndex(
-                (item) => item.id == $scope.form.id
-              );
-              $scope.items[index] = resp.data;
-              console.log("Success", resp);
-              window.location.href = "/admin/discount/list";
-              window.sessionStorage.setItem("name", "update");
-            })
-            .catch((error) => {
-              console.log("Error", error);
-            });
-        }
-      });
-   // }
+          .catch((error) => {
+            console.log("Error", error);
+          });
+      }
+    });
+     }
   };
   $scope.delete = (id) => {
     confirmationDialog(
@@ -336,7 +400,7 @@ function formUpdate($scope, $http, $filter) {
               animation: true,
               icon: "error",
               title:
-                "Hãng đã tồn tại trong sản phẩm. Cập nhật không thành công.",
+              "Khuyễn mãi đang áp dụng. Xóa không thành công",
               position: "top",
               width: 600,
             });
@@ -371,13 +435,12 @@ function dataFileHandler($scope, $http) {
         if (index > 1) {
           let student = {
             id: row.getCell(1).value,
-            name: row.getCell(2).value,
-            logo: row.getCell(3).value,
-            email: row.getCell(4).value,
-            phone: row.getCell(5).value,
-            website: row.getCell(6).value,
-            country: row.getCell(7).value,
-            description: row.getCell(8).value,
+            title: row.getCell(2).value,
+            percentage: row.getCell(3).value,
+            startDate: new Date(row.getCell(4).value),
+            endDate: new Date(row.getCell(5).value),
+            active: row.getCell(6).value,
+            description: row.getCell(7).value,
           };
           let url = `${host}/discount`;
           $http
@@ -398,13 +461,13 @@ function dataFileHandler($scope, $http) {
         toastMixin.fire({
           animation: true,
           icon: "success",
-          title: "Import Excel thành công",
+          title: "Import excel thành công",
         });
       } else {
         toastMixin.fire({
           animation: true,
           icon: "error",
-          title: "Import Excel thất bại. Vui lòng kiểm tra lại.",
+          title: "Import excel thất bại. Vui lòng kiểm tra lại.",
         });
       }
     };
@@ -412,31 +475,42 @@ function dataFileHandler($scope, $http) {
     reader.readAsArrayBuffer(files[0]);
   };
 
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear().toString();
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const seconds = date.getSeconds().toString().padStart(2, '0');
+  
+    return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+  }
   // Hàm xuất dữ liệu ra tập tin Excel
   $scope.export = () => {
     var tableData = [];
     var headers = [
       "ID",
-      "NAME",
-      "LOGO",
-      "EMAIL",
-      "PHONE",
-      "WEBSITE",
-      "COUNTRY",
+      "TITLE",
+      "PERCENTAGE",
+      "STARTDATE",
+      "ENDDATE",
+      "ACTIVE",
       "DESCRIPTION",
+     
     ];
 
     // Thêm dữ liệu của từng hàng (row) trong bảng vào mảng tableData
     angular.forEach($scope.items, function (item) {
       var rowData = [
         item.id,
-        item.name,
-        item.logo,
-        item.email,
-        item.phone,
-        item.website,
-        item.country,
+        item.title,
+        item.percentage,
+        formatDate(item.startDate),
+        formatDate(item.endDate),
+        item.active,
         item.description,
+      
       ];
       tableData.push(rowData);
     });
@@ -476,12 +550,11 @@ function dataFileHandler($scope, $http) {
     var tableData = [];
     var headers = [
       "ID",
-      "NAME",
-      "LOGO",
-      "EMAIL",
-      "PHONE",
-      "WEBSITE",
-      "COUNTRY",
+      "TITLE",
+      "PERCENTAGE",
+      "STARTDATE",
+      "ENDDATE",
+      "ACTIVE",
       "DESCRIPTION",
     ];
 
@@ -489,12 +562,11 @@ function dataFileHandler($scope, $http) {
     angular.forEach($scope.items, function (item) {
       var rowData = [
         item.id,
-        item.name,
-        item.logo,
-        item.email,
-        item.phone,
-        item.website,
-        item.country,
+        item.title,
+        item.percentage,
+        formatDate(item.startDate),
+        formatDate(item.endDate),
+        item.active,
         item.description,
       ];
       tableData.push(rowData);
@@ -533,87 +605,112 @@ function dataFileHandler($scope, $http) {
   // /PDF
 }
 //
-function validation($scope, item) {
+function validation($scope, item, $filter) {
   var kyTuDacBietTen = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
-  var regexEmail =
-    /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?$/;
-  var regexPhoneNumber = /^(09|03|08|05)\d{8}$/;
-  const domainRegex = /^(https:\/\/www\.)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
+  var kyTuDacBietSo = /[!@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?]/;
   var chu =
     /^[a-zA-Z\sàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ]*$/;
+
   var valid = true;
-  //name
-  if (!item.name) {
-    $scope.MessageName = "Không để rỗng tên hãng";
-    $scope.showName = true;
+
+  //id
+  if (!item.id) {
+    $scope.MessageId = "Không để rỗng mã khuyễn mãi";
+    $scope.showId = true;
     valid = false;
-  } else if (kyTuDacBietTen.test(item.name)) {
-    $scope.MessageName = "Không được chứa ký tự đặc biệt trong tên hãng";
-    $scope.showName = true;
-    valid = false;
-  } else if (!chu.test(item.name)) {
-    $scope.MessageName = "Không để số tên hãng";
-    $scope.showName = true;
+  } else if (kyTuDacBietTen.test(item.id)) {
+    $scope.MessageId = "Không được chứa ký tự đặc biệt trong tên khuyễn mãi";
+    $scope.showId = true;
     valid = false;
   } else {
-    $scope.MessageName = "";
-    $scope.showName = false;
+    $scope.MessageId = "";
+    $scope.showId = false;
   }
 
-  if (!item.logo) {
-    $scope.MessageLogo = "Chọn ảnh hãng";
-    $scope.showLogo = true;
+  //title
+  if (!item.title) {
+    $scope.MessageTitle = "Không để rỗng tên khuyễn mãi";
+    $scope.showTitle = true;
+    valid = false;
+  } else if (kyTuDacBietTen.test(item.title)) {
+    $scope.MessageTitle = "Không được chứa ký tự đặc biệt trong tên khuyễn mãi";
+    $scope.showTitle = true;
+    valid = false;
+  } else if (!chu.test(item.title)) {
+    $scope.MessageTitle = "Không để số tên khuyễn mãi";
+    $scope.showTitle = true;
     valid = false;
   } else {
-    $scope.MessageLogo = "";
-    $scope.showLogo = false;
-  }
-  //email
-  if (!item.email) {
-    $scope.MessageEmail = "Không để rỗng email";
-    $scope.showEmail = true;
-    valid = false;
-  } else if (!regexEmail.test(item.email)) {
-    $scope.MessageEmail = "Email không đúng địng dạng";
-    $scope.showEmail = true;
-    valid = false;
-  } else {
-    $scope.MessageEmail = "";
-    $scope.showEmail = false;
+    $scope.MessageTitle = "";
+    $scope.showTitle = false;
   }
 
-  //phone
-  if (!item.phone) {
-    $scope.MessagePhone = "Không để rỗng phone";
-    $scope.showPhone = true;
+  //percentage
+  if (!item.percentage) {
+    $scope.MessagePercentage = "Không để rỗng % khuyễn mãi";
+    $scope.showPercentage = true;
     valid = false;
-  } else if (isNaN(item.phone)) {
-    $scope.MessagePhone = "Nhập số cho số điện thoại";
-    $scope.showPhone = true;
+  } else if (kyTuDacBietSo.test(item.percentage)) {
+    $scope.MessagePercentage =
+      "Không được chứa ký tự đặc biệt trong % khuyễn mãi";
+    $scope.showPercentage = true;
     valid = false;
-  } else if (!regexPhoneNumber.test(item.phone)) {
-    $scope.MessagePhone = "Số điện thoại không đúng địng dạng ";
-    $scope.showPhone = true;
+  } else if (isNaN(item.percentage)) {
+    $scope.MessagePercentage = "Nhập số cho % khuyễn mãi";
+    $scope.showPercentage = true;
     valid = false;
-  } else {
-    $scope.MessagePhone = "";
-    $scope.showPhone = false;
-  }
-  //website
-  if (!item.website) {
-    $scope.MessageWebsite = "Không để rỗng website";
-    $scope.showWebsite = true;
-    valid = false;
-  } else if (!domainRegex.test(item.website)) {
-    $scope.MessageWebsite =
-      "Tên      website không đúng địng dạng VD: website.com ";
-    $scope.showWebsite = true;
+  }else if (item.percentage < 1 || item.percentage > 100) {
+    $scope.MessagePercentage = "Nhập số từ 1 đến 100 cho % khuyến mãi";
+    $scope.showPercentage = true;
     valid = false;
   } else {
-    $scope.MessageWebsite = "";
-    $scope.showWebsite = false;
+    $scope.MessagePercentage = "";
+    $scope.showPercentage = false;
   }
 
+
+    const formattedStartDate =  $filter("date")($scope.form.startDate, "yyyy-MM-dd") ;
+    const formattedEndDate = $filter("date")($scope.form.endDate, "yyyy-MM-dd")  ;
+    if (!formattedStartDate || !$scope.startTime) {
+      $scope.MessageStartDate = "Vui lòng chọn từ ngày và giờ";
+      $scope.showStartDate = true;
+      valid = false;
+    } else {
+      $scope.MessageStartDate = "";
+      $scope.showStartDate = false;
+    }
+    
+    if (!formattedEndDate || !$scope.endTime) {
+      $scope.MessageEndDate = "Vui lòng chọn đến ngày và giờ";
+      $scope.showEndDate = true;
+      valid = false;
+    } else {
+      $scope.MessageEndDate = "";
+      $scope.showEndDate = false;
+    }
+
+      
+    if (formattedStartDate && formattedEndDate) {
+      var fromDate = new Date(formattedStartDate);
+      var toDate = new Date(formattedEndDate);
+      if (fromDate > toDate) {
+        $scope.MessageStartDate = "Từ ngày không được nhỏ hơn Đến ngày";
+        $scope.MessageEndDate = "Đến ngày không được lớn hơn Từ ngày";
+        $scope.showStartDate = true;
+        $scope.showEndDate = true;
+        valid = false;
+      }
+      const startTime = new Date(`1970-01-01T${$scope.startTime}`);
+      const endTime = new Date(`1970-01-01T${$scope.endTime}`);
+      if (startTime > endTime) {
+        $scope.MessageStartDate = "Giờ bắt đầu không được nhỏ hơn Giờ kết thúc";
+        $scope.MessageEndDate = "Giờ kết thúc không được lớn hơn Giờ bắt đầu";
+        $scope.showStartDate = true;
+        $scope.showEndDate = true;
+        valid = false;
+      }
+    }
+  //description
   if (kyTuDacBietTen.test(item.description)) {
     $scope.MessageDescription = "Không được chứa ký tự đặc biệt trong mô tả";
     $scope.showDescription = true;
@@ -627,18 +724,17 @@ function validation($scope, item) {
 }
 function validationCreate(item) {
   const items = JSON.parse(window.sessionStorage.getItem("items"));
+    console.log(items)
+    console.log(item)
   var index = items.findIndex(
     (items) =>
-      items.name.toLowerCase().replace(/\s+/g, "") ===
-        item.name.toLowerCase().replace(/\s+/g, "") &&
-      items.website === "https://www." + item.website &&
-      items.country === item.country
+     items.id === item.id
   );
   if (index !== -1) {
     toastMixin.fire({
       animation: true,
       icon: "error",
-      title: "Tên danh mục đã tồn tại",
+      title: "Tên khuyến mãi đã tồn tại",
       position: "top",
       width: 600,
     });

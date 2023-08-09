@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.laptech.dao.UserDAO;
-import com.laptech.model.User;
+import com.laptech.model.Account;
 
 @CrossOrigin("*")
 @RestController
@@ -25,12 +25,12 @@ public class UserRestController {
     UserDAO dao;
 
     @GetMapping("/api/user")
-    public ResponseEntity<List<User>> getAll(Model model) {
+    public ResponseEntity<List<Account>> getAll(Model model) {
         return ResponseEntity.ok(dao.findAll());
     }
 
     @GetMapping("/api/user/{username}")
-    public ResponseEntity<User> getOne(@PathVariable("username") String username) {
+    public ResponseEntity<Account> getOne(@PathVariable("username") String username) {
         if (!dao.existsById(username)) {
             return ResponseEntity.notFound().build();
         }
@@ -38,13 +38,13 @@ public class UserRestController {
     }
 
     @PostMapping("/api/user")
-    public ResponseEntity<User> post(@RequestBody User user) {
+    public ResponseEntity<Account> post(@RequestBody Account user) {
         dao.save(user);
         return ResponseEntity.ok(user);
     }
 
     @PutMapping("/api/user/{username}")
-    public ResponseEntity<User> update(@PathVariable("username") String username, @RequestBody User user) {
+    public ResponseEntity<Account> update(@PathVariable("username") String username, @RequestBody Account user) {
         if (!dao.existsById(username)) {
             return ResponseEntity.notFound().build();
         }
@@ -54,7 +54,7 @@ public class UserRestController {
 
     @DeleteMapping("/api/user/{username}")
     public ResponseEntity<Boolean> delete(@PathVariable("username") String username) {
-        User user = dao.findById(username).get();
+        Account user = dao.findById(username).get();
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
@@ -72,8 +72,8 @@ public class UserRestController {
     // }
 
     @GetMapping("/api/user/search/{keyword}")
-    public ResponseEntity<List<User>> searchUsers(@PathVariable("keyword") String keyword) {
-        List<User> user = dao.findByFullnameOrUsernameLike(keyword);
+    public ResponseEntity<List<Account>> searchUsers(@PathVariable("keyword") String keyword) {
+        List<Account> user = dao.findByFullnameOrUsernameLike(keyword);
         return ResponseEntity.ok(user);
     }
 }

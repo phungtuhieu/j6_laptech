@@ -1,7 +1,7 @@
 
 const host = "http://localhost:8081/api";
 const urlImg = "/files/images";
-const app = angular.module("app", []);
+// const app = angular.module("app", []);
 const statusProduct = {
     IN_STOCK : 1, // Còn hàng
     OUT_OF_STOCK : 2,// Hết hàng
