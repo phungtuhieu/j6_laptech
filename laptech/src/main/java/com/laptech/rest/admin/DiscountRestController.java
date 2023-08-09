@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -23,8 +24,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.laptech.dao.BrandDAO;
 import com.laptech.dao.DiscountDAO;
+import com.laptech.dao.DiscountPriceDAO;
+import com.laptech.dao.PriceDAO;
 import com.laptech.model.Brand;
 import com.laptech.model.Discount;
+import com.laptech.model.DiscountPrice;
+import com.laptech.model.DiscountPricePK;
+import com.laptech.model.Price;
 
 
 @RestController
@@ -33,6 +39,10 @@ public class DiscountRestController {
     
      @Autowired
     DiscountDAO dao;
+    @Autowired
+    PriceDAO prDao;
+    @Autowired
+    DiscountPriceDAO dpDao;
     
     @GetMapping("/api/discount")
     public ResponseEntity<List<Discount>> getAll(Model model){
@@ -75,15 +85,26 @@ public class DiscountRestController {
        
     }
 
-    // @GetMapping("/api/brand/search/{name}")
-    // public ResponseEntity<List<Brand>> search(@PathVariable("name") String name){
-    //     return ResponseEntity.ok(dao.findByNameLike(name));
-    // }
+    @GetMapping("/api/discount/PriceByProduct")
+    public ResponseEntity<List<Price>> PriceByProductAndDiscount(){
+        return ResponseEntity.ok(prDao.findByPriceByProductAndDiscount());
+    }
 
-    
-    // @GetMapping("/api/brand/countries")
-    // public ResponseEntity<String> getCountries() throws IOException {
-    //     String jsonContent = new String(Files.readAllBytes(Paths.get(new ClassPathResource("static/countries.json").getURI())));
-    //     return ResponseEntity.ok(jsonContent);
-    // }
+    @GetMapping("/api/discount/price/{id}")
+    public ResponseEntity<Optional<Price>> findByPriceId(@PathVariable("id") Long id){
+        return ResponseEntity.ok(prDao.findById(id));
+    }
+
+
+    @PostMapping("/api/discount-price")
+    public ResponseEntity<DiscountPrice> discountPrice(@RequestBody DiscountPrice discountPrice){
+        DiscountPricePK discountPricePK = new DiscountPricePK();
+        discountPricePK.setDiscountId(discountPrice.getDiscount().getId());;
+        discountPricePK.setPriceId(discountPrice.getPrice().getId());
+        discountPrice.setDiscountPricePK(discountPricePK);
+        dpDao.save(discountPrice);
+        return ResponseEntity.ok(discountPrice);
+    }
+
+  
 }

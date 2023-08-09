@@ -15,6 +15,6 @@ public class DiscountPricePK implements  Serializable {
     private String discountId;
 
     @Column(name = "price_id",insertable = false,updatable = false)
-    private Double priceId;
+    private Long priceId;
 
 }

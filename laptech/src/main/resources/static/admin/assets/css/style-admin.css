@@ -467,7 +467,7 @@ body {
 }
 .table th::after {
     position: absolute;
-    right: 0.5em;
+    right: 0.1em;
     content: "\f0dc";
     font-family: "Font Awesome 6 free";
     top: 14px;
@@ -610,6 +610,49 @@ body {
     background: #fff;
     box-shadow: none;
 }
+
+
+
+input[type="checkbox"] {
+    position: relative;
+    appearance: none;
+    -webkit-appearance: none;
+    border: 2px solid #FF9F43;
+    background: #fff;
+    box-shadow: none;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+input[type="checkbox"]:focus{
+    box-shadow: none;
+    border: 2px solid #FF9F43;
+}
+input[type="checkbox"]::before {
+    content: "✔"; /* Sử dụng ký tự tick */
+    font-size: 14px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #FF9F43;
+    display: none;
+}
+
+input[type="checkbox"]:checked:before {
+    display: block;
+    background-color: #ffffff;
+    border: 2px solid #FF9F43;
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    padding-top: -10px;
+    
+}
+
+
+
+
 
 .form-group .form-label {
     margin-bottom: 8px;

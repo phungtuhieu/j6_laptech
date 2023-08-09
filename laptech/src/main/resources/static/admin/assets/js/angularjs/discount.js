@@ -177,6 +177,20 @@ function formCreate($scope, $http,$filter) {
   $scope.uploadName = (files) => {
     return ($scope.form.logo = files[0].name);
   };
+
+
+  $scope.mang = []; 
+
+  $scope.laydulieu = (id) => {
+    const index = $scope.mang.indexOf(id);
+    if (index === -1) {
+      $scope.mang.push(id);
+      
+    } else {
+      $scope.mang.splice(index, 1);
+    }
+  };
+
   $scope.create = () => {
     if (validation($scope, $scope.form,$filter)) {
        if (validationCreate($scope.form)) {
@@ -198,20 +212,89 @@ function formCreate($scope, $http,$filter) {
             data: item,
           })
             .then((resp) => {
-
               $scope.items.push(item);
-              console.log("Success", resp);
-              window.location.href = "/admin/discount/list";
-              window.sessionStorage.setItem("name", "create");
+              $scope.discount = resp.data;
+              console.log("Success_taogiamgia", $scope.discount);
+          
+              $scope.mang.forEach((value, index) => {
+                // price
+                $http({
+                  method: "get",
+                  url: `${host}/discount/price/${value}`,
+                })
+                  .then((respp) => {
+                    $scope.price = respp.data;
+                    console.log("price nè: " + respp.data);
+          
+                    // discountPrice
+                    var data = {
+                      discount: $scope.discount,
+                      price: $scope.price,
+                    };
+                    $http({
+                      method: "post", 
+                      url: `${host}/discount-price`, 
+                      data: data,
+                    }).then((resp) => {
+                      alert("thành công rồi");
+                      window.location.href = "/admin/discount/list";
+                      window.sessionStorage.setItem("name", "create");
+                    }).catch((error) => {
+                      console.log("Error_discountPrice", error);
+                    });
+                    // discountPrice
+
+                  })
+                  .catch((error) => {
+                    console.log("Error_price", error);
+                  });
+                  // price
+              });
+             
             })
             .catch((error) => {
-              console.log("Error", error);
+              console.log("Error_discount", error);
             });
+          
+
+
+
+
+
+            // 
         }
       });
        }
     }
   };
+
+
+  
+ 
+
+
+
+  
+
+
+  $scope.PriceByProduct = () => {
+    var url = `${host}/discount/PriceByProduct`;
+    //var url = host+'/students.json';
+    $http({
+      method: "GET",
+      url: url,
+    })
+      .then((resp) => {
+        $scope.PriceByProduct = resp.data;
+        console.log("Success_PriceByProduct", resp);
+      })
+      .catch((error) => {
+        console.log("Error_PriceByProduct", error);
+      });
+  };
+
+  $scope.PriceByProduct();
+
 }
 function formUpdate($scope, $http,$filter) {
   $scope.optionActive = [
