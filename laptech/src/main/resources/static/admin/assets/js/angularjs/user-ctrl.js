@@ -1,6 +1,7 @@
 let host = "http://localhost:8081/api";
 var i = 0;
 // const app = angular.module("app", []);
+var url =  "http://localhost:8081/api/files/images";
 app.controller("list", list)
     .controller("create", formCreate)
    . controller("update", formUpdate)
@@ -23,7 +24,7 @@ $scope.load_all = () => {
         url: url,
 
     }).then((resp) => {
-        $scope.items = resp.data;
+        $scope.items = resp.data.filter((item) => item.admin === false);
         $scope.pageCount = Math.ceil($scope.items.length / 5);
         console.log("Success", resp);
     })
@@ -144,6 +145,44 @@ function formCreate($scope, $http){
         console.log("Error", error);
       });
   };
+
+  //hình ảnh
+  $scope.url = function(filename){
+    return `${url}/${filename}`;
+  }
+  $scope.list = function (){
+    $http.get(url).then(resp => {
+      $scope.filenames = resp.data;
+    }).catch(error => {
+      console.log("Errors", error);
+    });
+  }
+
+  $scope.upload = function (files){
+    var form = new FormData();
+    for(var i = 0; i< files.length; i++){
+      form.append("files", files[i]);
+    }
+
+    $http.post(url, form, {
+      transformRequest: angular.identity,
+      headers: {'Content-Type': undefined}
+    }).then(resp => {
+      $scope.filenames.push(...resp.data);
+    }).catch(error => {
+      console.log("Errors", error);
+    });
+  };
+
+  $scope.delete = function (filename){
+    $http.delete(`${url}/${filename}`).then(resp => {
+      let i = $scope.filenames.findIndex(name => name == filename);
+      $scope.filenames.splice(i, 1);
+    }).catch(error => {
+      console.log("Errors", error);
+    });
+  }
+  $scope.list();
 }
 function formUpdate($scope, $http){ 
   $scope.optionActive = [
@@ -223,6 +262,43 @@ $scope.delete = (username) => {
         console.log("Error", error);
       });
   };
+  //hình ảnh
+  $scope.url = function(filename){
+    return `${url}/${filename}`;
+  }
+  $scope.list = function (){
+    $http.get(url).then(resp => {
+      $scope.filenames = resp.data;
+    }).catch(error => {
+      console.log("Errors", error);
+    });
+  }
+
+  $scope.upload = function (files){
+    var form = new FormData();
+    for(var i = 0; i< files.length; i++){
+      form.append("files", files[i]);
+    }
+
+    $http.post(url, form, {
+      transformRequest: angular.identity,
+      headers: {'Content-Type': undefined}
+    }).then(resp => {
+      $scope.filenames.push(...resp.data);
+    }).catch(error => {
+      console.log("Errors", error);
+    });
+  };
+
+  $scope.delete = function (filename){
+    $http.delete(`${url}/${filename}`).then(resp => {
+      let i = $scope.filenames.findIndex(name => name == filename);
+      $scope.filenames.splice(i, 1);
+    }).catch(error => {
+      console.log("Errors", error);
+    });
+  }
+  $scope.list();
   const username = window.sessionStorage.getItem("editUs");
   $scope.edit(username)
 }
@@ -347,6 +423,3 @@ function dataFileHandler($scope, $http) {
   };
   // /PDF
 }
-
-
-

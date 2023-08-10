@@ -1,5 +1,6 @@
 package com.laptech.rest.admin;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.laptech.dao.UserDAO;
 import com.laptech.model.Account;
+import com.laptech.service.FileManagerService;
 
 @CrossOrigin("*")
 @RestController
@@ -23,6 +25,9 @@ public class UserRestController {
 
     @Autowired
     UserDAO dao;
+
+    @Autowired
+    FileManagerService fileService;
 
     @GetMapping("/api/user")
     public ResponseEntity<List<Account>> getAll(Model model) {
@@ -76,4 +81,5 @@ public class UserRestController {
         List<Account> user = dao.findByFullnameOrUsernameLike(keyword);
         return ResponseEntity.ok(user);
     }
+
 }

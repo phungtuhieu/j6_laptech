@@ -15,8 +15,8 @@ CREATE TABLE Users (
     email NVARCHAR(100) NOT NULL,
     [address] NVARCHAR(200) NOT NULL,
     [admin] BIT NOT NULL,   
-    active BIT NOT NULL
-
+    active BIT NOT NULL,
+    [image] NVARCHAR(200) NOT NULL
 ) 
 GO
 
@@ -431,13 +431,13 @@ SELECT * FROM Favorites;
 
 
 
-INSERT INTO Users (username, [password], fullname, phone, email, [address], [admin], active)
+INSERT INTO Users (username, [password], fullname, phone, email, [address], [admin],active, [image])
 VALUES
-    ('ngocanh01', '123456', N'Ngọc Anh', '0909123456', 'ngocanh01@example.com', N'Hồ Chí Minh', 0, 1),
-    ('thanhnam87', '654321', N'Thanh Nam', '0918234567', 'nam87@example.com', N'Hà Nội', 1, 1),
-    ('minhchau02', 'abc123', N'Minh Châu', '0987123456', 'chau02@example.com', N'Đà Nẵng', 0, 1),
-    ('trungkien11', 'def456', N'Trung Kiên', '0967123456', 'kien11@example.com', N'Bình Dương', 0, 1),
-    ('thuytrang9x', 'ghj789', N'Thúy Trang', '0978123456', 'trang9x@example.com', N'Hải Phòng', 0, 1);
+    ('ngocanh01', '123456', N'Ngọc Anh', '0909123456', 'ngocanh01@example.com', N'Hồ Chí Minh', 0, 1,"avt.png"),
+    ('thanhnam87', '654321', N'Thanh Nam', '0918234567', 'nam87@example.com', N'Hà Nội', 1, 1,"avt.png"),
+    ('minhchau02', 'abc123', N'Minh Châu', '0987123456', 'chau02@example.com', N'Đà Nẵng', 0, 1,"avt.png"),
+    ('trungkien11', 'def456', N'Trung Kiên', '0967123456', 'kien11@example.com', N'Bình Dương', 0, 1,"avt.png"),
+    ('thuytrang9x', 'ghj789', N'Thúy Trang', '0978123456', 'trang9x@example.com', N'Hải Phòng', 0, 1,"avt.png");
 
 GO
 
