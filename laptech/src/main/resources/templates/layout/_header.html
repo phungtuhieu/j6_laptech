@@ -39,7 +39,7 @@
           <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" >
             <div class="right-phone-box">
               <!-- TH khi chưa đăng nhập  -->
-              <div class="d-flex align-items-center me-5" th:unless="${#request.remoteUser}">
+              <div class="d-flex align-items-center me-5"  ng-if="user.fullname == null">
                 <a type="button" th:href="@{/account/login}" class="btn btn-dark t me-3 fw-bold" style="background-color: #d33b33; color: #ffffff; ">
                   Đăng nhập
                 </a>
@@ -48,8 +48,8 @@
               <!-- TH khi chưa đăng nhập  -->
 
               <!-- TH khi đăng nhập thành công -->
-              <div class="d-flex align-items-center pe-5 fw-bold"  th:if="${#request.remoteUser}" >
-              <div class="text-truncate me-3 " style="width: 100px; color: #1435c3;" ><a href="#" style="color: #1435c3;"   >  </a></div>
+              <div class="d-flex align-items-center pe-5 fw-bold"  ng-if="user.fullname != null" >
+              <div class="text-truncate me-3 " style="width: 100px; color: #1435c3;" ><a href="#" style="color: #1435c3;"  > {{user.fullname}} </a></div>
               <div class="dropdown">
                 <a class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#"
                   id="navbarDropdownMenuAvatar" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
@@ -61,7 +61,7 @@
                     <a class="dropdown-item" href="#">Hồ sơ cá nhân</a>
                   </li>
                   <li>
-                    <a class="dropdown-item" href="#" th:unless="${#request.remoteUser}">Đăng nhập</a>
+                    <a class="dropdown-item" href="#" ng-if="user.fullname == null">Đăng nhập</a>
                   </li>
                   <li>
                     <a class="dropdown-item"  href="/logoff" >Đăng xuất</a>

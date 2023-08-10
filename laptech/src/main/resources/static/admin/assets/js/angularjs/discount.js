@@ -236,7 +236,6 @@ function formCreate($scope, $http,$filter) {
                       url: `${host}/discount-price`, 
                       data: data,
                     }).then((resp) => {
-                      alert("thành công rồi");
                       window.location.href = "/admin/discount/list";
                       window.sessionStorage.setItem("name", "create");
                     }).catch((error) => {
