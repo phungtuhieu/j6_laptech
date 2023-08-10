@@ -1,9 +1,10 @@
 @import url(superslides.css);
 @import url(code_animate.css);
 @import url(bootsnav.css);
-
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
 body {
   /* font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; */
+  font-family: 'Quicksand', sans-serif;
   background-color: #F8F8FC;
   height: 200vh;
   position: relative; }

@@ -9,7 +9,7 @@
 </head>
 <body> 
 
-    <main>
+    <main ng-controller="index">
     <div class="container cart-area ">
         <div class="row">
             <div class="col-lg-12">
@@ -21,14 +21,14 @@
                                     <tr>
                                         <th class="width-thumbnail">Sản phẩm</th>
                                         <th class="width-name"></th>
-                                        <th class="width-price"> Giá</th>
+                                        <th class="width-price"> Giá (VND)</th>
                                         <th class="width-quantity">Số lượng</th>
-                                        <th class="">Tạm tính</th>
+                                        <th class="">Tạm tính  (VND)</th>
                                         <th class="width-remove"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
+                                    <tr ng-repeat="item in cart.items">
                                         <td  class="product-thumbnail">
                                             <a href="product-details.html" class="">
                                                 <img src="assets/images/cart/cart-1.jpg" alt="">
@@ -36,29 +36,34 @@
                                         </td>
                                         <td class="product-name">	
                                             <h5>
-                                                <a href="product-details.html">Sản phẩm laptop acer 1</a>
+                                                <a href="product-details.html">{{item.prod.name}}</a>
                                             </h5>
                                         </td>
-                                        <td class="product-price"><span class="amount">120.000 VND</span></td>
+                                        <td class="product-price"><span class="amount">{{item.priceObj.price | currency:"":0}} </span></td>
                                         <td class="cart-quality">
                                             <div class="product-quality">
-                                                <input class="cart-plus-minus-box input-text qty text" type="number" name="qtybutton" value="1">
+                                                <input class="cart-plus-minus-box input-text qty text" ng-change="cart.saveToLocalStorage()" type="number" name="qtybutton" ng-model="item.prod.quantity" value="1">
                                         </td>
                                         <td class="product-price">
-                                            <span class="amount">120.000 VND</span>
+                                            <span class="amount"> {{(item.priceObj.price * item.prod.quantity) | currency:"":0}}</span>
                                         </td>
-                                        <td class="product-remove"><a href="#">Xoá</a></td>
+                                        <td class="product-remove"><a  href="" ng-click="cart.remove(item.prod.id)">Xoá</a></td>
                                     </tr>
+
                                 </tbody>
+                               
                             </table>
+                            <div ng-if="cart.items.length == 0" class="d-flex justify-content-center py-5">
+                                <span> Giỏ hàng của bạn còn trống</span>
+                             </div>
                         </div>
                         <div class="cart-shiping-update-wrapper">
                             <div class="continure-clear-btn">
                                 <div class="continure-btn">
-                                    <a href="#">Tiếp tục mua sắm</a>
+                                    <a th:href="@{/client/index}">Tiếp tục mua sắm</a>
                                 </div>
                                 <div class="clear-btn">
-                                    <a href="#"><i class="fa-sharp fa-solid fa-xmark"></i> Xoá tất cả giỏ hàng</a>
+                                    <a href="" ng-click="cart.clear()"><i class="fa-sharp fa-solid fa-xmark"></i> Xoá tất cả giỏ hàng</a>
                                 </div>
                             </div>
                             <div class="update-price d-flex align-items-center">
@@ -88,13 +93,13 @@
             <div class="col-lg-6 col-md-12 col-12">
                 <div class="grand-total-wrap mb-40">
                     <ul>
-                        <li>Tạm tính <h4>600.000 VND</h4> 
-                        </li>
+                        <!-- <li>Tạm tính <h4>600.000 VND</h4> 
+                        </li> -->
                         <!-- <li>Shipping <h4><span>Flat rate:</span>$5.00</h4>
                         </li> -->
                     </ul>
                     <div class="grand-total">
-                        <h4>Tổng cộng <span>600.000 VND</span></h4>
+                        <h4>Tổng cộng <span>{{cart.amount | currency:"":0}} VND</span></h4>
                     </div>
                     <div class="grand-total-btn">
                         <a th:href="@{/cart/checkout}">Đặt hàng</a>

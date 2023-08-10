@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import com.laptech.model.Brand;
 import com.laptech.model.DiscountPrice;
 import com.laptech.model.DiscountPricePK;
+import com.laptech.model.Price;
 
 public interface DiscountPriceDAO extends JpaRepository<DiscountPrice, DiscountPricePK> {
 
@@ -18,6 +19,10 @@ public interface DiscountPriceDAO extends JpaRepository<DiscountPrice, DiscountP
     + "AND CURRENT_TIMESTAMP BETWEEN dp.discount.startDate AND dp.discount.endDate "
     + "AND dp.price.id = dp.price.id")
     List<DiscountPrice> findByDiscountAndPriceId();
+
+    @Query("SELECT dp FROM DiscountPrice dp WHERE dp.price = ?1 AND CURRENT_TIMESTAMP "
+    + "BETWEEN dp.discount.startDate AND dp.discount.endDate")
+    DiscountPrice findByDiscountAndPriceByNowDate(Price price);
 
 
     

@@ -1,5 +1,6 @@
 package com.laptech.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,6 +16,9 @@ import com.laptech.model.Product;
 
 public interface PriceDAO extends JpaRepository<Price,Long> {
     List<Price> findByProduct(Product product);
+
+    @Query(" SELECT p FROM Price p WHERE p.product  = ?1 AND CURRENT_TIMESTAMP  BETWEEN p.startDate AND p.endDate")
+    Price findByProductAndDateNowBetween(Product product);
 
     @Query("SELECT pr FROM Price pr WHERE pr.product.status = 1 AND CURRENT_TIMESTAMP BETWEEN pr.startDate AND pr.endDate")
     List<Price> findByPriceInDate();

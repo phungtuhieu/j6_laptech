@@ -16,7 +16,7 @@ app
   .controller("listCategory", listCategory)
  
 
-function index($scope, $http, $interval) {
+function index($scope, $http, $interval,$rootScope) {
   $scope.pageCount;
   $scope.items = [];
   $scope.currentPage = 1;
@@ -379,7 +379,94 @@ function index($scope, $http, $interval) {
   }
 
 
+  $rootScope.cart =  {
+    items :[],
+    
+    add(id){
+      var prodPrice = {
+        prod: {},
+        priceObj: {}
+      };
+      var item = this.items.find(item => item.prod.id == id);
+      if(item) {
+        item.prod.quantity++;
+        this.saveToLocalStorage();
+        console.log("items-cart",this.items);
+      
+      }else {
+        $http.get(`${host}/product/${id}`).then(resp => {
+          resp.data.quantity = 1;
+          prodPrice.prod = resp.data;
+            $http.get(`${host}/product/cart/price/${id}`).then(resp => {
+              prodPrice.priceObj = resp.data;
+              this.items.push(prodPrice);
+              this.saveToLocalStorage();
+            }).catch(err => {
+              console.log("err-cart-price"+err);
+            })
+          console.log("items-cart",this.items);
+        }).catch(err => {
+          console.log("err-cart",err);
+        })
+        
+      }
+      Swal.fire(
+        'Cảm ơn bạn',
+        'Sản phẩm đã được thêm vào giỏ hàng thành công',
+        'success'
+      )
+    },
+    remove(id){
+      var index = this.items.findIndex(item => item.prod.id == id);
+      this.items.splice(index,1);
+      this.saveToLocalStorage();
 
+    },
+    clear(){
+      Swal.fire({
+        title: 'Bạn có chắc muốn xóa ?',
+        text: "Sản phẩm sẽ được xóa tất cả?",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Không',
+        confirmButtonText: 'Có'
+      }).then((result) => {
+        Swal.fire(
+          'Đã xóa!',
+          'Tất cả sản phẩm đã được xóa khỏi giỏ hàng.',
+          'success'
+        )
+        this.items= [];
+        this.saveToLocalStorage();
+        $scope.$applyAsync();
+      })
+    },
+    amt_of(item){},
+    get count(){
+      var c = this.items.map(item => item.prod.quantity).reduce((total,quantity) => total += quantity,0);
+      console.log("count-cart",c);
+      return c ;
+    },
+    get amount(){
+      var am = this.items.map(item => item.prod.quantity * item.priceObj.price).reduce((total,price) => total += price,0);
+      
+      return am ;
+    },
+    saveToLocalStorage(){
+      var json = JSON.stringify(angular.copy(this.items));
+      localStorage.setItem("cart",json);
+      $rootScope.$emit('countChanged', this.count);
+    },
+    loadFromLocalStorage(){
+      var json = localStorage.getItem('cart');
+      this.items =  json ? JSON.parse(json) : []
+      $rootScope.$emit('countChanged', this.count);
+    }
+   
+  }
+  $scope.cart.loadFromLocalStorage();
  
   $scope.login();
   $scope.notNull();
@@ -413,5 +500,7 @@ function listCategory($scope, $http) {
   };
   const id = window.sessionStorage.getItem("brandName");
   $scope.load_all_productBrand(id);
+
+
 }
 

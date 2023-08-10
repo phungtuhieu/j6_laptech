@@ -614,8 +614,9 @@
                                     <div class="col-lg-6"><button type="submit" name="addtocart" value="5"
                                         class="button btnred add-to-cartProduct">Mua
                                         ngay</button></div>
-                                    <div class="col-lg-6"> <button type="submit" class="button-cart slide">Thêm vào giỏ
+                                    <div class="col-lg-6"> <button  ng-click="cart.add(pd.id)" class="button-cart slide">Thêm vào giỏ
                                         hàng</button></div>
+                                      
                                   </div>
 
                                 </div>
@@ -743,7 +744,7 @@
                       </div>
 
                       <div class="col-lg-12 mt-4">
-                        <button type="submit" class="button-cart slide">Thêm vào giỏ hàng</button>
+                        <a  class="button-cart slide">Thêm vào giỏ hàng</a>
                       </div>
 
 

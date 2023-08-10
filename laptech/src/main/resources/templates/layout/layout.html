@@ -48,8 +48,7 @@
 
     <script  th:src="@{/assets/js/angularjs/header.js}"></script>
 
-    <script  th:src="@{/assets/js/angularjs/header.js}"></script>
-    <th:block th:if="${#ctx.springRequestContext.requestUri.contains('index')}">
+    <th:block th:if="${#ctx.springRequestContext.requestUri.contains('index') || #ctx.springRequestContext.requestUri.contains('cart')}">
         <script  th:src="@{/assets/js/angularjs/index.js}"></script>
     </th:block>
     <th:block th:if="${#ctx.springRequestContext.requestUri.contains('ListCategory')}">
