@@ -39,15 +39,15 @@
                                                 <a href="product-details.html">{{item.prod.name}}</a>
                                             </h5>
                                         </td>
-                                        <td class="product-price"><span class="amount">{{item.priceObj.price | currency:"":0}} </span></td>
+                                        <td class="product-price"><span class="amount">{{item.price | currency:"":0}} </span></td>
                                         <td class="cart-quality">
                                             <div class="product-quality">
-                                                <input class="cart-plus-minus-box input-text qty text" ng-change="cart.saveToLocalStorage()" type="number" name="qtybutton" ng-model="item.prod.quantity" value="1">
+                                                <input class="cart-plus-minus-box input-text qty text" ng-change="user.fullname != null ? cart.updateToCartUser(item) : cart.saveToLocalStorage()" type="number" name="qtybutton" ng-model="item.quantity" value="1">
                                         </td>
                                         <td class="product-price">
-                                            <span class="amount"> {{(item.priceObj.price * item.prod.quantity) | currency:"":0}}</span>
+                                            <span class="amount"> {{(item.price * item.quantity) | currency:"":0}}</span>
                                         </td>
-                                        <td class="product-remove"><a  href="" ng-click="cart.remove(item.prod.id)">Xoá</a></td>
+                                        <td class="product-remove"><a  href="" ng-click="cart.remove(user.fullname != null ? item.id : item.prod.id)">Xoá</a></td>
                                     </tr>
 
                                 </tbody>

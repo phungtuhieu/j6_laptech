@@ -161,25 +161,7 @@ public class ProductRestController {
        
         return ResponseEntity.ok(list)  ;
     }
-    @GetMapping ("/cart/price/{idProd}")
-    public ResponseEntity<Price> getPriceForCart(@PathVariable("idProd") Long id) {
-        if(!dao.existsById(id)) {
-            ResponseEntity.notFound().build() ;
-        } 
-        Product prod = dao.findById(id).get();
-        Price price = priceDao.findByProductAndDateNowBetween(prod);
-        if(price == null) {
-            return  ResponseEntity.notFound().build() ;
-        } 
-        System.out.println("Giá : "+price.getPrice());
-        DiscountPrice disPrice = disPriceDao.findByDiscountAndPriceByNowDate(price);
-        if(disPrice != null) {
-            price.setPrice( price.getPrice() - ((price.getPrice() * disPrice.getDiscount().getPercentage()) / 100));
-            System.out.println("Giá có giảm: "+price.getPrice());
-        }
-     
-        return ResponseEntity.ok(price) ;
-    }
+ 
     @GetMapping ("/price/{idProd}")
     public ResponseEntity<List<Price>> getlistPrice(@PathVariable("idProd") Long id) {
         if(!dao.existsById(id)) {

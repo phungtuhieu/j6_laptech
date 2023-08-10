@@ -584,10 +584,10 @@
                                 </div>
 
                                 <div class="col-lg-12 d-flex mb-3">
-                                  <span class="quantity-title align-self-center">Số lượng:</span>
+                                  <span class="quantity-title align-self-center" >Số lượng:</span>
                                   <div class="quantity">
                                     <div class="d-flex align-items-center">
-                                      <input type="number" id="typeNumber" class="form-control" step="1" min="1"
+                                      <input type="number" id="typeNumber" ng-model="cartProdQuantity" class="form-control" step="1" min="1"
                                         max="99" value="1">
                                     </div>
                                   </div>
@@ -614,7 +614,8 @@
                                     <div class="col-lg-6"><button type="submit" name="addtocart" value="5"
                                         class="button btnred add-to-cartProduct">Mua
                                         ngay</button></div>
-                                    <div class="col-lg-6"> <button  ng-click="cart.add(pd.id)" class="button-cart slide">Thêm vào giỏ
+                                        {{pd.id}}
+                                    <div class="col-lg-6"> <button  ng-click="cart.add(pd.id,cartProdQuantity)" class="button-cart slide">Thêm vào giỏ
                                         hàng</button></div>
                                       
                                   </div>
