@@ -3,6 +3,7 @@ package com.laptech.rest;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,18 +22,19 @@ public class SignUpRestController {
     @Autowired
     UserDAO dao;
 
-    @GetMapping("/api/sign-up")
+    @GetMapping("/api/account/sign-up")
     public ResponseEntity<List<User>> getAll(Model model) {
         return ResponseEntity.ok(dao.findAll());
     }
 
-    @PostMapping("/api/sign-up")
-    public ResponseEntity<User> signup(@RequestBody User user) {
-        if (!dao.existsById(user.getUsername())) {
-            return ResponseEntity.notFound().build();
+    @PostMapping("/api/account/sign-up")
+    public ResponseEntity<?> signup(@RequestBody User user) {
+        if (dao.existsById(user.getUsername())) {
+            return ResponseEntity.badRequest().body("Username already exists");
         }
-        dao.save(user);
-        return ResponseEntity.ok(dao.findById(user.getUsername()).get());
+
+        User savedUser = dao.save(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
     }
 
 }

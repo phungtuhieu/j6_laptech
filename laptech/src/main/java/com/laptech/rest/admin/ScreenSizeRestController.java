@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.laptech.dao.ScreenSizeDAO;
@@ -64,9 +65,16 @@ public class ScreenSizeRestController {
 
     }
 
-    @GetMapping("/api/screen-size/search/{keyword}")
-    public ResponseEntity<List<ScreenSize>> searchScreenSize(@PathVariable("keyword") String keyword) {
-        List<ScreenSize> screenSizes = dao.findBySizeAndPanelType(keyword);
+    // @GetMapping("/api/screen-size/search/{keyword}")
+    // public ResponseEntity<List<ScreenSize>>
+    // searchScreenSize(@PathVariable("keyword") String keyword) {
+    // List<ScreenSize> screenSizes = dao.findBySizeAndPanelType(keyword);
+    // return ResponseEntity.ok(screenSizes);
+    // }
+    @GetMapping("/api/screen-size/search")
+    public ResponseEntity<List<ScreenSize>> searchScreenSize(@RequestParam("size") String size,
+            @RequestParam("panelType") String panelType) {
+        List<ScreenSize> screenSizes = dao.findBySizeAndPanelType(size, panelType);
         return ResponseEntity.ok(screenSizes);
     }
 }
