@@ -30,7 +30,7 @@ public class SecurityConfg extends WebSecurityConfigurerAdapter {
 
                 http.authorizeHttpRequests(requests -> requests
                                 .antMatchers("/admin/**/**").hasRole("ADMIN")
-                                // .antMatchers("").hasAnyRole("ADMIN","USER")
+                                //  .antMatchers("/client/favorite").hasRole("USER")
                                 .antMatchers("/client/index").permitAll());
                 // .antMatchers("/client/index").authenticated());
                 http.exceptionHandling(handling -> handling

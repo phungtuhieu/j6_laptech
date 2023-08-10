@@ -1,5 +1,6 @@
 
 let host = "http://localhost:8081/api";
+let urlImg = "/files/images";
 // const app = angular.module("app", []);
 app
   .filter("formatCurrency", function () {
@@ -20,6 +21,10 @@ function index($scope, $http, $interval) {
   $scope.pageCount;
   $scope.items = [];
   $scope.currentPage = 1;
+
+  $scope.urlImg = (name) =>{
+    return `${urlImg}/${name}`;
+  }
 
   function generatePaginationNumbers(currentPage, pageCount) {
     const pagination = [];
@@ -266,6 +271,7 @@ function index($scope, $http, $interval) {
   };
 
   $scope.favoriteLikeUser = (username) => {
+
     var url = `${host}/favorite/${username}`;
     $http({
       method: "GET",
@@ -297,6 +303,10 @@ function index($scope, $http, $interval) {
   $scope.andFavorite = (productId) => {
 
     var username = $scope.user.username;
+
+    if(username == null){
+      return window.location.href = "/account/login"
+    }
 
     var url = `${host}/favorite/${username}`;
     $http({
