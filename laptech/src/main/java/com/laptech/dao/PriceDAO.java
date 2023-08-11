@@ -53,12 +53,13 @@ public interface PriceDAO extends JpaRepository<Price,Long> {
 
     Optional<Price> findById(Long id);
 
-    @Query("SELECT pr FROM Price pr " +
-       "WHERE pr.product.status = 1 " +
-       "AND CURRENT_TIMESTAMP BETWEEN pr.startDate AND pr.endDate " +
-       "AND pr.product.id IN " +
-       "(SELECT p.id FROM Product p JOIN p.prices pr JOIN pr.discountPrices dp " +
-       "WHERE dp.discount.id = ?1 AND CURRENT_TIMESTAMP BETWEEN dp.discount.startDate AND dp.discount.endDate)")
+    // @Query("SELECT pr FROM Price pr " +
+    //    "WHERE pr.product.status = 1 " +
+    //    "AND CURRENT_TIMESTAMP BETWEEN pr.startDate AND pr.endDate " +
+    //    "AND pr.product.id IN " +
+    //    "(SELECT p.id FROM Product p JOIN p.prices pr JOIN pr.discountPrices dp " +
+    //    "WHERE dp.discount.id = ?1 AND CURRENT_TIMESTAMP BETWEEN dp.discount.startDate AND dp.discount.endDate)")
+    @Query("SELECT pr FROM Price pr JOIN pr.discountPrices dp WHERE dp.discount.id = ?1")
         List<Price> findByPriceByProductInDiscount(String name);
 
 

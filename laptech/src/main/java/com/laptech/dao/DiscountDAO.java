@@ -14,4 +14,13 @@ public interface DiscountDAO extends JpaRepository<Discount,String> {
 
     @Query("SELECT d FROM Discount d WHERE d.id LIKE CONCAT('%', :id, '%') OR d.title LIKE CONCAT('%', :id, '%') ")
     List<Discount> findByNameLike(@Param("id") String id);
+
+
+
+    @Query("SELECT d FROM Discount d WHERE CURRENT_TIMESTAMP BETWEEN d.startDate AND d.endDate ")
+    List<Discount> findByBetweenDate();
+
+
+    @Query("SELECT d FROM Discount d WHERE CURRENT_TIMESTAMP NOT BETWEEN d.startDate AND d.endDate ")
+    List<Discount> findByNotBetweenDate();
 }

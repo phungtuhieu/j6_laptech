@@ -45,8 +45,19 @@ public class DiscountRestController {
     DiscountPriceDAO dpDao;
     
     @GetMapping("/api/discount")
-    public ResponseEntity<List<Discount>> getAll(Model model){
+    public ResponseEntity<List<Discount>> getAll(){
         return ResponseEntity.ok( dao.findAll());
+    }
+
+
+     @GetMapping("/api/discount/betweenDate")
+    public ResponseEntity<List<Discount>> getAllBetweenDate(){
+        return ResponseEntity.ok(dao.findByBetweenDate());
+    }
+
+    @GetMapping("/api/discount/notBetweenDate")
+    public ResponseEntity<List<Discount>> getAllNotBetweenDate(){
+        return ResponseEntity.ok(dao.findByNotBetweenDate());
     }
 
 
@@ -60,7 +71,7 @@ public class DiscountRestController {
 
     @PostMapping("/api/discount")
     public ResponseEntity<Discount> post(@RequestBody Discount discount){
-       dao.save(discount);
+        dao.save(discount);
         return ResponseEntity.ok(discount);
     }
 
@@ -159,6 +170,9 @@ public class DiscountRestController {
     public ResponseEntity<List<Price>> findByPriceDiscountIdAndNotInDiscountPriceSearch(@PathVariable("discountId") String discountId, @PathVariable("name") String name){
         return ResponseEntity.ok(prDao.findByPriceDiscountIdAndNotInDiscountPriceSearch(discountId,name));
     }
+
+
+
 
 
 }

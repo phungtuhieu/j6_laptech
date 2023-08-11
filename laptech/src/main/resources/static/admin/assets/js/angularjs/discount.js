@@ -33,6 +33,8 @@ function list($scope, $http) {
         console.log("Error", error);
       });
   };
+
+  
   // sap xep
   $scope.reverseSort = false;
   $scope.sortColumn = "id";
@@ -157,7 +159,79 @@ function list($scope, $http) {
   $scope.load_all();
   $scope.check();
 }
+function NotAndBetweenDate ($scope,$http){
+
+  $scope.betweenDate = () => {
+    var url = `${host}/discount/betweenDate`;
+    $http({
+      method: "GET",
+      url: url,
+    })
+      .then((resp) => {
+        console.log("betweenDate:",resp.data);
+        $scope.betweenDate = resp.data;
+
+        var urlPost = `${host}/discount`;
+
+        $scope.betweenDate.forEach(
+          (item) => {
+            var copiedItem = angular.copy(item);
+                copiedItem.active = true;
+            $http({
+              method: "post",
+              url: urlPost,
+              data: copiedItem,
+            })
+              .then((resp) => {
+                console.log("Success_betweenDate", resp.data);
+
+              }).catch((error) => {
+
+                console.log("Error_betweenDate", error);
+              });
+          }
+        )
+      })
+      
+  };
+
+  $scope.notBetweenDate = () => {
+    var url = `${host}/discount/notBetweenDate`;
+    $http({
+      method: "GET",
+      url: url,
+    })
+      .then((resp) => {
+        console.log("notBetweenDate:",resp.data);
+        $scope.notBetweenDate = resp.data;
+        var urlPost = `${host}/discount`;
+
+        $scope.notBetweenDate.forEach(
+          (item) => {
+            var copiedItem = angular.copy(item);
+                copiedItem.active = false;
+            $http({
+              method: "post",
+              url: urlPost,
+              data: copiedItem,
+            })
+              .then((resp) => {
+                console.log("Success_notBetweenDate", resp.data);
+
+              }).catch((error) => {
+
+                console.log("Error_notBetweenDate", error);
+              });
+          }
+        )
+
+      })
+      
+  };
+}
 function formCreate($scope, $http, $filter) {
+  NotAndBetweenDate($scope,$http);
+
   $scope.MessageStartDate = "Vui lòng chọn Đến ngày";
   $scope.optionActive = [
     {
@@ -166,11 +240,14 @@ function formCreate($scope, $http, $filter) {
     },
     {
       id: false,
-      value: "Không hoạt động",
+      value: "Ngừng hoạt động",
     },
   ];
   //
-  $scope.form = { active: true };
+
+  $scope.form = { active: true, startDate: new Date(),endDate: new Date() };
+  $scope.startTime = "00:00:00";
+  $scope.endTime = "23:59:59";
   $scope.items = [];
 
   $scope.uploadName = (files) => {
@@ -219,8 +296,9 @@ function formCreate($scope, $http, $filter) {
                 $scope.items.push(item);
                 $scope.discount = resp.data;
                 console.log("Success_taogiamgia", $scope.discount);
-
-                $scope.mang.forEach((value, index) => {
+               
+                $scope.mang.forEach((value) => {
+                  console.log(value)
                   // price
                   $http({
                     method: "get",
@@ -254,6 +332,9 @@ function formCreate($scope, $http, $filter) {
                     });
                   // price
                 });
+                 $scope.betweenDate();
+                 $scope.notBetweenDate();
+               
               })
               .catch((error) => {
                 console.log("Error_discount", error);
@@ -305,7 +386,11 @@ function formCreate($scope, $http, $filter) {
 
   $scope.PriceByProduct();
 }
+
+
 function formUpdate($scope, $http, $filter) {
+
+  NotAndBetweenDate($scope,$http);
   $scope.optionActive = [
     {
       id: true,
@@ -313,7 +398,7 @@ function formUpdate($scope, $http, $filter) {
     },
     {
       id: false,
-      value: "Không hoạt động",
+      value: "Ngừng hoạt động",
     },
   ];
   $scope.mang = [];
@@ -372,12 +457,6 @@ function formUpdate($scope, $http, $filter) {
         "Hủy"
       ).then((result) => {
         if (result.isConfirmed) {
-
-          // $scope.mang.forEach((value, index) => {
-          //   console.log("Value:", value);
-          //   // console.log("Index:", index);
-          // })
-
           $scope.form.startDate = new Date(
             $filter("date")($scope.form.startDate, "yyyy-MM-dd") +
               "T" +
@@ -389,29 +468,28 @@ function formUpdate($scope, $http, $filter) {
               $scope.endTime
           ).toISOString();
           var item = angular.copy($scope.form);
-
           var url = `${host}/discount/${$scope.form.id}`;
-
           $http({
             method: "put",
             url: url,
             data: item,
           })
             .then((resp) => {
+
               var index = $scope.items.findIndex(
                 (item) => item.id == $scope.form.id
               );
               $scope.items[index] = resp.data;
               $scope.discount = resp.data;
               console.log("Success", resp);
-
+            
               $http({
                 method: "GET",
                 url: `${host}/discount-price-delete/`+$scope.discount.id,
               })
                 .then((resp) => {
                   $scope.check = resp.data;
-
+                  alert($scope.check)
                   if($scope.check === true){
                        //
                     $scope.mang.forEach((value, index) => {
@@ -454,11 +532,13 @@ function formUpdate($scope, $http, $filter) {
                     //
                   }
                 })
-        
+                $scope.betweenDate();
+                $scope.notBetweenDate();
+                
             })
             .catch((error) => {
               console.log("Error", error);
-            });
+            });         
         }
       });
     }
@@ -566,17 +646,9 @@ function formUpdate($scope, $http, $filter) {
         console.log("Error_PriceByProduct", error);
       });
   }
-
-
-  
-
-  $scope.PriceAll();
-
-
   const id = window.sessionStorage.getItem("editId");
   $scope.edit(id);
 
- 
 }
 function dataFileHandler($scope, $http) {
   //

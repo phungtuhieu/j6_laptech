@@ -26,7 +26,7 @@
         <div class="card">
             <div class="card-body page-body">
 
-                <form action="">
+                <form action="" class="form-input">
                     <div class="row" id="jqueryExample">
                         <div class="mb-4 col-lg-4  form-group">
                             <label for="product-name" class="form-label">Mã khuyến mãi</label>
@@ -66,28 +66,155 @@
                         </div>
                         <div class="mb-4 col-lg-4 form-group">
                             <label for="" class="form-label">Hoạt động</label>
-                            <select class="form-select" ng-model="form.active" aria-label="Default select example"
+                            <select disabled class="form-select" ng-model="form.active" aria-label="Default select example"
                                 ng-options="option.id as option.value for option in optionActive">
 
                             </select>
                             <span ng-show="showActive" class="text-danger">{{MessageActive}}</span>
                         </div>
-                        <div class="mb-4 col-lg-12 form-group">
-                            <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('create')}"
-                                class="btn btn-submit me-2" data-bs-toggle="modal" data-bs-target="#modalCreate">Áp
-                                dụng giảm giá sản phẩm</a>
-
-                            <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('update')}"
-                                class="btn btn-submit me-2" data-bs-toggle="modal" data-bs-target="#modalUpdate">update</a>
-                               
-                        </div>
+                        <!-- <div class="mb-4 col-lg-12 form-group">                                                          
+                        </div> -->
                         <div class="mb-4 col-lg-12 form-group">
                             <label for="prod-desciption" class="form-label">Mô tả</label>
                             <textarea ng-model="form.description" class="form-control" id="prod-desciption"
                                 rows="3"></textarea>
                             <span ng-show="showDescription" class="text-danger">{{MessageDescription}}</span>
+                        </div>   
+                        
+                        
+                        <div class="mb-4 col-lg-12 form-group ">
+                            <div class="accordion " id="price-product-tab">
+                                <div class="accordion-item">
+                                  <h2 class="accordion-header" id="flush-headingOne">
+                                    <button class="accordion-button collapsed active" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                                        <label for="" class="form-label">Giá sản phẩm</label>
+                                    </button>
+                                  </h2>
+                                  <div id="flush-collapseOne" class="accordion-collapse collapse " ng-class="{'show' : messageError.price != null }" aria-labelledby="flush-headingOne" data-bs-parent="#price-product-tab">
+                                    <div class="accordion-body">
+
+                                        <div class=" list-price">
+                                            <div class="row"  >
+                                                <div class="table-responsive" >
+                                                    <table class="table table-hover" >
+                                                      <thead>
+                                                        <tr class="tb-header">
+                                                          <th scope="col">Tên sản phẩm</th>
+                                                          <th scope="col">Mã sản phẩm</th>
+                                                          <th scope="col">Ngày kết thúc</th>
+                                                          <th scope="col">~</th>
+                                                        </tr>
+                                                      </thead>
+                                                      <tbody >
+
+                                                        <tr class="table-row-added"  >
+                                                          <td>{{p.price}}</td>
+                                                          <td> {{p.startDate  | date:'dd/MM/yyyy  HH:mm:ss' }}</td>
+                                                          <td> {{p.endDate == null?'Còn áp dụng':p.endDate | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                                                          <td> 
+                                                            <a href=""class="btn btn-danger "  >
+                                                                <i class="fa-solid fa-trash-can"></i>
+                                                           </a>
+                                                        </td>
+                                                        </tr>
+                                                        <tr class="table-row-added"  >
+                                                          <td>{{p.price}}</td>
+                                                          <td> {{p.startDate  | date:'dd/MM/yyyy  HH:mm:ss' }}</td>
+                                                          <td> {{p.endDate == null?'Còn áp dụng':p.endDate | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                                                          <td> 
+                                                            <a href=""class="btn btn-danger "  >
+                                                                <i class="fa-solid fa-trash-can"></i>
+                                                           </a>
+                                                        </td>
+                                                        </tr>
+                                                        <tr class="table-row-added"  >
+                                                            <td>{{p.price}}</td>
+                                                            <td> {{p.startDate  | date:'dd/MM/yyyy  HH:mm:ss' }}</td>
+                                                            <td> {{p.endDate == null?'Còn áp dụng':p.endDate | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                                                            <td> 
+                                                              <a href=""class="btn btn-danger "  >
+                                                                  <i class="fa-solid fa-trash-can"></i>
+                                                             </a>
+                                                          </td>
+                                                        </tr>
+                                                        <tr class="table-row-added"  >
+                                                            <td>{{p.price}}</td>
+                                                            <td> {{p.startDate  | date:'dd/MM/yyyy  HH:mm:ss' }}</td>
+                                                            <td> {{p.endDate == null?'Còn áp dụng':p.endDate | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                                                            <td> 
+                                                              <a href=""class="btn btn-danger "  >
+                                                                  <i class="fa-solid fa-trash-can"></i>
+                                                             </a>
+                                                          </td>
+                                                        </tr>
+                                                        <tr class="table-row-added"  >
+                                                            <td>{{p.price}}</td>
+                                                            <td> {{p.startDate  | date:'dd/MM/yyyy  HH:mm:ss' }}</td>
+                                                            <td> {{p.endDate == null?'Còn áp dụng':p.endDate | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                                                            <td> 
+                                                              <a href=""class="btn btn-danger "  >
+                                                                  <i class="fa-solid fa-trash-can"></i>
+                                                             </a>
+                                                          </td>
+                                                        </tr>
+                                                        <tr class="table-row-added"  >
+                                                            <td>{{p.price}}</td>
+                                                            <td> {{p.startDate  | date:'dd/MM/yyyy  HH:mm:ss' }}</td>
+                                                            <td> {{p.endDate == null?'Còn áp dụng':p.endDate | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                                                            <td> 
+                                                              <a href=""class="btn btn-danger "  >
+                                                                  <i class="fa-solid fa-trash-can"></i>
+                                                             </a>
+                                                          </td>
+                                                        </tr>
+                                                        <tr class="table-row-added"  >
+                                                            <td>{{p.price}}</td>
+                                                            <td> {{p.startDate  | date:'dd/MM/yyyy  HH:mm:ss' }}</td>
+                                                            <td> {{p.endDate == null?'Còn áp dụng':p.endDate | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                                                            <td> 
+                                                              <a href=""class="btn btn-danger "  >
+                                                                  <i class="fa-solid fa-trash-can"></i>
+                                                             </a>
+                                                          </td>
+                                                        </tr>
+                                                        <tr class="table-row-added"  >
+                                                            <td>{{p.price}}</td>
+                                                            <td> {{p.startDate  | date:'dd/MM/yyyy  HH:mm:ss' }}</td>
+                                                            <td> {{p.endDate == null?'Còn áp dụng':p.endDate | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                                                            <td> 
+                                                              <a href=""class="btn btn-danger "  >
+                                                                  <i class="fa-solid fa-trash-can"></i>
+                                                             </a>
+                                                          </td>
+                                                        </tr>
+                                                         
+                                                        
+                                                      </tbody>
+                                                    </table>
+                                                  </div>
+                                            </div>
+                                            <div class="row">
+                                               
+                                            </div>
+                                        </div>
+                                        <div class="mb-4 col-lg-12" style="padding-left:  12px;" >
+                                            <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('create')}"
+                                            class="btn btn-submit me-2" data-bs-toggle="modal" data-bs-target="#modalCreate">Áp dụng giảm giá sản phẩm</a>
+            
+                                        <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('update')}"
+                                            class="btn btn-submit me-2" data-bs-toggle="modal" data-bs-target="#modalUpdate">Áp dụng giảm giá sản phẩm</a>
+                                        </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
                         </div>
+
                     </div>
+
+
+
+
                     <div class="mb-4 col-lg-12 ">
                         <a href="" th:if="${#ctx.springRequestContext.requestUri.contains('create')}"
                             class="btn btn-submit me-2" ng-click="create()">Lưu</a>
@@ -116,7 +243,7 @@
                                         <!-- <button class="nav-link active " id="nav-delete-author-tab" data-bs-togg   le="tab" data-bs-target="#nav-delete-author" type="button" role="tab" aria-controls="nav-delete-author" aria-selected="false" >Xóa tác giả</button> -->
                                         <button class="nav-link active" id="nav-add-author-tab" data-bs-toggle="tab"
                                             data-bs-target="#nav-add-author" type="button" role="tab"
-                                            aria-controls="nav-add-author" aria-selected="false"><input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"
+                                            aria-controls="nav-add-author" aria-selected="false"><input class="form-control me-2" type="search" placeholder="Tìm kiếm" aria-label="Search"
                                             ng-model="searchText" ng-change="search(searchText)"></button>
                                     </div>
                                 </nav>
@@ -176,7 +303,7 @@
                             <div class="modal-header">
                                 <h5 class="modal-title">
                                    
-                                    <span>Áp dụng khuyễn mãi update</span>
+                                    <span>Chỉnh sửa áp dụng khuyễn mãi</span>
                                 </h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
@@ -187,7 +314,7 @@
                                         <!-- <button class="nav-link active " id="nav-delete-author-tab" data-bs-togg   le="tab" data-bs-target="#nav-delete-author" type="button" role="tab" aria-controls="nav-delete-author" aria-selected="false" >Xóa tác giả</button> -->
                                         <button class="nav-link active" id="nav-add-author-tab" data-bs-toggle="tab"
                                             data-bs-target="#nav-add-author" type="button" role="tab"
-                                            aria-controls="nav-add-author" aria-selected="false"><input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"
+                                            aria-controls="nav-add-author" aria-selected="false"><input class="form-control me-2" type="search" placeholder="Tìm kiếm" aria-label="Search"
                                             ng-model="searchText" ng-change="search(searchText,form.id)"></button>
                                          
                                     </div>
@@ -231,7 +358,7 @@
                                     <!-- /Tab thêm tác giả -->
                                 </div>
                                 
-
+                                
 
                             </div>
                             <div class="modal-footer">
