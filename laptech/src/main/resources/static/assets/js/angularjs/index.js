@@ -263,7 +263,6 @@ function index($scope, $http, $interval,$rootScope) {
         console.log("Dữ liệu user nè:", $scope.user);
         $scope.favoriteLikeUser($scope.user.username);
         window.sessionStorage.setItem("user", JSON.stringify($scope.user));
-        
       })
       .catch(function (error) {
         console.error("Lỗi khi lấy thông tin người dùng", error);
@@ -388,7 +387,10 @@ function index($scope, $http, $interval,$rootScope) {
         });
   }
   $scope.cartProdQuantity = 1;
-  const currentUser = JSON.parse(window.sessionStorage.getItem('user')) ;
+  $scope.login();
+  let currentUser = JSON.parse(window.sessionStorage.getItem("user"));
+  console.log("currentUser",currentUser);
+
   var listCart = [];
   var cartObj = {};
   $rootScope.cart =  {
@@ -396,18 +398,14 @@ function index($scope, $http, $interval,$rootScope) {
     
     add(id,quantity){
       var item = this.items.find(item => item.prod.id == id);
-      console.log("add-item", id)
-      ; console.log("list-item", this.items);
       if(item) {
-        console.log("update", this.items);
         item.quantity = item.quantity + quantity;
         // console.log("-1-1-1-");
-        if(currentUser.username  != null) {
+        if(currentUser.username != null) {
           this.updateToCartUser(item);
         } else {
           this.saveToLocalStorage();
         }
-        // console.log("items-cart",this.items);
       }else {
         $http.get(`${host}/product/${id}`).then(resp => {
           // resp.data;
@@ -421,7 +419,7 @@ function index($scope, $http, $interval,$rootScope) {
           prodPrice.quantity = quantity;
             $http.get(`${host}/cart/price/${id}`).then(resp => {
               prodPrice.price = resp.data.price;
-              if(currentUser.username  != null) {
+              if(currentUser.username != null) {
                 this.saveToCartUser(prodPrice);
               } else {
                 this.items.push(prodPrice);
@@ -430,7 +428,6 @@ function index($scope, $http, $interval,$rootScope) {
             }).catch(err => {
               console.log("err-cart-price"+err);
             })
-          console.log("items-cart",this.items);
         }).catch(err => {
           console.log("err-cart",err);
         })
@@ -473,7 +470,7 @@ function index($scope, $http, $interval,$rootScope) {
       }).then((result) => {
         if (result.isConfirmed) {
           if(currentUser.username != null) {
-            $http.delete(`${host}/cart/user/${currentUser.username}`).then(resp => {
+            $http.delete(`${host}/cart/user/${currentUser}`).then(resp => {
               Swal.fire(
                 'Đã xóa!',
                 'Tất cả sản phẩm đã được xóa khỏi giỏ hàng.',
@@ -502,7 +499,6 @@ function index($scope, $http, $interval,$rootScope) {
     amt_of(item){},
     get count(){
       var c = this.items.map(item => item.quantity).reduce((total,quantity) => total += quantity,0);
-      console.log("count-cart",c);
       return c ;
     },
     get amount(){
@@ -537,7 +533,7 @@ function index($scope, $http, $interval,$rootScope) {
         $http.post(`${host}/cart/save`,cartObj).then(resp => {
           console.log("LIST CART",resp.data);
           this.items.push(resp.data);
-          console.log("this.item-saveto",  this.items);
+        
           $rootScope.$emit('countChanged', this.count);
         }).catch(err => {
           console.log("Err LiST CART",err);
@@ -584,7 +580,7 @@ function index($scope, $http, $interval,$rootScope) {
     $scope.cart.loadCart();
   
  
-  $scope.login();
+
   $scope.notNull();
   $scope.load_all_product();
   $scope.load_all_image();
