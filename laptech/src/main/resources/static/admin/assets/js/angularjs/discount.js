@@ -96,8 +96,7 @@ function list($scope, $http) {
             toastMixin.fire({
               animation: true,
               icon: "error",
-              title:
-                "Khuyễn mãi đang áp dụng. Xóa không thành công",
+              title: "Khuyễn mãi đang áp dụng. Xóa không thành công",
               position: "top",
               width: 600,
             });
@@ -158,7 +157,7 @@ function list($scope, $http) {
   $scope.load_all();
   $scope.check();
 }
-function formCreate($scope, $http,$filter) {
+function formCreate($scope, $http, $filter) {
   $scope.MessageStartDate = "Vui lòng chọn Đến ngày";
   $scope.optionActive = [
     {
@@ -178,103 +177,115 @@ function formCreate($scope, $http,$filter) {
     return ($scope.form.logo = files[0].name);
   };
 
-
-  $scope.mang = []; 
-
+  $scope.mang = [];
   $scope.laydulieu = (id) => {
     const index = $scope.mang.indexOf(id);
     if (index === -1) {
       $scope.mang.push(id);
-      
     } else {
       $scope.mang.splice(index, 1);
     }
   };
 
   $scope.create = () => {
-    if (validation($scope, $scope.form,$filter)) {
-       if (validationCreate($scope.form)) {
-      confirmationDialog(
-        "Xác nhận thêm?",
-        "Bạn có chắc chắn muốn thêm dữ liệu?",
-        "question",
-        "Thêm",
-        "Hủy"
-      ).then((result) => {
-        if (result.isConfirmed) {
-          $scope.form.startDate = new Date($filter("date")($scope.form.startDate, "yyyy-MM-dd")+"T"+$scope.startTime).toISOString();
-          $scope.form.endDate = new Date($filter("date")($scope.form.endDate, "yyyy-MM-dd")+"T"+$scope.endTime).toISOString(); 
-          var item = angular.copy($scope.form);
-          var url = `${host}/discount`;
-          $http({
-            method: "post",
-            url: url,
-            data: item,
-          })
-            .then((resp) => {
-              $scope.items.push(item);
-              $scope.discount = resp.data;
-              console.log("Success_taogiamgia", $scope.discount);
-          
-              $scope.mang.forEach((value, index) => {
-                // price
-                $http({
-                  method: "get",
-                  url: `${host}/discount/price/${value}`,
-                })
-                  .then((respp) => {
-                    $scope.price = respp.data;
-                    console.log("price nè: " + respp.data);
-          
-                    // discountPrice
-                    var data = {
-                      discount: $scope.discount,
-                      price: $scope.price,
-                    };
-                    $http({
-                      method: "post", 
-                      url: `${host}/discount-price`, 
-                      data: data,
-                    }).then((resp) => {
-                      window.location.href = "/admin/discount/list";
-                      window.sessionStorage.setItem("name", "create");
-                    }).catch((error) => {
-                      console.log("Error_discountPrice", error);
-                    });
-                    // discountPrice
-
-                  })
-                  .catch((error) => {
-                    console.log("Error_price", error);
-                  });
-                  // price
-              });
-             
+    if (validation($scope, $scope.form, $filter)) {
+      if (validationCreate($scope.form)) {
+        confirmationDialog(
+          "Xác nhận thêm?",
+          "Bạn có chắc chắn muốn thêm dữ liệu?",
+          "question",
+          "Thêm",
+          "Hủy"
+        ).then((result) => {
+          if (result.isConfirmed) {
+            $scope.form.startDate = new Date(
+              $filter("date")($scope.form.startDate, "yyyy-MM-dd") +
+                "T" +
+                $scope.startTime
+            ).toISOString();
+            $scope.form.endDate = new Date(
+              $filter("date")($scope.form.endDate, "yyyy-MM-dd") +
+                "T" +
+                $scope.endTime
+            ).toISOString();
+            var item = angular.copy($scope.form);
+            var url = `${host}/discount`;
+            $http({
+              method: "post",
+              url: url,
+              data: item,
             })
-            .catch((error) => {
-              console.log("Error_discount", error);
-            });
-          
+              .then((resp) => {
+                $scope.items.push(item);
+                $scope.discount = resp.data;
+                console.log("Success_taogiamgia", $scope.discount);
 
+                $scope.mang.forEach((value, index) => {
+                  // price
+                  $http({
+                    method: "get",
+                    url: `${host}/discount/price/${value}`,
+                  })
+                    .then((respp) => {
+                      $scope.price = respp.data;
+                      console.log("price nè: " + respp.data);
 
-
-
-
-            // 
-        }
-      });
-       }
+                      // discountPrice
+                      var data = {
+                        discount: $scope.discount,
+                        price: $scope.price,
+                      };
+                      $http({
+                        method: "post",
+                        url: `${host}/discount-price`,
+                        data: data,
+                      })
+                        .then((resp) => {
+                          window.location.href = "/admin/discount/list";
+                          window.sessionStorage.setItem("name", "create");
+                        })
+                        .catch((error) => {
+                          console.log("Error_discountPrice", error);
+                        });
+                      // discountPrice
+                    })
+                    .catch((error) => {
+                      console.log("Error_price", error);
+                    });
+                  // price
+                });
+              })
+              .catch((error) => {
+                console.log("Error_discount", error);
+              });
+            //
+          }
+        });
+      }
     }
   };
 
 
-  
- 
+  $scope.search = (name) =>{
 
-
-
-  
-
+    if (name != "") {
+      var url = `${host}/discount/PriceByProduct/${name}`;
+    } else {
+      var url = `${host}/discount/PriceByProduct`;
+    }
+    //var url = host+'/students.json';
+    $http({
+      method: "GET",
+      url: url,
+    })
+      .then((resp) => {
+        $scope.PriceByProduct = resp.data;
+        console.log("Success_PriceByProduct", resp);
+      })
+      .catch((error) => {
+        console.log("Error_PriceByProduct", error);
+      });
+  }
 
   $scope.PriceByProduct = () => {
     var url = `${host}/discount/PriceByProduct`;
@@ -293,9 +304,8 @@ function formCreate($scope, $http,$filter) {
   };
 
   $scope.PriceByProduct();
-
 }
-function formUpdate($scope, $http,$filter) {
+function formUpdate($scope, $http, $filter) {
   $scope.optionActive = [
     {
       id: true,
@@ -325,6 +335,8 @@ function formUpdate($scope, $http,$filter) {
         $scope.endTime = $filter("date")($scope.form.endDate, "HH:mm:ss");
         console.log("Success_edit", resp);
         $scope.isLoading = false;
+        $scope.PriceInDiscountPriceList($scope.form.id);
+
       })
       .catch((error) => {
         console.log("Error_edit", error);
@@ -332,41 +344,93 @@ function formUpdate($scope, $http,$filter) {
     window.sessionStorage.removeItem("editId");
   };
   $scope.update = () => {
-      if (validation($scope, $scope.form, $filter)) {
-    confirmationDialog(
-      "Xác nhận sửa?",
-      "Bạn có chắc chắn muốn sửa dữ liệu?",
-      "question",
-      "Sửa",
-      "Hủy"
-    ).then((result) => {
-      if (result.isConfirmed) {
-        $scope.form.startDate = new Date($filter("date")($scope.form.startDate, "yyyy-MM-dd")+"T"+$scope.startTime).toISOString();
-        $scope.form.endDate = new Date($filter("date")($scope.form.endDate, "yyyy-MM-dd")+"T"+$scope.endTime).toISOString();
-        var item = angular.copy($scope.form);
+    if (validation($scope, $scope.form, $filter)) {
+      confirmationDialog(
+        "Xác nhận sửa?",
+        "Bạn có chắc chắn muốn sửa dữ liệu?",
+        "question",
+        "Sửa",
+        "Hủy"
+      ).then((result) => {
+        if (result.isConfirmed) {
 
-        var url = `${host}/discount/${$scope.form.id}`;
-
-        $http({
-          method: "put",
-          url: url,
-          data: item,
-        })
-          .then((resp) => {
-            var index = $scope.items.findIndex(
-              (item) => item.id == $scope.form.id
-            );
-            $scope.items[index] = resp.data;
-            console.log("Success", resp);
-            window.location.href = "/admin/discount/list";
-            window.sessionStorage.setItem("name", "update");
+          $scope.mang.forEach((value, index) => {
+            console.log("Value:", value);
+            // console.log("Index:", index);
           })
-          .catch((error) => {
-            console.log("Error", error);
-          });
-      }
-    });
-     }
+
+          $scope.form.startDate = new Date(
+            $filter("date")($scope.form.startDate, "yyyy-MM-dd") +
+              "T" +
+              $scope.startTime
+          ).toISOString();
+          $scope.form.endDate = new Date(
+            $filter("date")($scope.form.endDate, "yyyy-MM-dd") +
+              "T" +
+              $scope.endTime
+          ).toISOString();
+          var item = angular.copy($scope.form);
+
+          var url = `${host}/discount/${$scope.form.id}`;
+
+          $http({
+            method: "put",
+            url: url,
+            data: item,
+          })
+            .then((resp) => {
+              var index = $scope.items.findIndex(
+                (item) => item.id == $scope.form.id
+              );
+              $scope.items[index] = resp.data;
+              $scope.discount = resp.data;
+              console.log("Success", resp);
+
+              //
+              $scope.mang.forEach((value, index) => {
+                // price
+                $http({
+                  method: "get",
+                  url: `${host}/discount/price/${value}`,
+                })
+                  .then((respp) => {
+                    $scope.price = respp.data;
+                    console.log("price nè: " + respp.data);
+
+                    // discountPrice
+                    var data = {
+                      discount: $scope.discount,
+                      price: $scope.price,
+                    };
+                    $http({
+                      method: "post",
+                      url: `${host}/discount-price-update`,
+                      data: data,
+                    })
+                      .then((resp) => {
+                        window.location.href = "/admin/discount/list";
+                        window.sessionStorage.setItem("name", "update");
+                      })
+                      .catch((error) => {
+                        console.log("Error_discountPrice", error);
+                      });
+                    // discountPrice
+                  })
+                  .catch((error) => {
+                    console.log("Error_price", error);
+                  });
+                // price
+              });
+
+              //
+              
+            })
+            .catch((error) => {
+              console.log("Error", error);
+            });
+        }
+      });
+    }
   };
   $scope.delete = (id) => {
     confirmationDialog(
@@ -398,8 +462,7 @@ function formUpdate($scope, $http,$filter) {
             toastMixin.fire({
               animation: true,
               icon: "error",
-              title:
-              "Khuyễn mãi đang áp dụng. Xóa không thành công",
+              title: "Khuyễn mãi đang áp dụng. Xóa không thành công",
               position: "top",
               width: 600,
             });
@@ -407,8 +470,71 @@ function formUpdate($scope, $http,$filter) {
       }
     });
   };
+
+  $scope.PriceInDiscountPriceList = (name) => {
+    var url = `${host}/discount/PriceByProductInDiscountPrice/${name}`;
+    //var url = host+'/students.json';
+    $http({
+      method: "GET",
+      url: url,
+    })
+      .then((resp) => {
+        $scope.PriceInDiscountPrice = resp.data;
+        console.log("Success_PriceInDiscountPrice", resp);
+
+        $scope.isProductInDiscount = (priceId) => {
+          if (!$scope.mang.includes(priceId)) {
+            if ($scope.PriceInDiscountPrice.some((price) => price.id === priceId)) {
+              $scope.mang.push(priceId);
+            }
+          }
+          return $scope.mang.includes(priceId);
+        };
+        
+      
+
+      })
+      .catch((error) => {
+        console.log("Error_PriceInDiscountPrice", error);
+      });
+  };
+  $scope.PriceAll = () => {
+    var url = `${host}/price`;
+    //var url = host+'/students.json';
+    $http({
+      method: "GET",
+      url: url,
+    })
+      .then((resp) => {
+        $scope.PriceAll = resp.data;
+        console.log("Success_PriceAll", resp);
+      })
+      .catch((error) => {
+        console.log("Error_PriceAll", error);
+      });
+  };
+
+  $scope.PriceAll();
+
+
+
+  $scope.mang = [];
+  $scope.laydulieu = (id) => {
+    const index = $scope.mang.indexOf(id);
+    if (index === -1) {
+      $scope.mang.push(id);
+    } else {
+      $scope.mang.splice(index, 1);
+    }
+  };
+
+  
+
+
   const id = window.sessionStorage.getItem("editId");
   $scope.edit(id);
+
+ 
 }
 function dataFileHandler($scope, $http) {
   //
@@ -476,13 +602,13 @@ function dataFileHandler($scope, $http) {
 
   function formatDate(dateString) {
     const date = new Date(dateString);
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const year = date.getFullYear().toString();
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    const seconds = date.getSeconds().toString().padStart(2, '0');
-  
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    const seconds = date.getSeconds().toString().padStart(2, "0");
+
     return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
   }
   // Hàm xuất dữ liệu ra tập tin Excel
@@ -496,7 +622,6 @@ function dataFileHandler($scope, $http) {
       "ENDDATE",
       "ACTIVE",
       "DESCRIPTION",
-     
     ];
 
     // Thêm dữ liệu của từng hàng (row) trong bảng vào mảng tableData
@@ -509,7 +634,6 @@ function dataFileHandler($scope, $http) {
         formatDate(item.endDate),
         item.active,
         item.description,
-      
       ];
       tableData.push(rowData);
     });
@@ -658,7 +782,7 @@ function validation($scope, item, $filter) {
     $scope.MessagePercentage = "Nhập số cho % khuyễn mãi";
     $scope.showPercentage = true;
     valid = false;
-  }else if (item.percentage < 1 || item.percentage > 100) {
+  } else if (item.percentage < 1 || item.percentage > 100) {
     $scope.MessagePercentage = "Nhập số từ 1 đến 100 cho % khuyến mãi";
     $scope.showPercentage = true;
     valid = false;
@@ -667,48 +791,49 @@ function validation($scope, item, $filter) {
     $scope.showPercentage = false;
   }
 
+  const formattedStartDate = $filter("date")(
+    $scope.form.startDate,
+    "yyyy-MM-dd"
+  );
+  const formattedEndDate = $filter("date")($scope.form.endDate, "yyyy-MM-dd");
+  if (!formattedStartDate || !$scope.startTime) {
+    $scope.MessageStartDate = "Vui lòng chọn từ ngày và giờ";
+    $scope.showStartDate = true;
+    valid = false;
+  } else {
+    $scope.MessageStartDate = "";
+    $scope.showStartDate = false;
+  }
 
-    const formattedStartDate =  $filter("date")($scope.form.startDate, "yyyy-MM-dd") ;
-    const formattedEndDate = $filter("date")($scope.form.endDate, "yyyy-MM-dd")  ;
-    if (!formattedStartDate || !$scope.startTime) {
-      $scope.MessageStartDate = "Vui lòng chọn từ ngày và giờ";
+  if (!formattedEndDate || !$scope.endTime) {
+    $scope.MessageEndDate = "Vui lòng chọn đến ngày và giờ";
+    $scope.showEndDate = true;
+    valid = false;
+  } else {
+    $scope.MessageEndDate = "";
+    $scope.showEndDate = false;
+  }
+
+  if (formattedStartDate && formattedEndDate) {
+    var fromDate = new Date(formattedStartDate);
+    var toDate = new Date(formattedEndDate);
+    if (fromDate > toDate) {
+      $scope.MessageStartDate = "Từ ngày không được nhỏ hơn Đến ngày";
+      $scope.MessageEndDate = "Đến ngày không được lớn hơn Từ ngày";
       $scope.showStartDate = true;
-      valid = false;
-    } else {
-      $scope.MessageStartDate = "";
-      $scope.showStartDate = false;
-    }
-    
-    if (!formattedEndDate || !$scope.endTime) {
-      $scope.MessageEndDate = "Vui lòng chọn đến ngày và giờ";
       $scope.showEndDate = true;
       valid = false;
-    } else {
-      $scope.MessageEndDate = "";
-      $scope.showEndDate = false;
     }
-
-      
-    if (formattedStartDate && formattedEndDate) {
-      var fromDate = new Date(formattedStartDate);
-      var toDate = new Date(formattedEndDate);
-      if (fromDate > toDate) {
-        $scope.MessageStartDate = "Từ ngày không được nhỏ hơn Đến ngày";
-        $scope.MessageEndDate = "Đến ngày không được lớn hơn Từ ngày";
-        $scope.showStartDate = true;
-        $scope.showEndDate = true;
-        valid = false;
-      }
-      const startTime = new Date(`1970-01-01T${$scope.startTime}`);
-      const endTime = new Date(`1970-01-01T${$scope.endTime}`);
-      if (startTime > endTime) {
-        $scope.MessageStartDate = "Giờ bắt đầu không được nhỏ hơn Giờ kết thúc";
-        $scope.MessageEndDate = "Giờ kết thúc không được lớn hơn Giờ bắt đầu";
-        $scope.showStartDate = true;
-        $scope.showEndDate = true;
-        valid = false;
-      }
+    const startTime = new Date(`1970-01-01T${$scope.startTime}`);
+    const endTime = new Date(`1970-01-01T${$scope.endTime}`);
+    if (startTime > endTime) {
+      $scope.MessageStartDate = "Giờ bắt đầu không được nhỏ hơn Giờ kết thúc";
+      $scope.MessageEndDate = "Giờ kết thúc không được lớn hơn Giờ bắt đầu";
+      $scope.showStartDate = true;
+      $scope.showEndDate = true;
+      valid = false;
     }
+  }
   //description
   if (kyTuDacBietTen.test(item.description)) {
     $scope.MessageDescription = "Không được chứa ký tự đặc biệt trong mô tả";
@@ -723,12 +848,9 @@ function validation($scope, item, $filter) {
 }
 function validationCreate(item) {
   const items = JSON.parse(window.sessionStorage.getItem("items"));
-    console.log(items)
-    console.log(item)
-  var index = items.findIndex(
-    (items) =>
-     items.id === item.id
-  );
+  console.log(items);
+  console.log(item);
+  var index = items.findIndex((items) => items.id === item.id);
   if (index !== -1) {
     toastMixin.fire({
       animation: true,

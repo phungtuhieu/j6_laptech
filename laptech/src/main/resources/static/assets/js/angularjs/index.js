@@ -1,6 +1,6 @@
 
 let host = "http://localhost:8081/api";
-let urlImg = "/files/images";
+// let urlImg = "/files/images";
 // const app = angular.module("app", []);
 app
   .filter("formatCurrency", function () {
@@ -387,201 +387,201 @@ function index($scope, $http, $interval,$rootScope) {
           console.error("", error);
         });
   }
-  $scope.cartProdQuantity = 1;
-  const currentUser = JSON.parse(window.sessionStorage.getItem('user')) ;
-  var listCart = [];
-  var cartObj = {};
-  $rootScope.cart =  {
-    items :[],
+  // $scope.cartProdQuantity = 1;
+  // const currentUser = JSON.parse(window.sessionStorage.getItem('user')) ;
+  // var listCart = [];
+  // var cartObj = {};
+  // $rootScope.cart =  {
+  //   items :[],
     
-    add(id,quantity){
-      var item = this.items.find(item => item.prod.id == id);
-      console.log("add-item", id)
-      ; console.log("list-item", this.items);
-      if(item) {
-        console.log("update", this.items);
-        item.quantity = item.quantity + quantity;
-        // console.log("-1-1-1-");
-        if(currentUser.username  != null) {
-          this.updateToCartUser(item);
-        } else {
-          this.saveToLocalStorage();
-        }
-        // console.log("items-cart",this.items);
-      }else {
-        $http.get(`${host}/product/${id}`).then(resp => {
-          // resp.data;
-          var prodPrice = {
-            prod: {},
-            price: 0.0,
-            quantity: 0.0,
-          };
+  //   add(id,quantity){
+  //     var item = this.items.find(item => item.prod.id == id);
+  //     console.log("add-item", id)
+  //     ; console.log("list-item", this.items);
+  //     if(item) {
+  //       console.log("update", this.items);
+  //       item.quantity = item.quantity + quantity;
+  //       // console.log("-1-1-1-");
+  //       if(currentUser.username  != null) {
+  //         this.updateToCartUser(item);
+  //       } else {
+  //         this.saveToLocalStorage();
+  //       }
+  //       // console.log("items-cart",this.items);
+  //     }else {
+  //       $http.get(`${host}/product/${id}`).then(resp => {
+  //         // resp.data;
+  //         var prodPrice = {
+  //           prod: {},
+  //           price: 0.0,
+  //           quantity: 0.0,
+  //         };
           
-          prodPrice.prod = resp.data;
-          prodPrice.quantity = quantity;
-            $http.get(`${host}/cart/price/${id}`).then(resp => {
-              prodPrice.price = resp.data.price;
-              if(currentUser.username  != null) {
-                this.saveToCartUser(prodPrice);
-              } else {
-                this.items.push(prodPrice);
-                this.saveToLocalStorage();
-              }
-            }).catch(err => {
-              console.log("err-cart-price"+err);
-            })
-          console.log("items-cart",this.items);
-        }).catch(err => {
-          console.log("err-cart",err);
-        })
+  //         prodPrice.prod = resp.data;
+  //         prodPrice.quantity = quantity;
+  //           $http.get(`${host}/cart/price/${id}`).then(resp => {
+  //             prodPrice.price = resp.data.price;
+  //             if(currentUser.username  != null) {
+  //               this.saveToCartUser(prodPrice);
+  //             } else {
+  //               this.items.push(prodPrice);
+  //               this.saveToLocalStorage();
+  //             }
+  //           }).catch(err => {
+  //             console.log("err-cart-price"+err);
+  //           })
+  //         console.log("items-cart",this.items);
+  //       }).catch(err => {
+  //         console.log("err-cart",err);
+  //       })
         
-      }
-      Swal.fire(
-        'Cảm ơn bạn',
-        'Sản phẩm đã được thêm vào giỏ hàng thành công',
-        'success'
-      )
-    },
-    remove(id){
-      var index = -1;
-      if(currentUser.username != null) {
-        $http.delete(`${host}/cart/${id}`).then(resp => {
-          index = this.items.findIndex(item => item.id == id);
-          this.items.splice(index,1);
-          $rootScope.$emit('countChanged', this.count);
-        }).catch(err => {
-          console.log("err-remove-cart",err);
-        })
-      } else  {
-        index = this.items.findIndex(item => item.prod.id == id);
-        this.items.splice(index,1);
-        this.saveToLocalStorage();
-      }
+  //     }
+  //     Swal.fire(
+  //       'Cảm ơn bạn',
+  //       'Sản phẩm đã được thêm vào giỏ hàng thành công',
+  //       'success'
+  //     )
+  //   },
+  //   remove(id){
+  //     var index = -1;
+  //     if(currentUser.username != null) {
+  //       $http.delete(`${host}/cart/${id}`).then(resp => {
+  //         index = this.items.findIndex(item => item.id == id);
+  //         this.items.splice(index,1);
+  //         $rootScope.$emit('countChanged', this.count);
+  //       }).catch(err => {
+  //         console.log("err-remove-cart",err);
+  //       })
+  //     } else  {
+  //       index = this.items.findIndex(item => item.prod.id == id);
+  //       this.items.splice(index,1);
+  //       this.saveToLocalStorage();
+  //     }
     
 
-    },
-    clear(){
-      Swal.fire({
-        title: 'Bạn có chắc muốn xóa ?',
-        text: "Sản phẩm sẽ được xóa tất cả?",
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        cancelButtonText: 'Không',
-        confirmButtonText: 'Có'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          if(currentUser.username != null) {
-            $http.delete(`${host}/cart/user/${currentUser.username}`).then(resp => {
-              Swal.fire(
-                'Đã xóa!',
-                'Tất cả sản phẩm đã được xóa khỏi giỏ hàng.',
-                'success'
-              )
+  //   },
+  //   clear(){
+  //     Swal.fire({
+  //       title: 'Bạn có chắc muốn xóa ?',
+  //       text: "Sản phẩm sẽ được xóa tất cả?",
+  //       icon: 'question',
+  //       showCancelButton: true,
+  //       confirmButtonColor: '#3085d6',
+  //       cancelButtonColor: '#d33',
+  //       cancelButtonText: 'Không',
+  //       confirmButtonText: 'Có'
+  //     }).then((result) => {
+  //       if (result.isConfirmed) {
+  //         if(currentUser.username != null) {
+  //           $http.delete(`${host}/cart/user/${currentUser.username}`).then(resp => {
+  //             Swal.fire(
+  //               'Đã xóa!',
+  //               'Tất cả sản phẩm đã được xóa khỏi giỏ hàng.',
+  //               'success'
+  //             )
 
-              this.items= [];
-              $rootScope.$emit('countChanged', this.count);
-            }).catch(err => {
-              console.log("err-clear-cart-all",err);
-            })
-        } else {
-          this.items= [];
-          this.saveToLocalStorage();
-          $scope.$applyAsync();
-          Swal.fire(
-            'Đã xóa!',
-            'Tất cả sản phẩm đã được xóa khỏi giỏ hàng.',
-            'success'
-          )
-        }
-        }
+  //             this.items= [];
+  //             $rootScope.$emit('countChanged', this.count);
+  //           }).catch(err => {
+  //             console.log("err-clear-cart-all",err);
+  //           })
+  //       } else {
+  //         this.items= [];
+  //         this.saveToLocalStorage();
+  //         $scope.$applyAsync();
+  //         Swal.fire(
+  //           'Đã xóa!',
+  //           'Tất cả sản phẩm đã được xóa khỏi giỏ hàng.',
+  //           'success'
+  //         )
+  //       }
+  //       }
       
-      })
-    },
-    amt_of(item){},
-    get count(){
-      var c = this.items.map(item => item.quantity).reduce((total,quantity) => total += quantity,0);
-      console.log("count-cart",c);
-      return c ;
-    },
-    get amount(){
-      var am = this.items.map(item => item.quantity * item.price).reduce((total,price) => total += price,0);
+  //     })
+  //   },
+  //   amt_of(item){},
+  //   get count(){
+  //     var c = this.items.map(item => item.quantity).reduce((total,quantity) => total += quantity,0);
+  //     console.log("count-cart",c);
+  //     return c ;
+  //   },
+  //   get amount(){
+  //     var am = this.items.map(item => item.quantity * item.price).reduce((total,price) => total += price,0);
       
-      return am ;
-    },
-    updateToCartUser(item) {
-      $http.get(`${host}/cart/${item.id}`).then(resp => {
-        var obj = resp.data;
-        obj.quantity = item.quantity;
-        $http.put(`${host}/cart/${obj.id}`,obj).then(resp => {
-          console.log("update-cart",obj);
-          var index = this.items.findIndex(item => item.id == obj.id);
-          $rootScope.$emit('countChanged', this.count);
-        }).catch(err => {
-          console.log("err-update-cart",err);
-        })
-      }).catch(err => {
-        console.log("err-get-cart",err);
-      })
+  //     return am ;
+  //   },
+  //   updateToCartUser(item) {
+  //     $http.get(`${host}/cart/${item.id}`).then(resp => {
+  //       var obj = resp.data;
+  //       obj.quantity = item.quantity;
+  //       $http.put(`${host}/cart/${obj.id}`,obj).then(resp => {
+  //         console.log("update-cart",obj);
+  //         var index = this.items.findIndex(item => item.id == obj.id);
+  //         $rootScope.$emit('countChanged', this.count);
+  //       }).catch(err => {
+  //         console.log("err-update-cart",err);
+  //       })
+  //     }).catch(err => {
+  //       console.log("err-get-cart",err);
+  //     })
      
       
-    },
-    saveToCartUser(item) {
-        cartObj = {
-            price: item.price,
-            quantity: item.quantity,
-            product: item.prod,
-            user: currentUser
-          }
-        $http.post(`${host}/cart/save`,cartObj).then(resp => {
-          console.log("LIST CART",resp.data);
-          this.items.push(resp.data);
-          console.log("this.item-saveto",  this.items);
-          $rootScope.$emit('countChanged', this.count);
-        }).catch(err => {
-          console.log("Err LiST CART",err);
-        })
+  //   },
+  //   saveToCartUser(item) {
+  //       cartObj = {
+  //           price: item.price,
+  //           quantity: item.quantity,
+  //           product: item.prod,
+  //           user: currentUser
+  //         }
+  //       $http.post(`${host}/cart/save`,cartObj).then(resp => {
+  //         console.log("LIST CART",resp.data);
+  //         this.items.push(resp.data);
+  //         console.log("this.item-saveto",  this.items);
+  //         $rootScope.$emit('countChanged', this.count);
+  //       }).catch(err => {
+  //         console.log("Err LiST CART",err);
+  //       })
      
-    },
+  //   },
 
-    saveToLocalStorage(){
-      var json = JSON.stringify(angular.copy(this.items));
-        localStorage.setItem("cart",json);
-      $rootScope.$emit('countChanged', this.count);
-    },
-    loadCart(){
-      if(currentUser.username != null) {
-        this.items = []
-        $http.get(`${host}/cart/user/${currentUser.username}`).then(resp => {
-            listCart = resp.data;
-            listCart.forEach(item => {
-              var prodPrice = {
-                id: item.id,
-                price: item.price,
-                quantity: item.quantity,
-                prod: item.product,
-                user : item.user
-              };
-             this.items.push(prodPrice);
-            })
-            $rootScope.$emit('countChanged', this.count);
-            // console.log("itemsssssss",);
-        }).catch(err => {
-          console.log("err-list-items-load",err);
-        })
-      } else {
-        var json = localStorage.getItem('cart');
-        this.items =  json ? JSON.parse(json) : []
-        $rootScope.$emit('countChanged', this.count);
-      }
+  //   saveToLocalStorage(){
+  //     var json = JSON.stringify(angular.copy(this.items));
+  //       localStorage.setItem("cart",json);
+  //     $rootScope.$emit('countChanged', this.count);
+  //   },
+  //   loadCart(){
+  //     if(currentUser.username != null) {
+  //       this.items = []
+  //       $http.get(`${host}/cart/user/${currentUser.username}`).then(resp => {
+  //           listCart = resp.data;
+  //           listCart.forEach(item => {
+  //             var prodPrice = {
+  //               id: item.id,
+  //               price: item.price,
+  //               quantity: item.quantity,
+  //               prod: item.product,
+  //               user : item.user
+  //             };
+  //            this.items.push(prodPrice);
+  //           })
+  //           $rootScope.$emit('countChanged', this.count);
+  //           // console.log("itemsssssss",);
+  //       }).catch(err => {
+  //         console.log("err-list-items-load",err);
+  //       })
+  //     } else {
+  //       var json = localStorage.getItem('cart');
+  //       this.items =  json ? JSON.parse(json) : []
+  //       $rootScope.$emit('countChanged', this.count);
+  //     }
     
     
-    }
+  //   }
    
-  }
+  // }
  
-    $scope.cart.loadCart();
+  // $scope.cart.loadCart();
   
  
   $scope.login();

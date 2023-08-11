@@ -93,12 +93,13 @@
                               <tbody>
                                 <tr class="" ng-repeat="ba in items |  orderBy:sortColumn:reverseSort | limitTo:5:begin">
                                   <td>{{ba.name}}</td>
-                                  <td>{{ba.logo}}</td>
+                                  <td><img ng-src="{{ba.logo}}"  alt="" style="width: 130px; height: 33px;"></td>
                                   <td>{{ba.email}}</td>
                                   <td>{{ba.phone}}</td>
                                   <td>{{ba.website}}</td>
                                   <td>{{ba.country}}</td>
-                                  <td>{{ba.description}}</td>
+                                  <td class="text-truncate" style="max-width: 155px;" data-bs-toggle="tooltip"
+                                  data-bs-placement="left" title="{{ba.description}}" >{{ba.description}}</td>
                                   <td class="td-action ">
                                      <div class="wordset">
                                         <ul>
