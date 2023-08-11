@@ -188,7 +188,8 @@
                                         <button class="nav-link active" id="nav-add-author-tab" data-bs-toggle="tab"
                                             data-bs-target="#nav-add-author" type="button" role="tab"
                                             aria-controls="nav-add-author" aria-selected="false"><input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"
-                                            ng-model="searchText" ng-change="search(searchText)"></button>
+                                            ng-model="searchText" ng-change="search(searchText,form.id)"></button>
+                                         
                                     </div>
                                 </nav>
                                 <div class="tab-content" id="nav-tabContent">
@@ -229,6 +230,8 @@
                                     </div>
                                     <!-- /Tab thêm tác giả -->
                                 </div>
+                                
+
 
                             </div>
                             <div class="modal-footer">

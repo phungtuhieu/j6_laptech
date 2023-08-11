@@ -316,6 +316,25 @@ function formUpdate($scope, $http, $filter) {
       value: "Không hoạt động",
     },
   ];
+  $scope.mang = [];
+  $scope.laydulieu = (id) => {
+    const index = $scope.mang.indexOf(id);
+    if (index === -1) {
+      $scope.mang.push(id);
+    } else {
+      $scope.mang.splice(index, 1);
+    }
+    
+    // Thêm đoạn mã để loại bỏ giá trị khỏi mảng khi checkbox bị bỏ chọn
+    if (!$scope.mang.includes(id)) {
+      // Tìm vị trí của giá trị trong mảng PriceInDiscountPrice
+      const priceIndex = $scope.PriceInDiscountPrice.findIndex(price => price.id === id);
+      if (priceIndex !== -1) {
+        $scope.PriceInDiscountPrice.splice(priceIndex, 1);
+      }
+    }
+  };
+
   //
   $scope.isLoading = true;
   $scope.form = {};
@@ -336,7 +355,7 @@ function formUpdate($scope, $http, $filter) {
         console.log("Success_edit", resp);
         $scope.isLoading = false;
         $scope.PriceInDiscountPriceList($scope.form.id);
-
+        $scope.PriceAll($scope.form.id);
       })
       .catch((error) => {
         console.log("Error_edit", error);
@@ -354,10 +373,10 @@ function formUpdate($scope, $http, $filter) {
       ).then((result) => {
         if (result.isConfirmed) {
 
-          $scope.mang.forEach((value, index) => {
-            console.log("Value:", value);
-            // console.log("Index:", index);
-          })
+          // $scope.mang.forEach((value, index) => {
+          //   console.log("Value:", value);
+          //   // console.log("Index:", index);
+          // })
 
           $scope.form.startDate = new Date(
             $filter("date")($scope.form.startDate, "yyyy-MM-dd") +
@@ -386,44 +405,56 @@ function formUpdate($scope, $http, $filter) {
               $scope.discount = resp.data;
               console.log("Success", resp);
 
-              //
-              $scope.mang.forEach((value, index) => {
-                // price
-                $http({
-                  method: "get",
-                  url: `${host}/discount/price/${value}`,
-                })
-                  .then((respp) => {
-                    $scope.price = respp.data;
-                    console.log("price nè: " + respp.data);
+              $http({
+                method: "GET",
+                url: `${host}/discount-price-delete/`+$scope.discount.id,
+              })
+                .then((resp) => {
+                  $scope.check = resp.data;
 
-                    // discountPrice
-                    var data = {
-                      discount: $scope.discount,
-                      price: $scope.price,
-                    };
-                    $http({
-                      method: "post",
-                      url: `${host}/discount-price-update`,
-                      data: data,
-                    })
-                      .then((resp) => {
-                        window.location.href = "/admin/discount/list";
-                        window.sessionStorage.setItem("name", "update");
+                  if($scope.check === true){
+                       //
+                    $scope.mang.forEach((value, index) => {
+
+                      console.log(`${value}`)
+
+                      // price
+                      $http({
+                        method: "get",
+                        url: `${host}/discount/price/${value}`,
                       })
-                      .catch((error) => {
-                        console.log("Error_discountPrice", error);
-                      });
-                    // discountPrice
-                  })
-                  .catch((error) => {
-                    console.log("Error_price", error);
-                  });
-                // price
-              });
+                        .then((respp) => {
+                          $scope.price = respp.data;
+                          console.log("price nè: " + respp.data);
 
-              //
-              
+                          // discountPrice
+                          var data = {
+                            discount: $scope.discount,
+                            price: $scope.price,
+                          };
+                          $http({
+                            method: "post",
+                            url: `${host}/discount-price-update`,
+                            data: data,
+                          })
+                            .then((resp) => {
+                              window.location.href = "/admin/discount/list";
+                              window.sessionStorage.setItem("name", "update");
+                            })
+                            .catch((error) => {
+                              console.log("Error_discountPrice", error);
+                            });
+                          // discountPrice
+                        })
+                        .catch((error) => {
+                          console.log("Error_price", error);
+                        });
+                      // price
+                    });
+                    //
+                  }
+                })
+        
             })
             .catch((error) => {
               console.log("Error", error);
@@ -498,8 +529,8 @@ function formUpdate($scope, $http, $filter) {
         console.log("Error_PriceInDiscountPrice", error);
       });
   };
-  $scope.PriceAll = () => {
-    var url = `${host}/price`;
+  $scope.PriceAll = (name) => {
+    var url = `${host}/price-by-discountId-AndNotIn-discountPrice/${name}`;
     //var url = host+'/students.json';
     $http({
       method: "GET",
@@ -514,21 +545,32 @@ function formUpdate($scope, $http, $filter) {
       });
   };
 
-  $scope.PriceAll();
 
+  $scope.search = (name,discountId) =>{
 
-
-  $scope.mang = [];
-  $scope.laydulieu = (id) => {
-    const index = $scope.mang.indexOf(id);
-    if (index === -1) {
-      $scope.mang.push(id);
+    if (name != "") {
+      var url = `/api/price-by-discountId-AndNotIn-discountPrice/search/${discountId}/${name}`;
     } else {
-      $scope.mang.splice(index, 1);
+      var url = `${host}/price-by-discountId-AndNotIn-discountPrice/${discountId}`;
     }
-  };
+    //var url = host+'/students.json';
+    $http({
+      method: "GET",
+      url: url,
+    })
+      .then((resp) => {
+        $scope.PriceAll = resp.data;
+        console.log("Success_PriceByProduct", resp);
+      })
+      .catch((error) => {
+        console.log("Error_PriceByProduct", error);
+      });
+  }
+
 
   
+
+  $scope.PriceAll();
 
 
   const id = window.sessionStorage.getItem("editId");
