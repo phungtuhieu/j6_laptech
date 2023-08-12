@@ -15,7 +15,7 @@
             <div class="col-lg-12">
                 <form action="" class="form-cart mx-auto">
                     <div class="cart-table-content">
-                        
+                         {{user.fullname}} 
                         <div class="table-responsive table-content " style="position: relative;">
                             <div class=" loading-page"  ng-if="isLoading" ng-cloak>
                                 <div class="spinner-border text-warning" role="status">
@@ -37,7 +37,7 @@
                                     <tr ng-repeat="item in cart.items" ng-cloak>
                                         <td  class="product-thumbnail">
                                             <a href="product-details.html" class="">
-                                                <img src="assets/images/cart/cart-1.jpg" alt="">
+                                                <img ng-src="{{urlImg(item.img)}}" alt="">
                                             </a>
                                         </td>
                                         <td class="product-name">	

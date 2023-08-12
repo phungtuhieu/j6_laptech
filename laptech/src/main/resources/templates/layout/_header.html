@@ -54,7 +54,7 @@
               <div class="dropdown">
                 <a class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#"
                   id="navbarDropdownMenuAvatar" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
-                  <img  ng-cloak  ng-if="user.image != null" ng-src="{{urlImgHeader(user.image)}}" class="rounded-circle" style="width: 35px; height: 35px;"
+                  <img  ng-cloak  ng-if="user.image != null && user.image !== undefined" ng-src="{{urlImgHeader(user.image)}}" class="rounded-circle" style="width: 35px; height: 35px;"
                      />
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">

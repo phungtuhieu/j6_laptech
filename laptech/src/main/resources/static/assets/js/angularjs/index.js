@@ -257,14 +257,14 @@ function index($scope, $http, $interval,$rootScope,$location) {
   };
 
  
-  var userRemoteUser = document.querySelector("[data-user-remoteuser]").getAttribute("data-user-remoteuser");
+  var currentUsername = document.querySelector("[data-user-remoteuser]").getAttribute("data-user-remoteuser");
 
-  if (userRemoteUser === "-1") {
-    userRemoteUser = null;
+  if (currentUsername === "-1") {
+    currentUsername = null;
   }
   $scope.getUs = function () {
-    if(userRemoteUser !== null) {
-      $http.get(`${host}/user/${userRemoteUser}`)
+    if(currentUsername !== null) {
+      $http.get(`${host}/user/${currentUsername}`)
       .then(function (userResponse) {
         $scope.user = userResponse.data;
         console.log("Dữ liệu user nè:", $scope.user);
@@ -400,60 +400,10 @@ function index($scope, $http, $interval,$rootScope,$location) {
   }
   $scope.cartProdQuantity = 1;
   var listCart = [];
-  const cartObj = {};
+  var cartObj = {};
 
   $rootScope.cart =  {
     items :[],
-    
-    // add(id,quantity){
-    //   $http.get().then(resp => {
-
-    //   }).catch(err => {
-        
-    //   })
-    //   var item = this.items.find(item => item.product.id == id);
-    //   if(item) {
-    //     item.quantity = item.quantity + quantity;
-    //     // console.log("-1-1-1-");
-    //     if(userRemoteUser !== null) {
-    //       this.updateToCart(item);
-    //     } else {
-    //       this.saveToLocalStorage();
-    //     }
-    //   }else {
-    //     $http.get(`${host}/product/${id}`).then(resp => {
-    //       // resp.data;
-    //       var prodPrice = {
-    //         product: {},
-    //         price: 0.0,
-    //         quantity: 0.0,
-    //       };
-    //       prodPrice.product = resp.data;
-    //       prodPrice.quantity = quantity;
-    //         $http.get(`${host}/cart/price/${id}`).then(resp => {
-    //           prodPrice.price = resp.data.price;
-    //           if(userRemoteUser !== null) {
-    //             console.log("userRemoteUser",userRemoteUser );
-    //             console.log("userRemoteUser",userRemoteUser !== null);
-    //             this.saveToCartUser(prodPrice);
-    //           } else {
-    //             this.items.push(prodPrice);
-    //             this.saveToLocalStorage();
-    //           }
-    //         }).catch(err => {
-    //           console.log("err-cart-price"+err);
-    //         })
-    //     }).catch(err => {
-    //       console.log("err-cart",err);
-    //     })
-        
-    //   }
-    //   Swal.fire(
-    //     'Cảm ơn bạn',
-    //     'Sản phẩm đã được thêm vào giỏ hàng thành công',
-    //     'success'
-    //   )
-    // },
     add(id,quantity){
       
       if(quantity <= 0 ) {
@@ -497,13 +447,15 @@ function index($scope, $http, $interval,$rootScope,$location) {
           this.updateToCart(item.product.id, item.quantity);
         }else {
             var prodPrice = {
-              imageName: "",
               product: {},
               price: 0.0,
               quantity: 0.0,
             };
             $http.get(`${host}/cart/img/product/${id}`).then(resp => {
-              prodPrice.imageName = resp.data.name;
+             var imageName = resp.data.name;
+             if(currentUsername === null) {
+              prodPrice.img = imageName;
+             }
             }).catch(err => {
               console.log("err-cart-img",err);
             })
@@ -511,7 +463,7 @@ function index($scope, $http, $interval,$rootScope,$location) {
             prodPrice.quantity = quantity;
               $http.get(`${host}/cart/price/${id}`).then(resp => {
                 prodPrice.price = resp.data.price;
-                if(userRemoteUser !== null) {
+                if(currentUsername !== null) {
                   this.saveToCartUser(prodPrice);
                 } else {
                   this.items.push(prodPrice);
@@ -533,7 +485,7 @@ function index($scope, $http, $interval,$rootScope,$location) {
     },
     remove(id){
       var index = -1;
-      if(userRemoteUser !== null) {
+      if(currentUsername !== null) {
         $http.delete(`${host}/cart/${id}`).then(resp => {
           index = this.items.findIndex(item => item.id == id);
           this.items.splice(index,1);
@@ -562,7 +514,7 @@ function index($scope, $http, $interval,$rootScope,$location) {
         confirmButtonText: 'Có'
       }).then((result) => {
         if (result.isConfirmed) {
-          if(userRemoteUser !== null) {
+          if(currentUsername !== null) {
             $http.delete(`${host}/cart/user/${$scope.user.username}`).then(resp => {
               Swal.fire(
                 'Đã xóa!',
@@ -637,7 +589,7 @@ function index($scope, $http, $interval,$rootScope,$location) {
           )
           this.items[index].quantity = prod.quantity;
         }
-        if(userRemoteUser == null) {
+        if(currentUsername == null) {
           this.saveToLocalStorage();
         } else {
           $http.get(`${host}/cart/${id}`).then(resp => {
@@ -685,13 +637,20 @@ function index($scope, $http, $interval,$rootScope,$location) {
       $rootScope.$emit('countChanged', this.count);
        window.sessionStorage.setItem('countCart',this.count);
     },
+   
     loadCart(){
       
-      if(userRemoteUser !== null) {
+      if(currentUsername !== null) {
         this.items = []
         $http.get(`${host}/cart/user/${$scope.user.username}`).then(resp => {
             listCart = resp.data;
             listCart.forEach(item => {
+              $http.get(`${host}/cart/img/product/${item.product.id}`).then(resp => {
+               var imageName = resp.data.name;
+               prodPrice.img = imageName;
+              }).catch(err => {
+                console.log("err-cart-img",err);
+              })
               var prodPrice = {
                 id: item.id,
                 price: item.price,
@@ -721,11 +680,11 @@ function index($scope, $http, $interval,$rootScope,$location) {
   }
   
 
-  $scope.getUs();
+  
   
  
 
- 
+ $scope.getUs();
   $scope.isIndex = $location.absUrl().includes('index');
   if($scope.isIndex) {
     $scope.notNull();
