@@ -36,7 +36,7 @@
                                         </td>
                                         <td class="product-name">	
                                             <h5>
-                                                <a href="product-details.html">{{item.prod.name}}</a>
+                                                <a href="product-details.html">{{item.product.name}}</a>
                                             </h5>
                                         </td>
                                         <td class="product-price"><span class="amount">{{item.price | currency:"":0}} </span></td>
@@ -47,7 +47,7 @@
                                         <td class="product-price">
                                             <span class="amount"> {{(item.price * item.quantity) | currency:"":0}}</span>
                                         </td>
-                                        <td class="product-remove"><a  href="" ng-click="cart.remove(user.fullname != null ? item.id : item.prod.id)">Xoá</a></td>
+                                        <td class="product-remove"><a  href="" ng-click="cart.remove(user.fullname != null ? item.id : item.product.id)">Xoá</a></td>
                                     </tr>
 
                                 </tbody>

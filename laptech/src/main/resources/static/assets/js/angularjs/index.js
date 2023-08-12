@@ -1,6 +1,6 @@
 
 let host = "http://localhost:8081/api";
-let urlImg = "/files/images";
+// let urlImg = "/files/images";
 // const app = angular.module("app", []);
 app
   .filter("formatCurrency", function () {
@@ -21,7 +21,7 @@ function index($scope, $http, $interval,$rootScope) {
   $scope.pageCount;
   $scope.items = [];
   $scope.currentPage = 1;
-
+  $scope.isLoading = true;
   $scope.urlImg = (name) =>{
     return `${urlImg}/${name}`;
   }
@@ -117,9 +117,11 @@ function index($scope, $http, $interval,$rootScope) {
         $scope.pageCount = Math.ceil($scope.items.length / 10);
         $scope.updatePagination();
         console.log("Success1_product", resp);
+        $scope.isLoading = false;
       })
       .catch((error) => {
         console.log("Error_product", error);
+        $scope.isLoading = false;
       });
   };
 
@@ -254,19 +256,29 @@ function index($scope, $http, $interval,$rootScope) {
       });
   };
 
-  $scope.login = function () {
-    $http
-      .get("/api/account")
-      .then(function (userResponse) {
+ 
+  var userPrincipal = document.querySelector("[data-user-principal]").getAttribute("data-user-principal");
 
+  if (userPrincipal === "-1") {
+    userPrincipal = null;
+  }
+  $scope.getUs = function () {
+    if(userPrincipal !== null) {
+      $http.get(`${host}/user/${userPrincipal}`)
+      .then(function (userResponse) {
         $scope.user = userResponse.data;
         console.log("Dữ liệu user nè:", $scope.user);
         $scope.favoriteLikeUser($scope.user.username);
-        window.sessionStorage.setItem("user", JSON.stringify($scope.user));
+        $scope.cart.loadCart();
       })
       .catch(function (error) {
         console.error("Lỗi khi lấy thông tin người dùng", error);
       });
+    } else {
+      $scope.user = null;
+      $scope.cart.loadCart();
+    }
+   
   };
 
   $scope.favoriteLikeUser = (username) => {
@@ -387,21 +399,19 @@ function index($scope, $http, $interval,$rootScope) {
         });
   }
   $scope.cartProdQuantity = 1;
-  $scope.login();
-  let currentUser = JSON.parse(window.sessionStorage.getItem("user"));
-  console.log("currentUser",currentUser);
-
   var listCart = [];
   var cartObj = {};
+
   $rootScope.cart =  {
     items :[],
     
     add(id,quantity){
-      var item = this.items.find(item => item.prod.id == id);
+      console.log(this.items);
+      var item = this.items.find(item => item.product.id == id);
       if(item) {
         item.quantity = item.quantity + quantity;
         // console.log("-1-1-1-");
-        if(currentUser.username != null) {
+        if(userPrincipal !== null) {
           this.updateToCartUser(item);
         } else {
           this.saveToLocalStorage();
@@ -410,16 +420,18 @@ function index($scope, $http, $interval,$rootScope) {
         $http.get(`${host}/product/${id}`).then(resp => {
           // resp.data;
           var prodPrice = {
-            prod: {},
+            product: {},
             price: 0.0,
             quantity: 0.0,
           };
-          
-          prodPrice.prod = resp.data;
+          prodPrice.product = resp.data;
           prodPrice.quantity = quantity;
             $http.get(`${host}/cart/price/${id}`).then(resp => {
               prodPrice.price = resp.data.price;
-              if(currentUser.username != null) {
+              // console.log("userPrincipal",userPrincipal);
+              if(userPrincipal !== null) {
+                console.log("userPrincipal",userPrincipal );
+                console.log("userPrincipal",userPrincipal !== null);
                 this.saveToCartUser(prodPrice);
               } else {
                 this.items.push(prodPrice);
@@ -441,11 +453,12 @@ function index($scope, $http, $interval,$rootScope) {
     },
     remove(id){
       var index = -1;
-      if(currentUser.username != null) {
+      if(userPrincipal !== null) {
         $http.delete(`${host}/cart/${id}`).then(resp => {
           index = this.items.findIndex(item => item.id == id);
           this.items.splice(index,1);
           $rootScope.$emit('countChanged', this.count);
+           window.sessionStorage.setItem('countCart',this.count);
         }).catch(err => {
           console.log("err-remove-cart",err);
         })
@@ -469,8 +482,8 @@ function index($scope, $http, $interval,$rootScope) {
         confirmButtonText: 'Có'
       }).then((result) => {
         if (result.isConfirmed) {
-          if(currentUser.username != null) {
-            $http.delete(`${host}/cart/user/${currentUser}`).then(resp => {
+          if(userPrincipal !== null) {
+            $http.delete(`${host}/cart/user/${$scope.user.username}`).then(resp => {
               Swal.fire(
                 'Đã xóa!',
                 'Tất cả sản phẩm đã được xóa khỏi giỏ hàng.',
@@ -479,6 +492,7 @@ function index($scope, $http, $interval,$rootScope) {
 
               this.items= [];
               $rootScope.$emit('countChanged', this.count);
+               window.sessionStorage.setItem('countCart',this.count);
             }).catch(err => {
               console.log("err-clear-cart-all",err);
             })
@@ -514,42 +528,45 @@ function index($scope, $http, $interval,$rootScope) {
           console.log("update-cart",obj);
           var index = this.items.findIndex(item => item.id == obj.id);
           $rootScope.$emit('countChanged', this.count);
+           window.sessionStorage.setItem('countCart',this.count);
         }).catch(err => {
           console.log("err-update-cart",err);
         })
       }).catch(err => {
         console.log("err-get-cart",err);
       })
-     
+    
       
     },
     saveToCartUser(item) {
         cartObj = {
             price: item.price,
             quantity: item.quantity,
-            product: item.prod,
-            user: currentUser
+            product: item.product,
+            user: $scope.user
           }
         $http.post(`${host}/cart/save`,cartObj).then(resp => {
-          console.log("LIST CART",resp.data);
+          // console.log("LIST CART",resp.data);
           this.items.push(resp.data);
-        
+          console.log("LIST CART",this.items);
           $rootScope.$emit('countChanged', this.count);
+           window.sessionStorage.setItem('countCart',this.count);
         }).catch(err => {
           console.log("Err LiST CART",err);
         })
-     
+    
     },
 
     saveToLocalStorage(){
       var json = JSON.stringify(angular.copy(this.items));
         localStorage.setItem("cart",json);
       $rootScope.$emit('countChanged', this.count);
+       window.sessionStorage.setItem('countCart',this.count);
     },
     loadCart(){
-      if(currentUser.username != null) {
+      if(userPrincipal !== null) {
         this.items = []
-        $http.get(`${host}/cart/user/${currentUser.username}`).then(resp => {
+        $http.get(`${host}/cart/user/${$scope.user.username}`).then(resp => {
             listCart = resp.data;
             listCart.forEach(item => {
               var prodPrice = {
@@ -559,25 +576,26 @@ function index($scope, $http, $interval,$rootScope) {
                 prod: item.product,
                 user : item.user
               };
-             this.items.push(prodPrice);
+            this.items.push(prodPrice);
             })
-            $rootScope.$emit('countChanged', this.count);
+            
             // console.log("itemsssssss",);
         }).catch(err => {
           console.log("err-list-items-load",err);
         })
+      
       } else {
         var json = localStorage.getItem('cart');
         this.items =  json ? JSON.parse(json) : []
-        $rootScope.$emit('countChanged', this.count);
       }
-    
-    
+      $rootScope.$emit('countChanged', this.count);
+       window.sessionStorage.setItem('countCart',this.count);
     }
-   
+  
   }
- 
-    $scope.cart.loadCart();
+  
+
+  $scope.getUs();
   
  
 

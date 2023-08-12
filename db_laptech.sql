@@ -437,10 +437,10 @@ VALUES
     ('thanhnam87', '654321', N'Thanh Nam', '0918234567', 'nam87@example.com', N'Hà Nội', 1, 1,"avt.png"),
     ('minhchau02', 'abc123', N'Minh Châu', '0987123456', 'chau02@example.com', N'Đà Nẵng', 0, 1,"avt.png"),
     ('trungkien11', 'def456', N'Trung Kiên', '0967123456', 'kien11@example.com', N'Bình Dương', 0, 1,"avt.png"),
-    ('thuytrang9x', 'ghj789', N'Thúy Trang', '0978123456', 'trang9x@example.com', N'Hải Phòng', 0, 1,"avt.png");
+    ('thuytrang9x', 'ghj789', N'Thúy Trang', '0978123456', 'trang9x@example.com', N'Hải Phòng', 0, 1,"avt.png"),
     
     ('tuhieu', '12345678', N'Phùng Tự Hiếu', '0978123456', 'tuhieu@example.com', N'Hải Phòng', 1, 1,"avt.png"),
-    ('minhkhoi', '12345678', N'Nguyễn Minh Khôi', '0978123456', 'minhkhoi@example.com', N'Hải Phòng', 1, 1,"avt.png"),
+    ('minhkhoi', '12345678', N'Nguyễn Minh Khôi', '0978123456', 'minhkhoi@example.com', N'Hải Phòng', 1, 1,"7d817a18.jpg"),
     ('huutai', '12345678', N'Nguyễn Văn Hữu Tài', '0978123456', 'huutai@example.com', N'Hải Phòng', 1, 1,"avt.png");
 
 GO

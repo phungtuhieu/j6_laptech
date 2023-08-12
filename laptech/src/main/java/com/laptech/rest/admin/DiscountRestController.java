@@ -85,9 +85,24 @@ public class DiscountRestController {
        
     }
 
+    @GetMapping("/api/discount/search/{name}")
+    public ResponseEntity<List<Discount>> search(@PathVariable("name") String name){
+        return ResponseEntity.ok(dao.findByNameLike(name));
+    }
+
     @GetMapping("/api/discount/PriceByProduct")
     public ResponseEntity<List<Price>> PriceByProductAndDiscount(){
-        return ResponseEntity.ok(prDao.findByPriceByProductAndDiscount());
+        return ResponseEntity.ok(prDao.findByPriceByProductNotInDiscount());
+    }
+
+    @GetMapping("/api/discount/PriceByProductInDiscountPrice/{name}")
+    public ResponseEntity<List<Price>> PriceByProductInDiscountPrice(@PathVariable("name") String name){
+        return ResponseEntity.ok(prDao.findByPriceByProductInDiscount(name));
+    }
+
+    @GetMapping("/api/discount/PriceByProduct/{nameAndBrand}")
+    public ResponseEntity<List<Price>> findByPriceByProductNameAndBrandName(@PathVariable("nameAndBrand") String nameAndBrand){
+        return ResponseEntity.ok(prDao.findByPriceByProductNameAndBrandName(nameAndBrand));
     }
 
     @GetMapping("/api/discount/price/{id}")
@@ -103,6 +118,34 @@ public class DiscountRestController {
         discountPricePK.setPriceId(discountPrice.getPrice().getId());
         discountPrice.setDiscountPricePK(discountPricePK);
         dpDao.save(discountPrice);
+        return ResponseEntity.ok(discountPrice);
+    }
+
+
+    @PostMapping("/api/discount-price-update")
+    public ResponseEntity<DiscountPrice> discountPriceUpdate(@RequestBody DiscountPrice discountPrice){
+
+
+        // DiscountPrice dp = dpDao.findByOne(discountPrice.getDiscount().getId(),discountPrice.getPrice().getId());
+
+         List<DiscountPrice> dpList = dpDao.findByDiscountIdAll(discountPrice.getDiscount().getId());
+
+        // dpList.forEach((dp) -> {
+        //     DiscountPricePK discountPricePKDelete = new DiscountPricePK();
+        //     discountPricePKDelete.setDiscountId(dp.getDiscount().getId());
+        //     discountPricePKDelete.setPriceId(dp.getPrice().getId());
+        //     dp.setDiscountPricePK(discountPricePKDelete);
+        //      dpDao.deleteById(discountPricePKDelete);
+        // });
+
+        
+        DiscountPricePK discountPricePK = new DiscountPricePK();
+        discountPricePK.setDiscountId(discountPrice.getDiscount().getId());;
+        discountPricePK.setPriceId(discountPrice.getPrice().getId());
+        discountPrice.setDiscountPricePK(discountPricePK);
+        dpDao.save(discountPrice);
+
+
         return ResponseEntity.ok(discountPrice);
     }
 

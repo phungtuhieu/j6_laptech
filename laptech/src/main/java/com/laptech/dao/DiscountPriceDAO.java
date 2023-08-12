@@ -25,5 +25,12 @@ public interface DiscountPriceDAO extends JpaRepository<DiscountPrice, DiscountP
     DiscountPrice findByDiscountAndPriceByNowDate(Price price);
 
 
+    @Query("SELECT dp FROM DiscountPrice dp WHERE dp.discount.id = ?1 ")
+    List<DiscountPrice> findByDiscountIdAll(String name);
+
+
+    @Query("SELECT dp FROM DiscountPrice dp WHERE dp.discount.id = ?1 AND dp.price.id = ?2 ")
+    DiscountPrice findByOne(String discountId, Long priceId);
+    
     
 }

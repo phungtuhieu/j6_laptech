@@ -1,12 +1,13 @@
  <!-- Start Main Top -->
  <header class="main-header" ng-controller="header">
     <!-- Start Main Top -->
+    <span class="d-none" th:attr="data-user-principal=${#request.remoteUser != null ? #request.remoteUser : -1 }"></span>
     <div class="main-top">
       <div class="container-fluid">
         <div class="row">
           <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <div class="text-slid-box">
-              <div id="offer-box" class="carouselTicker">
+            <div class="text-slid-box" >
+              <div id="offer-box" class="carouselTicker" ng-cloak >
                 <ul class="offer-box">
                   <li>
                     <i class="fab fa-opencart"></i> Off 10%! Shop Now Man
@@ -39,8 +40,8 @@
           <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" >
             <div class="right-phone-box">
               <!-- TH khi chưa đăng nhập  -->
-              <div class="d-flex align-items-center me-5"  ng-if="user.fullname == null">
-                <a type="button" th:href="@{/account/login}" class="btn btn-dark t me-3 fw-bold" style="background-color: #d33b33; color: #ffffff; ">
+              <div class="d-flex align-items-center me-5"  th:if="${#request.remoteUser == null}"  >
+                <a type="button" th:href="@{/account/login}" class="btn btn-dark t me-3 fw-bold" ng-cloak  style="background-color: #d33b33; color: #ffffff; ">
                   Đăng nhập
                 </a>
               </div>
@@ -48,23 +49,26 @@
               <!-- TH khi chưa đăng nhập  -->
 
               <!-- TH khi đăng nhập thành công -->
-              <div class="d-flex align-items-center pe-5 fw-bold"  ng-if="user.fullname != null" >
-              <div class="text-truncate me-3 " style="width: 100px; color: #1435c3;" ><a href="#" style="color: #1435c3;"  > {{user.fullname}} </a></div>
+              <div class="d-flex align-items-center pe-5 fw-bold"  th:if="${#request.remoteUser != null}" >
+              <div class="text-truncate me-3 " ng-cloak style="max-width: 170px; color: #ffffff;" ><a href="#" style="color: #ffffff;"  > {{user.fullname}} </a></div>
               <div class="dropdown">
                 <a class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#"
                   id="navbarDropdownMenuAvatar" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
-                  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNzXYh-X4wxX1jfbPywa8HWoNGDnx1Tlo0-g&usqp=CAU" class="rounded-circle" height="30" width="30"
-                    alt="Black and White Portrait of a Man" loading="lazy" />
+                  <img  ng-cloak  ng-if="user.image != null" ng-src="{{urlImgHeader(user.image)}}" class="rounded-circle" style="width: 35px; height: 35px;"
+                     />
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">
                   <li>
                     <a class="dropdown-item" href="#">Hồ sơ cá nhân</a>
                   </li>
+                  <li  ng-if="user.admin == true">
+                    <a class="dropdown-item" th:href="@{/admin/index}">ADMIN</a>
+                  </li>
                   <li>
                     <a class="dropdown-item" href="#" ng-if="user.fullname == null">Đăng nhập</a>
                   </li>
                   <li>
-                    <a class="dropdown-item"  href="/logoff" >Đăng xuất</a>
+                    <a class="dropdown-item" ng-click="logout()"  href="/logoff" >Đăng xuất</a>
                   </li>
                  
                 </ul>
@@ -166,7 +170,7 @@
             </li> -->
             <li class="nav-item"><a class="nav-link" th:href="@{/client/contact}">Liên hệ</a></li>
             <li class="nav-item" th:if="${#request.remoteUser}"><a class="nav-link" th:href="@{/client/favorite}">Yêu thích</a></li>
-            <li class="nav-item"><a class="nav-link" ng-if="user.admin == true" th:href="@{/admin/index}">ADMIN</a></li>
+            <!-- <li class="nav-item"><a class="nav-link" ng-if="user.admin == true" th:href="@{/admin/index}">ADMIN</a></li> -->
           </ul>
         </div>
         <!-- /.navbar-collapse -->
@@ -179,7 +183,7 @@
 
               </li> -->
               <li>
-                <a th:href="@{/client/cart/list}"><i class="fa-solid fa-cart-shopping"></i><span class="badge rounded-pill bg-danger">{{count}}</span> </a>
+                <a  th:href="@{/client/cart/list}"><i class="fa-solid fa-cart-shopping"></i><span class="badge rounded-pill bg-danger" ng-cloak >{{count}}</span> </a>
               </li>
           </ul>
         </div>
