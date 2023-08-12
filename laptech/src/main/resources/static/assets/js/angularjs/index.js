@@ -17,7 +17,7 @@ app
   .controller("listCategory", listCategory)
  
 
-function index($scope, $http, $interval,$rootScope) {
+function index($scope, $http, $interval,$rootScope,$location) {
   $scope.pageCount;
   $scope.items = [];
   $scope.currentPage = 1;
@@ -257,14 +257,14 @@ function index($scope, $http, $interval,$rootScope) {
   };
 
  
-  var userPrincipal = document.querySelector("[data-user-principal]").getAttribute("data-user-principal");
+  var userRemoteUser = document.querySelector("[data-user-remoteuser]").getAttribute("data-user-remoteuser");
 
-  if (userPrincipal === "-1") {
-    userPrincipal = null;
+  if (userRemoteUser === "-1") {
+    userRemoteUser = null;
   }
   $scope.getUs = function () {
-    if(userPrincipal !== null) {
-      $http.get(`${host}/user/${userPrincipal}`)
+    if(userRemoteUser !== null) {
+      $http.get(`${host}/user/${userRemoteUser}`)
       .then(function (userResponse) {
         $scope.user = userResponse.data;
         console.log("Dữ liệu user nè:", $scope.user);
@@ -400,60 +400,140 @@ function index($scope, $http, $interval,$rootScope) {
   }
   $scope.cartProdQuantity = 1;
   var listCart = [];
-  var cartObj = {};
+  const cartObj = {};
 
   $rootScope.cart =  {
     items :[],
     
-    add(id,quantity){
-      console.log(this.items);
-      var item = this.items.find(item => item.product.id == id);
-      if(item) {
-        item.quantity = item.quantity + quantity;
-        // console.log("-1-1-1-");
-        if(userPrincipal !== null) {
-          this.updateToCartUser(item);
-        } else {
-          this.saveToLocalStorage();
-        }
-      }else {
-        $http.get(`${host}/product/${id}`).then(resp => {
-          // resp.data;
-          var prodPrice = {
-            product: {},
-            price: 0.0,
-            quantity: 0.0,
-          };
-          prodPrice.product = resp.data;
-          prodPrice.quantity = quantity;
-            $http.get(`${host}/cart/price/${id}`).then(resp => {
-              prodPrice.price = resp.data.price;
-              // console.log("userPrincipal",userPrincipal);
-              if(userPrincipal !== null) {
-                console.log("userPrincipal",userPrincipal );
-                console.log("userPrincipal",userPrincipal !== null);
-                this.saveToCartUser(prodPrice);
-              } else {
-                this.items.push(prodPrice);
-                this.saveToLocalStorage();
-              }
-            }).catch(err => {
-              console.log("err-cart-price"+err);
-            })
-        }).catch(err => {
-          console.log("err-cart",err);
-        })
+    // add(id,quantity){
+    //   $http.get().then(resp => {
+
+    //   }).catch(err => {
         
+    //   })
+    //   var item = this.items.find(item => item.product.id == id);
+    //   if(item) {
+    //     item.quantity = item.quantity + quantity;
+    //     // console.log("-1-1-1-");
+    //     if(userRemoteUser !== null) {
+    //       this.updateToCart(item);
+    //     } else {
+    //       this.saveToLocalStorage();
+    //     }
+    //   }else {
+    //     $http.get(`${host}/product/${id}`).then(resp => {
+    //       // resp.data;
+    //       var prodPrice = {
+    //         product: {},
+    //         price: 0.0,
+    //         quantity: 0.0,
+    //       };
+    //       prodPrice.product = resp.data;
+    //       prodPrice.quantity = quantity;
+    //         $http.get(`${host}/cart/price/${id}`).then(resp => {
+    //           prodPrice.price = resp.data.price;
+    //           if(userRemoteUser !== null) {
+    //             console.log("userRemoteUser",userRemoteUser );
+    //             console.log("userRemoteUser",userRemoteUser !== null);
+    //             this.saveToCartUser(prodPrice);
+    //           } else {
+    //             this.items.push(prodPrice);
+    //             this.saveToLocalStorage();
+    //           }
+    //         }).catch(err => {
+    //           console.log("err-cart-price"+err);
+    //         })
+    //     }).catch(err => {
+    //       console.log("err-cart",err);
+    //     })
+        
+    //   }
+    //   Swal.fire(
+    //     'Cảm ơn bạn',
+    //     'Sản phẩm đã được thêm vào giỏ hàng thành công',
+    //     'success'
+    //   )
+    // },
+    add(id,quantity){
+      
+      if(quantity <= 0 ) {
+        Swal.fire(
+          'Số lượng không khả dụng',
+          'Số lượng sản phẩm phải từ 1 trở lên',
+          'error'
+        )
+        return;
       }
-      Swal.fire(
-        'Cảm ơn bạn',
-        'Sản phẩm đã được thêm vào giỏ hàng thành công',
-        'success'
-      )
+      if(!quantity) {
+        Swal.fire(
+          'Số lượng không hợp lệ',
+          'Vui lòng chọn lại số lượng',
+          'error'
+        )
+        return;
+      }
+      if(isNaN(id)) {
+        Swal.fire(
+          'Mã sản phẩm không hợp lệ',
+          'Vui lòng tải lại trang',
+          'error'
+        )
+        return;
+      }
+      $http.get(`${host}/product/${id}`).then(resp => {
+        var product = resp.data;
+        if(quantity > product.quantity) {
+          Swal.fire(
+            'Số lượng vượt quá',
+            'Số lượng sản phẩm bạn đã chọn vượt quá số lượng có sẵn trong kho.',
+            'error'
+          )
+          return;
+        }
+        
+        var item = this.items.find(item => item.product.id == id);
+        if(item) {
+          item.quantity = item.quantity + quantity;
+          this.updateToCart(item.product.id, item.quantity);
+        }else {
+            var prodPrice = {
+              imageName: "",
+              product: {},
+              price: 0.0,
+              quantity: 0.0,
+            };
+            $http.get(`${host}/cart/img/product/${id}`).then(resp => {
+              prodPrice.imageName = resp.data.name;
+            }).catch(err => {
+              console.log("err-cart-img",err);
+            })
+            prodPrice.product = resp.data;
+            prodPrice.quantity = quantity;
+              $http.get(`${host}/cart/price/${id}`).then(resp => {
+                prodPrice.price = resp.data.price;
+                if(userRemoteUser !== null) {
+                  this.saveToCartUser(prodPrice);
+                } else {
+                  this.items.push(prodPrice);
+                  this.saveToLocalStorage();
+                }
+              }).catch(err => {
+                console.log("err-cart-price",err);
+              })
+        }
+        Swal.fire(
+          'Cảm ơn bạn',
+          'Sản phẩm đã được thêm vào giỏ hàng thành công',
+          'success'
+        )
+      }).catch(err => {
+        
+      })
+      
     },
     remove(id){
       var index = -1;
-      if(userPrincipal !== null) {
+      if(userRemoteUser !== null) {
         $http.delete(`${host}/cart/${id}`).then(resp => {
           index = this.items.findIndex(item => item.id == id);
           this.items.splice(index,1);
@@ -463,7 +543,7 @@ function index($scope, $http, $interval,$rootScope) {
           console.log("err-remove-cart",err);
         })
       } else  {
-        index = this.items.findIndex(item => item.prod.id == id);
+        index = this.items.findIndex(item => item.product.id == id);
         this.items.splice(index,1);
         this.saveToLocalStorage();
       }
@@ -482,7 +562,7 @@ function index($scope, $http, $interval,$rootScope) {
         confirmButtonText: 'Có'
       }).then((result) => {
         if (result.isConfirmed) {
-          if(userPrincipal !== null) {
+          if(userRemoteUser !== null) {
             $http.delete(`${host}/cart/user/${$scope.user.username}`).then(resp => {
               Swal.fire(
                 'Đã xóa!',
@@ -520,23 +600,65 @@ function index($scope, $http, $interval,$rootScope) {
       
       return am ;
     },
-    updateToCartUser(item) {
-      $http.get(`${host}/cart/${item.id}`).then(resp => {
-        var obj = resp.data;
-        obj.quantity = item.quantity;
-        $http.put(`${host}/cart/${obj.id}`,obj).then(resp => {
-          console.log("update-cart",obj);
-          var index = this.items.findIndex(item => item.id == obj.id);
-          $rootScope.$emit('countChanged', this.count);
-           window.sessionStorage.setItem('countCart',this.count);
-        }).catch(err => {
-          console.log("err-update-cart",err);
-        })
+    updateToCart(id,quantity) {
+      var index = this.items.findIndex(e => e.product.id == id);
+     
+      if(!quantity) {
+        Swal.fire(
+          'Số lượng không hợp lệ',
+          'Vui lòng chọn lại số lượng',
+          'error'
+        )
+        this.items[index].quantity = 1;
+      }
+      if(quantity <= 0 ) {
+        Swal.fire(
+          'Số lượng không khả dụng',
+          'Số lượng sản phẩm phải từ 1 trở lên',
+          'error'
+        )
+        this.items[index].quantity = 1;
+      }
+      if(isNaN(id)) {
+        Swal.fire(
+          'Mã sản phẩm không hợp lệ',
+          'Vui lòng tải lại trang',
+          'error'
+        )
+        return;
+      }
+      $http.get(`${host}/product/${id}`).then(resp => {
+        var prod = resp.data;
+        if(quantity > prod.quantity) {
+          Swal.fire(
+            'Rất tiếc!',
+            `Bạn chỉ có thể mua tối đa ${prod.quantity} sản phẩm này!`,
+            'error'
+          )
+          this.items[index].quantity = prod.quantity;
+        }
+        if(userRemoteUser == null) {
+          this.saveToLocalStorage();
+        } else {
+          $http.get(`${host}/cart/${id}`).then(resp => {
+            var prodFromCart = resp.data;
+            prodFromCart.quantity = quantity;
+            $http.put(`${host}/cart/${prodFromCart.id}`,prodFromCart).then(resp => {
+              console.log("update-cart",prodFromCart);
+              $rootScope.$emit('countChanged', this.count);
+              window.sessionStorage.setItem('countCart',this.count);
+            }).catch(err => {
+              console.log("err-update-cart",err);
+            })
+          }).catch(err => {
+            console.log("err-get-cart",err);
+          })
+        }
+       
       }).catch(err => {
         console.log("err-get-cart",err);
       })
     
-      
     },
     saveToCartUser(item) {
         cartObj = {
@@ -550,7 +672,7 @@ function index($scope, $http, $interval,$rootScope) {
           this.items.push(resp.data);
           console.log("LIST CART",this.items);
           $rootScope.$emit('countChanged', this.count);
-           window.sessionStorage.setItem('countCart',this.count);
+          window.sessionStorage.setItem('countCart',this.count);
         }).catch(err => {
           console.log("Err LiST CART",err);
         })
@@ -564,7 +686,8 @@ function index($scope, $http, $interval,$rootScope) {
        window.sessionStorage.setItem('countCart',this.count);
     },
     loadCart(){
-      if(userPrincipal !== null) {
+      
+      if(userRemoteUser !== null) {
         this.items = []
         $http.get(`${host}/cart/user/${$scope.user.username}`).then(resp => {
             listCart = resp.data;
@@ -573,20 +696,23 @@ function index($scope, $http, $interval,$rootScope) {
                 id: item.id,
                 price: item.price,
                 quantity: item.quantity,
-                prod: item.product,
+                product: item.product,
                 user : item.user
               };
             this.items.push(prodPrice);
             })
-            
-            // console.log("itemsssssss",);
+            $rootScope.$emit('countChanged', this.count);
+            window.sessionStorage.setItem('countCart',this.count);
+            $scope.isLoading = false;
         }).catch(err => {
           console.log("err-list-items-load",err);
+          $scope.isLoading =false;
         })
       
       } else {
         var json = localStorage.getItem('cart');
         this.items =  json ? JSON.parse(json) : []
+        $scope.isLoading =false;
       }
       $rootScope.$emit('countChanged', this.count);
        window.sessionStorage.setItem('countCart',this.count);
@@ -599,12 +725,17 @@ function index($scope, $http, $interval,$rootScope) {
   
  
 
-  $scope.notNull();
-  $scope.load_all_product();
-  $scope.load_all_image();
-  $scope.load_all_price();
-  $scope.load_all_brand();
-  $scope.load_all_discountPrice();
+ 
+  $scope.isIndex = $location.absUrl().includes('index');
+  if($scope.isIndex) {
+    $scope.notNull();
+    $scope.load_all_product();
+    $scope.load_all_image();
+    $scope.load_all_price();
+    $scope.load_all_brand();
+    $scope.load_all_discountPrice();
+  }
+
 }
 
 function listCategory($scope, $http) {

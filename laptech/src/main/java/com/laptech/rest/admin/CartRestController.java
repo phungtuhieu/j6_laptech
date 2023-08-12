@@ -25,12 +25,16 @@ import com.laptech.model.Cart;
 import com.laptech.model.DiscountPrice;
 import com.laptech.model.Price;
 import com.laptech.model.Product;
+import com.laptech.model.ProductImages;
 
 @RestController
 @RequestMapping("/api/cart")
 public class CartRestController {
     @Autowired
     ProductDAO daoProd;
+
+    @Autowired
+    ProductImagesDAO daoProdImg;
 
     @Autowired
     UserDAO daoUser;
@@ -93,6 +97,20 @@ public class CartRestController {
         }
         return ResponseEntity.ok(cartDao.save(cart)) ;
     }
+
+    @GetMapping("/img/product/{idProd}")
+    public ResponseEntity<ProductImages> getImgProd(@PathVariable("idProd") Long idProd) {
+        if(!daoProd.existsById(idProd)) {
+            return ResponseEntity.notFound().build();
+        }
+        Boolean isMain = true;
+        ProductImages pimg = daoProdImg.findByProductIdAndMain(idProd, isMain);
+        if(pimg == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(pimg) ;
+    }
+  
     @GetMapping("{id}")
     public ResponseEntity<Cart> update(@PathVariable("id") Long id) {
         if(!cartDao.existsById(id)) {

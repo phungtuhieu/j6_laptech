@@ -1,7 +1,7 @@
  <!-- Start Main Top -->
  <header class="main-header" ng-controller="header">
     <!-- Start Main Top -->
-    <span class="d-none" th:attr="data-user-principal=${#request.remoteUser != null ? #request.remoteUser : -1 }"></span>
+    <span class="d-none" th:attr="data-user-remoteuser=${#request.remoteUser != null ? #request.remoteUser : -1 }"></span>
     <div class="main-top">
       <div class="container-fluid">
         <div class="row">

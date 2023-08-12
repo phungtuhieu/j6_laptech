@@ -15,7 +15,13 @@
             <div class="col-lg-12">
                 <form action="" class="form-cart mx-auto">
                     <div class="cart-table-content">
-                        <div class="table-responsive table-content ">
+                        
+                        <div class="table-responsive table-content " style="position: relative;">
+                            <div class=" loading-page"  ng-if="isLoading" ng-cloak>
+                                <div class="spinner-border text-warning" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
                             <table class="table mb-0">
                                 <thead>
                                     <tr>
@@ -28,7 +34,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="item in cart.items">
+                                    <tr ng-repeat="item in cart.items" ng-cloak>
                                         <td  class="product-thumbnail">
                                             <a href="product-details.html" class="">
                                                 <img src="assets/images/cart/cart-1.jpg" alt="">
@@ -42,7 +48,7 @@
                                         <td class="product-price"><span class="amount">{{item.price | currency:"":0}} </span></td>
                                         <td class="cart-quality">
                                             <div class="product-quality">
-                                                <input class="cart-plus-minus-box input-text qty text" ng-change="user.fullname != null ? cart.updateToCartUser(item) : cart.saveToLocalStorage()" type="number" name="qtybutton" ng-model="item.quantity" value="1">
+                                                <input class="cart-plus-minus-box input-text qty text"  ng-change=" cart.updateToCart(item.product.id,item.quantity)" type="number" ng-model="item.quantity" value="1">
                                         </td>
                                         <td class="product-price">
                                             <span class="amount"> {{(item.price * item.quantity) | currency:"":0}}</span>
@@ -53,7 +59,7 @@
                                 </tbody>
                                
                             </table>
-                            <div ng-if="cart.items.length == 0" class="d-flex justify-content-center py-5">
+                            <div ng-if="cart.items.length == 0" ng-cloak class="d-flex justify-content-center py-5">
                                 <span> Giỏ hàng của bạn còn trống</span>
                              </div>
                         </div>
@@ -63,7 +69,7 @@
                                     <a th:href="@{/client/index}">Tiếp tục mua sắm</a>
                                 </div>
                                 <div class="clear-btn">
-                                    <a href="" ng-click="cart.clear()"><i class="fa-sharp fa-solid fa-xmark"></i> Xoá tất cả giỏ hàng</a>
+                                    <a href="" ng-if="cart.items.length > 0" ng-click="cart.clear()"><i class="fa-sharp fa-solid fa-xmark"></i> Xoá tất cả giỏ hàng</a>
                                 </div>
                             </div>
                             <div class="update-price d-flex align-items-center">
