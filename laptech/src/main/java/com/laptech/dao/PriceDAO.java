@@ -114,7 +114,7 @@ public interface PriceDAO extends JpaRepository<Price,Long> {
         "       AND CURRENT_TIMESTAMP BETWEEN d.startDate AND d.endDate" +
         "   )" +
         ")")
-        List<Price> findByPriceDiscountIdAndNotInDiscountPriceSearch(String discountId, String name);
+        List<Price> findByPricesDiscountIdAndNotInDiscountPriceSearch(String discountId, String name);
 
     
 

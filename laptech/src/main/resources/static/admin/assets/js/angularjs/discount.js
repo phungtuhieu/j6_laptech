@@ -16,6 +16,7 @@ function list($scope, $http) {
   $scope.reset = () => {
     $scope.form = {};
   };
+  $scope.isLoading = true;
   $scope.load_all = () => {
     var url = `${host}/discount`;
     //var url = host+'/students.json';
@@ -28,13 +29,16 @@ function list($scope, $http) {
         window.sessionStorage.setItem("items", JSON.stringify(resp.data));
         $scope.pageCount = Math.ceil($scope.items.length / 5);
         console.log("Success1", resp);
+        $scope.isLoading = false;
+
       })
       .catch((error) => {
         console.log("Error", error);
+        $scope.isLoading = false;
+
       });
   };
 
-  
   // sap xep
   $scope.reverseSort = false;
   $scope.sortColumn = "id";
@@ -66,6 +70,7 @@ function list($scope, $http) {
   $scope.formEdit = (id) => {
     // Lưu id vào session
     window.sessionStorage.setItem("editId", id);
+    
   };
   $scope.delete = (id) => {
     confirmationDialog(
@@ -230,7 +235,7 @@ function NotAndBetweenDate ($scope,$http){
   };
 }
 function formCreate($scope, $http, $filter) {
-  NotAndBetweenDate($scope,$http);
+   NotAndBetweenDate($scope,$http);
 
   $scope.MessageStartDate = "Vui lòng chọn Đến ngày";
   $scope.optionActive = [
@@ -245,9 +250,24 @@ function formCreate($scope, $http, $filter) {
   ];
   //
 
-  $scope.form = { active: true, startDate: new Date(),endDate: new Date() };
-  $scope.startTime = "00:00:00";
-  $scope.endTime = "23:59:59";
+  $scope.form = { active: true, startDate: new Date(), endDate: new Date() };
+    $scope.startTime = new Date();
+    var hoursToAdd = 2; //
+    var startDateClone = new Date($scope.startTime);
+    var endDateDate = new Date(startDateClone.getTime() + hoursToAdd * 60 * 60 * 1000);
+    if (endDateDate.getDate() !== startDateClone.getDate()) {
+        $scope.form.endDate.setDate($scope.form.endDate.getDate() + 1);
+        $scope.form.endDate.setHours(0, 0, 0);
+    } else {
+        $scope.form.endDate = endDateDate;
+    }
+
+    $scope.startTime = $filter("date")(new Date(), "HH:mm:ss");
+    $scope.endTime =  $filter("date")(endDateDate, "HH:mm:ss");
+
+
+        
+
   $scope.items = [];
 
   $scope.uploadName = (files) => {
@@ -255,13 +275,33 @@ function formCreate($scope, $http, $filter) {
   };
 
   $scope.mang = [];
-  $scope.laydulieu = (id) => {
-    const index = $scope.mang.indexOf(id);
-    if (index === -1) {
+  $scope.selectedItems = {}; 
+  $scope.CheckInput = (id) => {
+    if (!$scope.selectedItems[id]) {
+      $scope.selectedItems[id] = true;
       $scope.mang.push(id);
     } else {
-      $scope.mang.splice(index, 1);
+      delete $scope.selectedItems[id];
+      const index = $scope.mang.indexOf(id);
+      if (index !== -1) {
+        $scope.mang.splice(index, 1);
+      }
     }
+    console.log("Các giá trị đã chọn:", $scope.mang);
+    
+    // Cập nhật lại danh sách các sản phẩm đã chọn
+    $scope.itemsNe = {};
+    $scope.mang.forEach((selectedId) => {
+      const product = $scope.PriceByProduct.find(item => item.id === selectedId);
+      if (product) {
+        $scope.itemsNe[selectedId] = product;
+      }
+    });
+    console.log($scope.itemsNe);
+  };
+
+  $scope.deleteRow = function(item) {
+    delete $scope.itemsNe[item.id];
   };
 
   $scope.create = () => {
@@ -275,6 +315,9 @@ function formCreate($scope, $http, $filter) {
           "Hủy"
         ).then((result) => {
           if (result.isConfirmed) {
+            // $scope.mang.forEach((value) => {
+            //   console.log(value)
+            // })
             $scope.form.startDate = new Date(
               $filter("date")($scope.form.startDate, "yyyy-MM-dd") +
                 "T" +
@@ -319,6 +362,7 @@ function formCreate($scope, $http, $filter) {
                         data: data,
                       })
                         .then((resp) => {
+                        
                           window.location.href = "/admin/discount/list";
                           window.sessionStorage.setItem("name", "create");
                         })
@@ -332,20 +376,19 @@ function formCreate($scope, $http, $filter) {
                     });
                   // price
                 });
-                 $scope.betweenDate();
-                 $scope.notBetweenDate();
-               
+                 
+                $scope.betweenDate();
+                $scope.notBetweenDate();
               })
               .catch((error) => {
                 console.log("Error_discount", error);
               });
-            //
+            
           }
         });
       }
     }
   };
-
 
   $scope.search = (name) =>{
 
@@ -370,7 +413,6 @@ function formCreate($scope, $http, $filter) {
 
   $scope.PriceByProduct = () => {
     var url = `${host}/discount/PriceByProduct`;
-    //var url = host+'/students.json';
     $http({
       method: "GET",
       url: url,
@@ -387,9 +429,7 @@ function formCreate($scope, $http, $filter) {
   $scope.PriceByProduct();
 }
 
-
 function formUpdate($scope, $http, $filter) {
-
   NotAndBetweenDate($scope,$http);
   $scope.optionActive = [
     {
@@ -401,30 +441,120 @@ function formUpdate($scope, $http, $filter) {
       value: "Ngừng hoạt động",
     },
   ];
+
+  // $scope.mang = [];
+  // $scope.laydulieu = (id) => {
+  //   const index = $scope.mang.indexOf(id);
+  //   if (index === -1) {
+  //     $scope.mang.push(id);
+  //   } else {
+  //     $scope.mang.splice(index, 1);
+  //   }
+    
+  //   // Thêm đoạn mã để loại bỏ giá trị khỏi mảng khi checkbox bị bỏ chọn
+  //   if (!$scope.mang.includes(id)) {
+  //     // Tìm vị trí của giá trị trong mảng PriceInDiscountPrice
+  //     const priceIndex = $scope.PriceInDiscountPrice.findIndex(price => price.id === id);
+  //     if (priceIndex !== -1) {
+  //       $scope.PriceInDiscountPrice.splice(priceIndex, 1);
+  //     }
+  //   }
+  // };
+  $scope.itemsNe = {};
+
   $scope.mang = [];
-  $scope.laydulieu = (id) => {
-    const index = $scope.mang.indexOf(id);
-    if (index === -1) {
+  $scope.selectedItems = {}; 
+  $scope.CheckInput = (id) => {
+    if (!$scope.selectedItems[id]) {
+      $scope.selectedItems[id] = true;
       $scope.mang.push(id);
     } else {
-      $scope.mang.splice(index, 1);
-    }
-    
-    // Thêm đoạn mã để loại bỏ giá trị khỏi mảng khi checkbox bị bỏ chọn
-    if (!$scope.mang.includes(id)) {
-      // Tìm vị trí của giá trị trong mảng PriceInDiscountPrice
-      const priceIndex = $scope.PriceInDiscountPrice.findIndex(price => price.id === id);
-      if (priceIndex !== -1) {
-        $scope.PriceInDiscountPrice.splice(priceIndex, 1);
+      delete $scope.selectedItems[id];
+      delete $scope.itemsNe[id];
+      const index = $scope.mang.indexOf(id);
+      if (index !== -1) {
+        $scope.mang.splice(index, 1);
       }
     }
+    console.log("Các giá trị đã chọn:", $scope.mang);
+
+
+    $scope.itemsThem = {};
+    $scope.mang.forEach((selectedId) => {
+      const product = $scope.PriceAll.find(item => item.id === selectedId);
+      if (product) {
+        $scope.itemsThem[selectedId] = product;
+        $scope.itemsNe[selectedId] = product;
+      }
+    });
+    console.log($scope.itemsThem);
+    console.log($scope.itemsNe);
+  };
+
+  $scope.deleteRow = function(item) {
+
+    confirmationDialog(
+      "Xóa",
+      "Bạn có chắc chắn muốn sửa dữ liệu?",
+      "info",
+      "xóa",
+      "Hủy"
+    ).then((result) => {
+      if (result.isConfirmed) {
+        // alert(id)
+        // alert(item.id)
+        console.log($scope.itemsNe[item.id])
+        console.log($scope.discount)
+
+        var data = {
+          discount: $scope.discount,
+          price: $scope.itemsNe[item.id],
+        };
+        $http({
+          method: "POST",
+          url: `${host}/discount-price-delete/`,
+          data:data
+        })
+          .then((resp) => {
+            $scope.check = resp.data;
+            // alert($scope.check)
+            delete $scope.itemsNe[item.id];
+            $scope.PriceByProduct();
+          })
+
+      }
+    })
+  };
+  $scope.PriceInDiscountPriceList = (name) => {
+    var url = `${host}/discount/PriceByProductInDiscountPrice/${name}`;
+    $http({
+      method: "GET",
+      url: url,
+    })
+      .then((resp) => {
+        $scope.PriceInDiscountPrice = resp.data;
+        console.log("Success_PriceInDiscountPrice", resp);
+        $scope.PriceInDiscountPrice.forEach((price) => {
+          // alert(price.id)
+          const product = $scope.PriceInDiscountPrice.find(item => item.id === price.id);
+          if (product) {
+            $scope.itemsNe[price.id] = product;
+          }
+        });
+      })
+      .catch((error) => {
+        console.log("Error_PriceInDiscountPrice", error);
+      });
   };
 
   //
+ 
+
   $scope.isLoading = true;
   $scope.form = {};
   $scope.items = [];
-  $scope.edit = (id) => {
+  $scope.edit = () => {
+    const id = window.sessionStorage.getItem("editId");
     var url = `${host}/discount/${id}`;
     $http({
       method: "GET",
@@ -432,6 +562,7 @@ function formUpdate($scope, $http, $filter) {
     })
       .then((resp) => {
         $scope.form = resp.data;
+        $scope.discount = resp.data;
         $scope.form.startDate = new Date($scope.form.startDate);
         $scope.form.endDate = new Date($scope.form.endDate);
 
@@ -440,14 +571,17 @@ function formUpdate($scope, $http, $filter) {
         console.log("Success_edit", resp);
         $scope.isLoading = false;
         $scope.PriceInDiscountPriceList($scope.form.id);
-        $scope.PriceAll($scope.form.id);
       })
       .catch((error) => {
         console.log("Error_edit", error);
+        $scope.isLoading = false;
       });
-    window.sessionStorage.removeItem("editId");
+    // window.sessionStorage.removeItem("editId");
   };
+
+  $scope.edit();
   $scope.update = () => {
+   
     if (validation($scope, $scope.form, $filter)) {
       confirmationDialog(
         "Xác nhận sửa?",
@@ -457,6 +591,12 @@ function formUpdate($scope, $http, $filter) {
         "Hủy"
       ).then((result) => {
         if (result.isConfirmed) {
+          // alert("them")
+          
+          $scope.mang.forEach((value) => {
+            console.log("mảng nè:",value)
+          })
+
           $scope.form.startDate = new Date(
             $filter("date")($scope.form.startDate, "yyyy-MM-dd") +
               "T" +
@@ -474,7 +614,7 @@ function formUpdate($scope, $http, $filter) {
             url: url,
             data: item,
           })
-            .then((resp) => {
+           .then((resp) => {
 
               var index = $scope.items.findIndex(
                 (item) => item.id == $scope.form.id
@@ -482,56 +622,53 @@ function formUpdate($scope, $http, $filter) {
               $scope.items[index] = resp.data;
               $scope.discount = resp.data;
               console.log("Success", resp);
-            
-              $http({
-                method: "GET",
-                url: `${host}/discount-price-delete/`+$scope.discount.id,
-              })
-                .then((resp) => {
-                  $scope.check = resp.data;
-                  alert($scope.check)
-                  if($scope.check === true){
-                       //
-                    $scope.mang.forEach((value, index) => {
 
-                      console.log(`${value}`)
+              if($scope.mang.length == 0){
+                toastMixin.fire({
+                  animation: true,
+                  icon: "success",
+                  title: "Sửa thành công",
+                });
+              }
 
-                      // price
-                      $http({
-                        method: "get",
-                        url: `${host}/discount/price/${value}`,
-                      })
-                        .then((respp) => {
-                          $scope.price = respp.data;
-                          console.log("price nè: " + respp.data);
-
-                          // discountPrice
-                          var data = {
-                            discount: $scope.discount,
-                            price: $scope.price,
-                          };
-                          $http({
-                            method: "post",
-                            url: `${host}/discount-price-update`,
-                            data: data,
-                          })
-                            .then((resp) => {
-                              window.location.href = "/admin/discount/list";
-                              window.sessionStorage.setItem("name", "update");
-                            })
-                            .catch((error) => {
-                              console.log("Error_discountPrice", error);
-                            });
-                          // discountPrice
-                        })
-                        .catch((error) => {
-                          console.log("Error_price", error);
-                        });
-                      // price
-                    });
-                    //
-                  }
+              $scope.mang.forEach((value, index) => {
+                console.log(value)
+                // price
+                $http({
+                  method: "get",
+                  url: `${host}/discount/price/${value}`,
                 })
+                  .then((respp) => {
+                    $scope.price = respp.data;
+                    console.log("price nè: " + respp.data);
+
+                    // discountPrice
+                    var data = {
+                      discount: $scope.discount,
+                      price: $scope.price,
+                    };
+                    $http({
+                      method: "post",
+                      url: `${host}/discount-price`,
+                      data: data,
+                    })
+                      .then((resp) => {
+                        // window.location.href = "/admin/discount/list";
+                        // window.sessionStorage.setItem("name", "update");
+                      })
+                      .catch((error) => {
+                        console.log("Error_discountPrice", error);
+                      });
+                    // discountPrice
+                  })
+                  .catch((error) => {
+                    console.log("Error_price", error);
+                  });
+                // price
+              });
+
+              
+             
                 $scope.betweenDate();
                 $scope.notBetweenDate();
                 
@@ -582,48 +719,24 @@ function formUpdate($scope, $http, $filter) {
     });
   };
 
-  $scope.PriceInDiscountPriceList = (name) => {
-    var url = `${host}/discount/PriceByProductInDiscountPrice/${name}`;
-    //var url = host+'/students.json';
-    $http({
-      method: "GET",
-      url: url,
-    })
-      .then((resp) => {
-        $scope.PriceInDiscountPrice = resp.data;
-        console.log("Success_PriceInDiscountPrice", resp);
 
-        $scope.isProductInDiscount = (priceId) => {
-          if (!$scope.mang.includes(priceId)) {
-            if ($scope.PriceInDiscountPrice.some((price) => price.id === priceId)) {
-              $scope.mang.push(priceId);
-            }
-          }
-          return $scope.mang.includes(priceId);
-        };
-        
-      
 
-      })
-      .catch((error) => {
-        console.log("Error_PriceInDiscountPrice", error);
-      });
-  };
-  $scope.PriceAll = (name) => {
-    var url = `${host}/price-by-discountId-AndNotIn-discountPrice/${name}`;
-    //var url = host+'/students.json';
+  $scope.PriceByProduct = () => {
+    var url = `${host}/discount/PriceByProduct`;
     $http({
       method: "GET",
       url: url,
     })
       .then((resp) => {
         $scope.PriceAll = resp.data;
-        console.log("Success_PriceAll", resp);
+        console.log("Success_PriceByProduct", resp);
       })
       .catch((error) => {
-        console.log("Error_PriceAll", error);
+        console.log("Error_PriceByProduct", error);
       });
   };
+
+  $scope.PriceByProduct();
 
 
   $scope.search = (name,discountId) =>{
@@ -646,8 +759,7 @@ function formUpdate($scope, $http, $filter) {
         console.log("Error_PriceByProduct", error);
       });
   }
-  const id = window.sessionStorage.getItem("editId");
-  $scope.edit(id);
+  
 
 }
 function dataFileHandler($scope, $http) {
@@ -962,8 +1074,8 @@ function validation($scope, item, $filter) {
 }
 function validationCreate(item) {
   const items = JSON.parse(window.sessionStorage.getItem("items"));
-  console.log(items);
-  console.log(item);
+  // console.log(items);
+  // console.log(item);
   var index = items.findIndex((items) => items.id === item.id);
   if (index !== -1) {
     toastMixin.fire({
