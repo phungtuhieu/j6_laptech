@@ -9,6 +9,8 @@ app
 
 function list($scope, $http) {
   //
+
+  $scope.isLoading = true;
   $scope.form = {};
   $scope.items = [];
   $scope.pageCount;
@@ -27,9 +29,11 @@ function list($scope, $http) {
         $scope.pageCount = Math.ceil($scope.items.length / 5);
         window.sessionStorage.setItem("items", JSON.stringify(resp.data));
         console.log("Success1", resp);
+        $scope.isLoading = false;
       })
       .catch((error) => {
         console.log("Error", error);
+        $scope.isLoading = false;
       });
   };
   // sap xep
@@ -216,8 +220,8 @@ function formUpdate($scope, $http) {
       })
       .catch((error) => {
         console.log("Error_edit", error);
+        $scope.isLoading = false;
       });
-    window.sessionStorage.removeItem("editId");
   };
 
   $scope.update = () => {

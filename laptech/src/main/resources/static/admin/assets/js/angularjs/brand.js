@@ -27,6 +27,7 @@ function list($scope, $http) {
   $scope.form = {};
   $scope.items = [];
   $scope.pageCount;
+  $scope.isLoading = true;
   $scope.reset = () => {
     $scope.form = {};
   };
@@ -42,9 +43,11 @@ function list($scope, $http) {
         window.sessionStorage.setItem("items", JSON.stringify(resp.data));
         $scope.pageCount = Math.ceil($scope.items.length / 5);
         console.log("Success1", resp);
+        $scope.isLoading = false;
       })
       .catch((error) => {
         console.log("Error", error);
+        $scope.isLoading = false;
       });
   };
   // sap xep
@@ -226,6 +229,7 @@ function formUpdate($scope, $http) {
   });
   //
   $scope.isLoading = true;
+  
   $scope.form = {};
   $scope.items = [];
   $scope.edit = (id) => {
@@ -241,8 +245,8 @@ function formUpdate($scope, $http) {
       })
       .catch((error) => {
         console.log("Error_edit", error);
+        $scope.isLoading = false;
       });
-    window.sessionStorage.removeItem("editId");
   };
 
   $scope.update = () => {

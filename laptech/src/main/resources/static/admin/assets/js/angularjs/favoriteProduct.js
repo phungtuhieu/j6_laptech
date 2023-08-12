@@ -7,6 +7,8 @@ app
 
 function list($scope, $http, $filter) {
   //
+
+  $scope.isLoading = true;
   $scope.form = {};
   $scope.items = [];
   $scope.pageCount;
@@ -30,9 +32,11 @@ function list($scope, $http, $filter) {
         $scope.pageCount = Math.ceil($scope.items.length / 5);
         $scope.reset();
         console.log("Success1", resp);
+        $scope.isLoading = false;
       })
       .catch((error) => {
         console.log("Error", error);
+        $scope.isLoading = false;
       });
   };
   // sap xep
