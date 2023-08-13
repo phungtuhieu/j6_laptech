@@ -3,6 +3,16 @@ let host = "http://localhost:8081/api";
 
 // const app = angular.module("app", []);
 app
+  .filter("formatCurrency", function () {
+    return function (input) {
+      // Chuyển đổi số tiền thành tiền Việt Nam
+      var formattedPrice = input.toLocaleString("vi-VN", {
+        style: "currency",
+        currency: "VND",
+      });
+      return formattedPrice;
+    };
+  })
   .controller("list", list)
   .controller("create", formCreate)
   .controller("update", formUpdate)
@@ -111,6 +121,43 @@ function list($scope, $http) {
       }
     });
   };
+
+  $scope.deleteDiscount = (discountId) => {
+    confirmationDialog(
+      "Xác nhận xóa?",
+      "Bạn có chắc chắn muốn xóa dữ liệu?",
+      "warning",
+      "Xóa",
+      "Hủy"
+    ).then((result) => {
+      if (result.isConfirmed) {
+        var url = `${host}/discount-price-delete/${discountId}`;
+        $http({
+          method: "get",
+          url: url,
+        })
+          .then((resp) => {
+            toastMixin.fire({
+              animation: true,
+              icon: "success",
+              title: "Xóa thành công",
+              position: "top-right",
+            });
+            $scope.delete(discountId);
+          })
+          .catch((error) => {
+            console.log("Error", error);
+            toastMixin.fire({
+              animation: true,
+              icon: "error",
+              title: "Xóa không thành công",
+              position: "top",
+              width: 600,
+            });
+          });
+      }
+    });
+  };
   //
   $scope.search = (name) => {
     if (name != "") {
@@ -159,6 +206,10 @@ function list($scope, $http) {
     }
   };
 
+  NotAndBetweenDate($scope,$http);
+  
+  $scope.betweenDate();
+  $scope.notBetweenDate();
   // thực hiện
   $scope.reset();
   $scope.load_all();
@@ -548,8 +599,6 @@ function formUpdate($scope, $http, $filter) {
   };
 
   //
- 
-
   $scope.isLoading = true;
   $scope.form = {};
   $scope.items = [];
@@ -718,7 +767,42 @@ function formUpdate($scope, $http, $filter) {
       }
     });
   };
-
+  $scope.deleteDiscount = (discountId) => {
+    confirmationDialog(
+      "Xác nhận xóa?",
+      "Bạn có chắc chắn muốn xóa dữ liệu?",
+      "warning",
+      "Xóa",
+      "Hủy"
+    ).then((result) => {
+      if (result.isConfirmed) {
+        var url = `${host}/discount-price-delete/${discountId}`;
+        $http({
+          method: "get",
+          url: url,
+        })
+          .then((resp) => {
+            toastMixin.fire({
+              animation: true,
+              icon: "success",
+              title: "Xóa thành công",
+              position: "top-right",
+            });
+            $scope.delete(discountId);
+          })
+          .catch((error) => {
+            console.log("Error", error);
+            toastMixin.fire({
+              animation: true,
+              icon: "error",
+              title: "Xóa không thành công",
+              position: "top",
+              width: 600,
+            });
+          });
+      }
+    });
+  };
 
 
   $scope.PriceByProduct = () => {
@@ -762,6 +846,7 @@ function formUpdate($scope, $http, $filter) {
   
 
 }
+
 function dataFileHandler($scope, $http) {
   //
   // Excel

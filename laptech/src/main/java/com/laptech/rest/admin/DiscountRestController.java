@@ -133,15 +133,20 @@ public class DiscountRestController {
     }
 
 
-    // @PostMapping("/api/discount-price-update")
-    // public ResponseEntity<DiscountPrice> discountPriceUpdate(@RequestBody DiscountPrice discountPrice){
-    //     DiscountPricePK discountPricePK = new DiscountPricePK();
-    //     discountPricePK.setDiscountId(discountPrice.getDiscount().getId());;
-    //     discountPricePK.setPriceId(discountPrice.getPrice().getId());
-    //     discountPrice.setDiscountPricePK(discountPricePK);
-    //     dpDao.save(discountPrice);
-    //     return ResponseEntity.ok(discountPrice);
-    // }
+    @GetMapping("/api/discount-price-delete/{discountId}")
+    public ResponseEntity<Boolean> deleteDiscountPrice(@PathVariable("discountId") String name){
+
+         List<DiscountPrice> dpList = dpDao.findByDiscountIdAll(name);
+         dpList.forEach((dp) -> {
+            DiscountPricePK discountPricePKDelete = new DiscountPricePK();
+            discountPricePKDelete.setDiscountId(dp.getDiscount().getId());
+            discountPricePKDelete.setPriceId(dp.getPrice().getId());
+            dp.setDiscountPricePK(discountPricePKDelete);
+            dpDao.deleteById(discountPricePKDelete);
+        });
+
+        return ResponseEntity.ok(true);
+    }
 
     @PostMapping("/api/discount-price-delete")
     public ResponseEntity<Boolean> deleteDiscountPrice(@RequestBody DiscountPrice discountPrice){
