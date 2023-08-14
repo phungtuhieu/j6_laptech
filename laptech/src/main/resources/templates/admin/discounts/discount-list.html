@@ -79,6 +79,11 @@
                     </div>
                 </div>
                 <div class="table-center">
+                    <div class="loading-page"  ng-if="isLoading">
+                        <div class="spinner-border text-warning "  role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead>
@@ -101,7 +106,7 @@
                                     <td>{{dis.percentage}}</td>
                                     <td>{{dis.startDate | date: 'dd-MM-yyyy HH:mm'}}</td>
                                     <td>{{dis.endDate | date: 'dd-MM-yyyy HH:mm'}}</td>
-                                    <td>{{dis.active}}</td>
+                                    <td>{{dis.active == true ? 'Hoạt động' : 'Ngừng hoạt động'}}</td>
                                     <td class="text-truncate" style="max-width: 155px;" data-bs-toggle="tooltip"
                                         data-bs-placement="left" title="{{dis.description}}">{{dis.description}}</td>
                                     <td class="td-action ">
@@ -113,8 +118,9 @@
                                                             class="fa-solid fa-pen-to-square"></i></a>
                                                 </li>
                                                 <li>
-                                                    <a href="" class="text-danger" ng-click="delete(dis.id)"><i
+                                                    <a href="" ng-class="dis.active ? 'text-info' : 'text-danger'" ng-click="dis.active ? delete(dis.id) : deleteDiscount(dis.id)"><i
                                                             class="fa-solid fa-trash"></i></a>
+                                                            
                                                 </li>
                                             </ul>
                                         </div>

@@ -51,18 +51,71 @@ public interface PriceDAO extends JpaRepository<Price,Long> {
         "WHERE CURRENT_TIMESTAMP BETWEEN dp.discount.startDate AND dp.discount.endDate)")
      List<Price> findByPriceByProductNameAndBrandName(String nameAndBrand);
 
-
-    @Query("SELECT pr FROM Price pr " +
-       "WHERE pr.product.status = 1 " +
-       "AND CURRENT_TIMESTAMP BETWEEN pr.startDate AND pr.endDate " +
-       "AND pr.product.id IN " +
-       "(SELECT p.id FROM Product p JOIN p.prices pr JOIN pr.discountPrices dp " +
-       "WHERE dp.discount.id = ?1 AND CURRENT_TIMESTAMP BETWEEN dp.discount.startDate AND dp.discount.endDate)")
-        List<Price> findByPriceByProductInDiscount(String name);
-     
-
-
-
     Optional<Price> findById(Long id);
+
+    // @Query("SELECT pr FROM Price pr " +
+    //    "WHERE pr.product.status = 1 " +
+    //    "AND CURRENT_TIMESTAMP BETWEEN pr.startDate AND pr.endDate " +
+    //    "AND pr.product.id IN " +
+    //    "(SELECT p.id FROM Product p JOIN p.prices pr JOIN pr.discountPrices dp " +
+    //    "WHERE dp.discount.id = ?1 AND CURRENT_TIMESTAMP BETWEEN dp.discount.startDate AND dp.discount.endDate)")
+    @Query("SELECT pr FROM Price pr JOIN pr.discountPrices dp WHERE dp.discount.id = ?1")
+        List<Price> findByPriceByProductInDiscount(String name);
+
+
+
+        @Query("SELECT pr FROM Price pr " +
+        "JOIN pr.product p " +
+        "WHERE p.status = 1 " +
+        "AND CURRENT_TIMESTAMP BETWEEN pr.startDate AND pr.endDate " +
+        "AND p.id NOT IN (" +
+        "   SELECT p.id FROM Price pr " +
+        "   JOIN pr.product p " +
+        "   WHERE p.status = 1 " +
+        "   AND CURRENT_TIMESTAMP BETWEEN pr.startDate AND pr.endDate " +
+        "   AND p.id IN (" +
+        "       SELECT p.id FROM Product p " +
+        "       JOIN p.prices pr " +
+        "       JOIN pr.discountPrices dp " +
+        "       WHERE CURRENT_TIMESTAMP BETWEEN dp.discount.startDate AND dp.discount.endDate" +
+        "   )" +
+        "   AND p.id NOT IN (" +
+        "       SELECT p.id FROM Product p " +
+        "       JOIN p.prices pr " +
+        "       JOIN pr.discountPrices dp " +
+        "       JOIN dp.discount d " +
+        "       WHERE d.id = ?1 " +
+        "       AND CURRENT_TIMESTAMP BETWEEN d.startDate AND d.endDate" +
+        "   )" +
+        ")")
+        List<Price> findByPriceDiscountIdAndNotInDiscountPrice(String discountId);
+    
+        @Query("SELECT pr FROM Price pr " +
+        "JOIN pr.product p " +
+        "WHERE p.status = 1 AND (p.name LIKE CONCAT('%', ?2, '%') OR p.brand.name = ?2) " +
+        "AND CURRENT_TIMESTAMP BETWEEN pr.startDate AND pr.endDate " +
+        "AND p.id NOT IN (" +
+        "   SELECT p.id FROM Price pr " +
+        "   JOIN pr.product p " +
+        "   WHERE p.status = 1 " +
+        "   AND CURRENT_TIMESTAMP BETWEEN pr.startDate AND pr.endDate " +
+        "   AND p.id IN (" +
+        "       SELECT p.id FROM Product p " +
+        "       JOIN p.prices pr " +
+        "       JOIN pr.discountPrices dp " +
+        "       WHERE CURRENT_TIMESTAMP BETWEEN dp.discount.startDate AND dp.discount.endDate" +
+        "   )" +
+        "   AND p.id NOT IN (" +
+        "       SELECT p.id FROM Product p " +
+        "       JOIN p.prices pr " +
+        "       JOIN pr.discountPrices dp " +
+        "       JOIN dp.discount d " +
+        "       WHERE d.id = ?1 " +
+        "       AND CURRENT_TIMESTAMP BETWEEN d.startDate AND d.endDate" +
+        "   )" +
+        ")")
+        List<Price> findByPricesDiscountIdAndNotInDiscountPriceSearch(String discountId, String name);
+
+    
 
 }

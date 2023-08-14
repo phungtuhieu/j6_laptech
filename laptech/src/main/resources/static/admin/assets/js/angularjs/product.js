@@ -187,6 +187,7 @@ function form ($scope, $http,$location,$filter) {
     window.localStorage.removeItem("isDeleteSuccess");
   }
   $scope.isEdit = $location.absUrl().includes('update');
+
   $scope.priceForms = [
     {
       price: 0.0,
@@ -507,7 +508,7 @@ function form ($scope, $http,$location,$filter) {
           console.log("Errors",err);
       })
   }
-   var deleteProdImg = (index) => {
+  var deleteProdImg = (index) => {
 	  var prodImg = listProdImg[index];
 	  var url = getUrl(`/product/img/delete/${prodImg.id}`);
 	  $http.delete(url).then( resp => {

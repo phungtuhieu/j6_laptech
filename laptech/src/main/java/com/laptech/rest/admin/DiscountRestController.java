@@ -45,8 +45,19 @@ public class DiscountRestController {
     DiscountPriceDAO dpDao;
     
     @GetMapping("/api/discount")
-    public ResponseEntity<List<Discount>> getAll(Model model){
+    public ResponseEntity<List<Discount>> getAll(){
         return ResponseEntity.ok( dao.findAll());
+    }
+
+
+     @GetMapping("/api/discount/betweenDate")
+    public ResponseEntity<List<Discount>> getAllBetweenDate(){
+        return ResponseEntity.ok(dao.findByBetweenDate());
+    }
+
+    @GetMapping("/api/discount/notBetweenDate")
+    public ResponseEntity<List<Discount>> getAllNotBetweenDate(){
+        return ResponseEntity.ok(dao.findByNotBetweenDate());
     }
 
 
@@ -60,7 +71,7 @@ public class DiscountRestController {
 
     @PostMapping("/api/discount")
     public ResponseEntity<Discount> post(@RequestBody Discount discount){
-       dao.save(discount);
+        dao.save(discount);
         return ResponseEntity.ok(discount);
     }
 
@@ -122,32 +133,45 @@ public class DiscountRestController {
     }
 
 
-    @PostMapping("/api/discount-price-update")
-    public ResponseEntity<DiscountPrice> discountPriceUpdate(@RequestBody DiscountPrice discountPrice){
+    @GetMapping("/api/discount-price-delete/{discountId}")
+    public ResponseEntity<Boolean> deleteDiscountPrice(@PathVariable("discountId") String name){
 
+         List<DiscountPrice> dpList = dpDao.findByDiscountIdAll(name);
+         dpList.forEach((dp) -> {
+            DiscountPricePK discountPricePKDelete = new DiscountPricePK();
+            discountPricePKDelete.setDiscountId(dp.getDiscount().getId());
+            discountPricePKDelete.setPriceId(dp.getPrice().getId());
+            dp.setDiscountPricePK(discountPricePKDelete);
+            dpDao.deleteById(discountPricePKDelete);
+        });
 
-        // DiscountPrice dp = dpDao.findByOne(discountPrice.getDiscount().getId(),discountPrice.getPrice().getId());
-
-         List<DiscountPrice> dpList = dpDao.findByDiscountIdAll(discountPrice.getDiscount().getId());
-
-        // dpList.forEach((dp) -> {
-        //     DiscountPricePK discountPricePKDelete = new DiscountPricePK();
-        //     discountPricePKDelete.setDiscountId(dp.getDiscount().getId());
-        //     discountPricePKDelete.setPriceId(dp.getPrice().getId());
-        //     dp.setDiscountPricePK(discountPricePKDelete);
-        //      dpDao.deleteById(discountPricePKDelete);
-        // });
-
-        
-        DiscountPricePK discountPricePK = new DiscountPricePK();
-        discountPricePK.setDiscountId(discountPrice.getDiscount().getId());;
-        discountPricePK.setPriceId(discountPrice.getPrice().getId());
-        discountPrice.setDiscountPricePK(discountPricePK);
-        dpDao.save(discountPrice);
-
-
-        return ResponseEntity.ok(discountPrice);
+        return ResponseEntity.ok(true);
     }
 
+    @PostMapping("/api/discount-price-delete")
+    public ResponseEntity<Boolean> deleteDiscountPrice(@RequestBody DiscountPrice discountPrice){
+            DiscountPricePK discountPricePKDelete = new DiscountPricePK();
+            discountPricePKDelete.setDiscountId(discountPrice.getDiscount().getId());
+            discountPricePKDelete.setPriceId(discountPrice.getPrice().getId());
+            discountPrice.setDiscountPricePK(discountPricePKDelete);
+            dpDao.deleteById(discountPricePKDelete);
+
+        return ResponseEntity.ok(true);
+    }
   
+
+    @GetMapping("/api/price-by-discountId-AndNotIn-discountPrice/{discountId}")
+    public ResponseEntity<List<Price>> priceInNot(@PathVariable("discountId") String name){
+        return ResponseEntity.ok(prDao.findByPriceDiscountIdAndNotInDiscountPrice(name));
+    }
+
+    @GetMapping("/api/price-by-discountId-AndNotIn-discountPrice/search/{discountId}/{name}")
+    public ResponseEntity<List<Price>> findByPriceDiscountIdAndNotInDiscountPriceSearch(@PathVariable("discountId") String discountId, @PathVariable("name") String name){
+        return ResponseEntity.ok(prDao.findByPricesDiscountIdAndNotInDiscountPriceSearch(discountId,name));
+    }
+
+
+
+
+
 }
