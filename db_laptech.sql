@@ -16,7 +16,7 @@ CREATE TABLE Users (
     [address] NVARCHAR(200),
     [admin] BIT NOT NULL,   
     active BIT NOT NULL,
-    [image] NVARCHAR(200) 
+    [image] NVARCHAR(MAX) 
 ) 
 GO
 
