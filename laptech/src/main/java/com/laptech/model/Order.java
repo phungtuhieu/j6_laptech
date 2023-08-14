@@ -46,12 +46,18 @@ public class Order {
     @Column(name = "cancellation_date")
     Date cancellationDate = new Date();
 
+    @Column(name = "cancellation_reason")
     String cancellationReason;
-
+    
+    @Column(name = "payment_method")
     Boolean paymentMethod;
+
+    @Column(name = "payment_status")
+    Boolean paymentStatus;
 
     Integer  status;
     
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     Account user;
@@ -59,4 +65,8 @@ public class Order {
     @JsonIgnore
     @OneToMany(mappedBy = "order")
     List<OrderDetail> orderDetails;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "order")
+    List<OnlinePayment> onlinePayments;
 }

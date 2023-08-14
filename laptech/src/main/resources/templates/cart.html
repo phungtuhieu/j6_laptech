@@ -15,7 +15,6 @@
             <div class="col-lg-12">
                 <form action="" class="form-cart mx-auto">
                     <div class="cart-table-content">
-                         {{user.fullname}} 
                         <div class="table-responsive table-content " style="position: relative;">
                             <div class=" loading-page"  ng-if="isLoading" ng-cloak>
                                 <div class="spinner-border text-warning" role="status">
@@ -25,16 +24,33 @@
                             <table class="table mb-0">
                                 <thead>
                                     <tr>
-                                        <th class="width-thumbnail">Sản phẩm</th>
+                                        <th class="width-thumbnail">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" ng-model="checkAll" ng-click="selectAll()" id="flexCheckDefault">
+                                                <label class="form-check-label" for="flexCheckDefault">
+                                                </label>
+                                            </div>
+                                        </th>
+                                        <th class="width-thumbnail">Sản ph  ẩm</th>
                                         <th class="width-name"></th>
                                         <th class="width-price"> Giá (VND)</th>
                                         <th class="width-quantity">Số lượng</th>
                                         <th class="">Tạm tính  (VND)</th>
                                         <th class="width-remove"></th>
                                     </tr>
+                                   
                                 </thead>
                                 <tbody>
+                                   
                                     <tr ng-repeat="item in cart.items" ng-cloak>
+                                        <td  class="product-thumbnail">
+                                            {{item.select}}
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox"  ng-checked="statusChecked(item)" ng-model="cartSelected" ng-click="toggleSelection(item)"  id="prod{{item.product.id}}">
+                                                <label class="form-check-label" for="prod{{item.product.id}}">
+                                                </label>
+                                            </div>
+                                        </td>
                                         <td  class="product-thumbnail">
                                             <a href="product-details.html" class="">
                                                 <img ng-src="{{urlImg(item.img)}}" alt="">
@@ -59,6 +75,7 @@
                                 </tbody>
                                
                             </table>
+                         
                             <div ng-if="cart.items.length == 0" ng-cloak class="d-flex justify-content-center py-5">
                                 <span> Giỏ hàng của bạn còn trống</span>
                              </div>
@@ -83,7 +100,7 @@
         </div>
         <div class="row">
             <div class="col-lg-6 col-md-12 col-12">
-                <div class="coupon-wrap mb-40">
+                <!-- <div class="coupon-wrap mb-40">
                     <h4>Mã giảm giá </h4>
                     <div class="coupon-content common-form-style">
                         <p>Nhập mã giảm giá của bạn. </p>
@@ -94,7 +111,7 @@
                             <a class="common-btn-padding-2" href="#">Áp dụng</a>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
             <div class="col-lg-6 col-md-12 col-12">
                 <div class="grand-total-wrap mb-40">
@@ -108,7 +125,7 @@
                         <h4>Tổng cộng <span>{{cart.amount | currency:"":0}} VND</span></h4>
                     </div>
                     <div class="grand-total-btn">
-                        <a th:href="@{/cart/checkout}">Đặt hàng</a>
+                        <a th:href="@{/client/cart/checkout}">Đặt hàng</a>
                     </div>
                 </div>
         </div>

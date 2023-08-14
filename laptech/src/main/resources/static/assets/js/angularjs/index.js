@@ -592,7 +592,8 @@ function index($scope, $http, $interval,$rootScope,$location) {
         if(currentUsername == null) {
           this.saveToLocalStorage();
         } else {
-          $http.get(`${host}/cart/${id}`).then(resp => {
+          var c = this.items.find(e => e.product.id == id);
+          $http.get(`${host}/cart/${c.id}`).then(resp => {
             var prodFromCart = resp.data;
             prodFromCart.quantity = quantity;
             $http.put(`${host}/cart/${prodFromCart.id}`,prodFromCart).then(resp => {
@@ -620,9 +621,7 @@ function index($scope, $http, $interval,$rootScope,$location) {
             user: $scope.user
           }
         $http.post(`${host}/cart/save`,cartObj).then(resp => {
-          // console.log("LIST CART",resp.data);
           this.items.push(resp.data);
-          console.log("LIST CART",this.items);
           $rootScope.$emit('countChanged', this.count);
           window.sessionStorage.setItem('countCart',this.count);
         }).catch(err => {
@@ -637,12 +636,12 @@ function index($scope, $http, $interval,$rootScope,$location) {
       $rootScope.$emit('countChanged', this.count);
        window.sessionStorage.setItem('countCart',this.count);
     },
-   
+    
     loadCart(){
       
       if(currentUsername !== null) {
         this.items = []
-        $http.get(`${host}/cart/user/${$scope.user.username}`).then(resp => {
+        $http.get(`${host}/cart/user`).then(resp => {
             listCart = resp.data;
             listCart.forEach(item => {
               $http.get(`${host}/cart/img/product/${item.product.id}`).then(resp => {
@@ -671,7 +670,7 @@ function index($scope, $http, $interval,$rootScope,$location) {
       } else {
         var json = localStorage.getItem('cart');
         this.items =  json ? JSON.parse(json) : []
-        $scope.isLoading =false;
+        $scope.isLoading = false;
       }
       $rootScope.$emit('countChanged', this.count);
        window.sessionStorage.setItem('countCart',this.count);
@@ -679,9 +678,36 @@ function index($scope, $http, $interval,$rootScope,$location) {
   
   }
   
+  // Xử lí checkbox cart 
+  $scope.cartSelected = [];
 
-  
-  
+  $scope.statusChecked = (item) => {
+    return $scope.cartSelected.indexOf(item) > -1;
+  }
+
+  $scope.toggleSelection = (item) => {
+    var idx = $scope.cartSelected.indexOf(item);
+    if(idx > -1) {
+      $scope.cartSelected.splice(idx,1);
+    } else {
+      $scope.cartSelected.push(item);
+    }
+  } 
+  $scope.selectAll = () => {
+   if(!$scope.checkAll) {
+    console.log("$scope.checkAll", $scope.checkAll);
+    angular.forEach($scope.cart.items, (item) => {
+        var idx = $scope.cartSelected.indexOf(item);
+        if(idx <= -1){
+          $scope.cartSelected.push(item)
+        } else {
+         
+        }
+    })
+   } else {
+    $scope.cartSelected = [];
+   }
+  }
  
 
  $scope.getUs();

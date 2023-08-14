@@ -10,7 +10,7 @@
 </head>
 <body>
 
-  <div class="wrapp">
+  <div class="wrapp" ng-controller="checkout">
     <div class="container checkout-area ">
         <div class="row">
             <div class="woocommerce-info-top col-lg-12">
@@ -102,24 +102,57 @@
                                 </div>
                                 <div class="payment-method">
                                     <h3 class="checkout-title">PHƯƠNG THỨC THANH TOÁN</h3>
-                                    <ul class="list-payment-method">
+                                    <ul class="list-payment-method mb-4">
                                         <li class="wc_payment_method">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="payment-method" id="payment-method1">
-                                                <label class="form-check-label" for="payment-method1">
-                                                  Tiền mặt
+                                                <input class="form-check-input" type="radio" name="payment-method" ng-model="paymentSelect"  ng-value="false" id="payment-method1">
+                                                <label class="form-check-label" for="payment-method1"  >
+                                                  Thanh toán khi nhận hàng
                                                 </label>
                                               </div>
                                         </li>
                                         <li class="wc_payment_method">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="payment-method" id="payment-method2">
+                                                <input class="form-check-input" type="radio" name="payment-method" ng-model="paymentSelect"  ng-value="true" id="payment-method2">
                                                 <label class="form-check-label" for="payment-method2">
-                                                  Chuyển khoản
+                                                  Thanh toán trực tuyến (VNPay)
                                                 </label>
                                               </div>
+                                              
                                         </li>
                                     </ul>
+                                    <div class="collapse my-3" ng-class="{'show' : paymentSelect}" id="onlinePayment">
+                                        <div class="card card-body">
+                                            <div class="row mx-auto">
+                                            <div class="form-check col-3 mx-1">
+                                                <input class="form-check-input payment-radio " ng-model="optionBank"  type="radio" ng-value="1"  id="ncb-bank">
+                                                <label class="form-check-label payment-label" for="ncb-bank">
+                                                    <div class="checkout__box-img-bank ncb-bank">
+                                                        <img th:src="@{/assets/image/logo_ncb.png}">
+                                                    </div>
+                                                </label>
+                                            </div>
+                                          
+                                            <div class="form-check col-3 mx-1">
+                                                <input class="form-check-input payment-radio " ng-model="optionBank"  type="radio" ng-value="2"  id="mb-bank">
+                                                <label class="form-check-label payment-label" for="mb-bank">
+                                                    <div class="checkout__box-img-bank">
+                                                        <img th:src="@{/assets/image/logo_mbbank.png}">
+                                                    </div>
+                                                </label>
+                                            </div>
+                                            <div class="form-check col-3 mx-1">
+                                                <input class="form-check-input payment-radio " ng-model="optionBank"  type="radio" ng-value="3"  id="vtb-bank">
+                                                <label class="form-check-label payment-label" for="vtb-bank">
+                                                    <div class="checkout__box-img-bank">
+                                                        <img th:src="@{/assets/image/logo_vietinbank.png}">
+                                                    </div>
+                                                </label>
+                                            </div>
+                                          
+                                        </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <button  class="btn btn-order">Thanh toán</button>
                                 <div class="woocommerce-privacy-policy-text mt-3"><p>Bằng cách nhấp vào Đặt hàng, bạn đồng ý với 

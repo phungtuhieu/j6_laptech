@@ -9,6 +9,19 @@
    
 }
 
+@keyframes expand {
+    from {
+        max-height: 0;
+    }
+    to {
+        max-height: 500px;
+    }
+}
+
+#onlinePayment {
+    transition: all 1s ease;
+    animation: expand 0.8s ease;
+}
   .woocommerce-info-top {
     background-color: rgb(249, 249, 249);
     height: 100px;
@@ -16,6 +29,22 @@
     flex-direction: column;
     justify-content: center;
 
+}
+.checkout__box-img-bank img {
+    box-shadow: 0px 0px 0px 1px #f4f4f4;
+}
+
+.checkout__box-img-bank {
+    width: 80px;
+    height: 80px;
+
+}
+
+.payment-radio{
+    display:  none;
+}
+.payment-radio:checked + .payment-label img{
+    box-shadow: 0px 0px 0px 1px #4e97fd;
 }
 .woocommerce-info-top .message-container {
     text-align: center;

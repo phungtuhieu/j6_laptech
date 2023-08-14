@@ -3,6 +3,8 @@ package com.laptech.rest.admin;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -47,8 +49,30 @@ public class CartRestController {
 
     @Autowired
     DiscountPriceDAO disPriceDao;
-    @GetMapping("/user/{username}")
-    public ResponseEntity<List<Cart>> getList(@PathVariable("username") String username) {
+    // @GetMapping("/user/{username}")
+    // public ResponseEntity<List<Cart>> getList(@PathVariable("username") String username) {
+    //     if(!daoUser.existsById(username)) {
+    //         return ResponseEntity.notFound().build();
+    //     } 
+    //     Account account = daoUser.findById(username).get();
+    //     List<Cart> list = cartDao.findByUser(account);
+    //     for (Cart cart : list) {
+    //         System.out.println(cart.getQuantity());  
+    //     }
+    //     return ResponseEntity.ok(list) ;
+    // }
+    @DeleteMapping("/user/{username}")
+    public ResponseEntity<List<Cart>> deleteAllCart(@PathVariable("username") String username) {
+        if(!daoUser.existsById(username)) {
+            return ResponseEntity.notFound().build();
+        } 
+        cartDao.deleteAll();
+        return ResponseEntity.ok().build() ;
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<List<Cart>> getCartUsser(HttpServletRequest request) {
+        String username =request.getRemoteUser();
         if(!daoUser.existsById(username)) {
             return ResponseEntity.notFound().build();
         } 
@@ -57,15 +81,7 @@ public class CartRestController {
         for (Cart cart : list) {
             System.out.println(cart.getQuantity());  
         }
-        return ResponseEntity.ok(list) ;
-    }
-    @DeleteMapping("/user/{username}")
-    public ResponseEntity<List<Cart>> deleteAllCart(@PathVariable("username") String username) {
-        if(!daoUser.existsById(username)) {
-            return ResponseEntity.notFound().build();
-        } 
-        cartDao.deleteAll();
-        return ResponseEntity.ok().build() ;
+         return ResponseEntity.ok(list) ;
     }
 
     @GetMapping ("/price/{idProd}")
