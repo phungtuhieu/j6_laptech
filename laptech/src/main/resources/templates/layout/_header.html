@@ -37,19 +37,28 @@
               </div>
             </div>
           </div>
+
+          <!-- {{user.username}} -->
+          
+          <!-- <h1>{{user.username == null}}</h1>
+          [[${#request.remoteUser}]] -->
           <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" >
             <div class="right-phone-box">
               <!-- TH khi chưa đăng nhập  -->
               <div class="d-flex align-items-center me-5"  th:if="${#request.remoteUser == null}"  >
+              <!-- <div class="d-flex align-items-center me-5"  ng-if="user.username === null"  > -->
                 <a type="button" th:href="@{/account/login}" class="btn btn-dark t me-3 fw-bold" ng-cloak  style="background-color: #d33b33; color: #ffffff; ">
                   Đăng nhập
                 </a>
               </div>
 
+             
+
               <!-- TH khi chưa đăng nhập  -->
 
               <!-- TH khi đăng nhập thành công -->
               <div class="d-flex align-items-center pe-5 fw-bold"  th:if="${#request.remoteUser != null}" >
+              <!-- <div class="d-flex align-items-center pe-5 fw-bold"  ng:if="user.username !== null" > -->
               <div class="text-truncate me-3 " ng-cloak style="max-width: 170px; color: #ffffff;" ><a href="#" style="color: #ffffff;"  > {{user.fullname}} </a></div>
               <div class="dropdown">
                 <a class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#"
@@ -65,9 +74,9 @@
                   <li  ng-if="user.admin == true">
                     <a class="dropdown-item" th:href="@{/admin/index}">ADMIN</a>
                   </li>
-                  <li>
-                    <a class="dropdown-item" href="#" ng-if="user.fullname == null">Đăng nhập</a>
-                  </li>
+                  <!-- <li>
+                    <a class="dropdown-item" href="#" ng-if="user.username == null">Đăng nhập</a>
+                  </li> -->
                   <li>
                     <a class="dropdown-item" ng-click="logout()"  href="/logoff" >Đăng xuất</a>
                   </li>

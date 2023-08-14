@@ -14,8 +14,9 @@ app
     };
   })
   .controller("index", index)
-  .controller("listCategory", listCategory)
+
  
+
 
 function index($scope, $http, $interval,$rootScope,$location) {
   $scope.pageCount;
@@ -221,10 +222,6 @@ function index($scope, $http, $interval,$rootScope,$location) {
         console.log("Error_brand", error);
       });
   };
-
-  $scope.brandName = (name) => {
-    window.sessionStorage.setItem("brandName", name);
-  };
   $scope.load_all_discountPrice = () => {
     var url = `${host}/discountPriceAll`;
     $http({
@@ -258,6 +255,8 @@ function index($scope, $http, $interval,$rootScope,$location) {
 
  
   var currentUsername = document.querySelector("[data-user-remoteuser]").getAttribute("data-user-remoteuser");
+  // alert(currentUsername)
+
 
   if (currentUsername === "-1") {
     currentUsername = null;
@@ -267,7 +266,11 @@ function index($scope, $http, $interval,$rootScope,$location) {
       $http.get(`${host}/user/${currentUsername}`)
       .then(function (userResponse) {
         $scope.user = userResponse.data;
+        $rootScope.user1 = userResponse.data;
+        window.sessionStorage.setItem("user",JSON.stringify($scope.user));
+
         console.log("Dữ liệu user nè:", $scope.user);
+
         $scope.favoriteLikeUser($scope.user.username);
         $scope.cart.loadCart();
       })
@@ -708,26 +711,11 @@ function index($scope, $http, $interval,$rootScope,$location) {
     $scope.cartSelected = [];
    }
   }
- 
 
- $scope.getUs();
-  $scope.isIndex = $location.absUrl().includes('index');
-  if($scope.isIndex) {
-    $scope.notNull();
-    $scope.load_all_product();
-    $scope.load_all_image();
-    $scope.load_all_price();
-    $scope.load_all_brand();
-    $scope.load_all_discountPrice();
-  }
-
-}
-
-function listCategory($scope, $http) {
   $scope.load_all_productBrand = (name) => {
     var url;
     url = `${host}/product/brand/${name}`;
-    if (name == "xemTatCa") {
+    if (name == "xemTatCa" || name == "") {
       url = `${host}/productItems`;
     }
     $http({
@@ -735,18 +723,32 @@ function listCategory($scope, $http) {
       url: url,
     })
       .then((resp) => {
-        $scope.productBrands = resp.data;
+        $scope.items = resp.data;
         $scope.thuonghieu = name;
-        window.sessionStorage.removeItem("brandName");
+        // 
+        $scope.pageCount = Math.ceil($scope.items.length / 10);
+        $scope.updatePagination();
         console.log("Success1_productBrand", resp);
       })
       .catch((error) => {
         console.log("Error_productBrand", error);
       });
+      
   };
-  const id = window.sessionStorage.getItem("brandName");
-  $scope.load_all_productBrand(id);
+ 
 
+ $scope.getUs();
+  $scope.isIndex = $location.absUrl().includes('index');
+  $scope.isFavorite = $location.absUrl().includes('favorite');
+  // if($scope.isIndex || $scope.isFavorite ) {
+    $scope.notNull();
+    $scope.load_all_product();
+    $scope.load_all_image();
+    $scope.load_all_price();
+    $scope.load_all_brand();
+    $scope.load_all_discountPrice();
+  // }
 
 }
+
 
