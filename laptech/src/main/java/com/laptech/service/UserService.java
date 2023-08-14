@@ -111,7 +111,7 @@ public class UserService implements UserDetailsService {
         }else{
             String formatUsername = formatName(givenName);
             String password = Long.toHexString(System.currentTimeMillis());
-            String fullName = givenName;
+            String fullName = familyName+" "+givenName;
             account = new Account();
             account.setUsername(formatUsername);
             account.setPassword(password);
@@ -119,6 +119,7 @@ public class UserService implements UserDetailsService {
             account.setEmail(email);
             account.setAdmin(false);
             account.setActive(true);
+            account.setImage(picture);
             userDAO.save(account);
             account = dao.findById(account.getUsername()).get();
             String role = account.getAdmin() ? "ADMIN" : "USER";
