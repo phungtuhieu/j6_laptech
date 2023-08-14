@@ -4,9 +4,10 @@
     font-family: 'Quicksand', sans-serif;
   }
   .checkout-area  {
+    width: 95%;
+    margin: 0px auto;
     padding-top: 75px;
     padding-bottom: 35px;
-   
 }
 
 @keyframes expand {
@@ -67,7 +68,12 @@
     background: #fff;
     box-shadow: none;
 }
-
+.checkout-sidebar .card:hover img {
+    transform: none; 
+  }
+.checkout-sidebar .cart:hover {
+    
+}
 .form-group .form-label {
     margin-bottom: 8px;
     color: #212B36;

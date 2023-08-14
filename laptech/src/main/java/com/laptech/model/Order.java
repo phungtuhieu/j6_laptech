@@ -36,15 +36,15 @@ public class Order {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "completion_date")
-    Date completionDate = new Date();
+    Date completionDate ;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "delivery_date")
-    Date deliveryDate = new Date();
+    Date deliveryDate;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "cancellation_date")
-    Date cancellationDate = new Date();
+    Date cancellationDate;
 
     @Column(name = "cancellation_reason")
     String cancellationReason;

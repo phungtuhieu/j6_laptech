@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en"xmlns="http://www.thymeleaf.org" th:replace="~{/layout/layout.html :: dynamic(~{::title},~{:: main})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đơn hàng</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+
+    <main ng-controller="">
+        <div class="container cart-area ">
+            <div class="row">
+                <div class="col-lg-12">
+                    <form action="" class="form-cart mx-auto">
+                        <div class="cart-table-content">
+                            <div class="table-responsive table-content " style="position: relative;">
+                                <div class=" loading-page"  ng-if="isLoading" ng-cloak>
+                                    <div class="spinner-border text-warning" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
+                                <table class="table mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="width-thumbnail">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" ng-model="checkAll" ng-click="selectAll()" id="flexCheckDefault">
+                                                    <label class="form-check-label" for="flexCheckDefault">
+                                                    </label>
+                                                </div>
+                                            </th>
+                                            <th class="width-thumbnail">Sản phẩm</th>
+                                            <th class="width-name"></th>
+                                            <th class="width-price"> Giá (VND)</th>
+                                            <th class="width-quantity">Số lượng</th>
+                                            <th class="">Tạm tính  (VND)</th>
+                                            <th class="width-remove"></th>
+                                        </tr>
+                                       
+                                    </thead>
+                                    <tbody>
+                                       
+                                        <tr ng-repeat="item in cart.items" ng-cloak>
+                                            <td  class="product-thumbnail">
+                                             
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox"  ng-checked="statusChecked(item)" ng-model="cartSelected" ng-click="toggleSelection(item)"  id="prod{{item.product.id}}">
+                                                    <label class="form-check-label" for="prod{{item.product.id}}">
+                                                    </label>
+                                                </div>
+                                            </td>
+                                            <td  class="product-thumbnail">
+                                                <a href="product-details.html" class="">
+                                                    <img ng-src="{{urlImg(item.img)}}" alt="">
+                                                </a>
+                                            </td>
+                                            <td class="product-name">	
+                                                <h5>
+                                                    <a href="product-details.html">s</a>
+                                                </h5>
+                                            </td>
+                                            <td class="product-price"><span class="amount">s </span></td>
+                                            <td class="cart-quality">
+                                                <div class="product-quality">
+                                                    <input class="cart-plus-minus-box input-text qty text"  ng-change=" cart.updateToCart(item.product.id,item.quantity)" type="number" ng-model="item.quantity" value="1">
+                                            </td>
+                                            <td class="product-price">
+                                                <span class="amount">s</span>
+                                            </td>
+                                            <td class="product-remove"><a  href="">Xoá</a></td>
+                                        </tr>
+    
+                                    </tbody>
+                                   
+                                </table>
+                             
+                                <div ng-cloak class="d-flex justify-content-center py-5">
+                                    <span> Giỏ hàng của bạn còn trống</span>
+                                 </div>
+                            </div>
+                            <div class="cart-shiping-update-wrapper">
+                                <div class="continure-clear-btn">
+                                    <div class="continure-btn">
+                                        <a th:href="@{/client/index}">Tiếp tục mua sắm</a>
+                                    </div>
+                                    <div class="clear-btn">
+                                        <a href="" ng-if="cart.items.length > 0" ><i class="fa-sharp fa-solid fa-xmark"></i> Xoá tất cả giỏ hàng</a>
+                                    </div>
+                                </div>
+                                <div class="update-price d-flex align-items-center">
+                                    <!-- <h5 class="mb-0">Tạm tính: 600.000 VND </h5> -->
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+               
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-md-12 col-12">
+                    <!-- <div class="coupon-wrap mb-40">
+                        <h4>Mã giảm giá </h4>
+                        <div class="coupon-content common-form-style">
+                            <p>Nhập mã giảm giá của bạn. </p>
+                            <div class="input-style coupon-content-mrg">
+                                <input type="text" placeholder="Mã giảm giá">
+                            </div>
+                            <div class="common-btn-style">
+                                <a class="common-btn-padding-2" href="#">Áp dụng</a>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+                <div class="col-lg-6 col-md-12 col-12">
+                    <div class="grand-total-wrap mb-40">
+                        <ul>
+                            <li>Số lượng sản phẩm:  <h4>x</h4> 
+                            </li>
+                          
+                        </ul>
+                        <div class="grand-total">
+                            <h4>Tổng cộng <span>x VND</span></h4>
+                        </div>
+                        <div class="grand-total-btn">
+                            <!-- th:href="@{/client/cart/checkout}" -->
+                            <a  >Tiến hành đặt hàng</a>
+                        </div>
+                    </div>
+            </div>
+            </div>  
+        </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+</body>
+</html>

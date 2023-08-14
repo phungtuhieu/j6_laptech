@@ -15,4 +15,8 @@ public class CartCtrl {
     public String checkout (Model model) {
         return "checkout";
     }
+    @RequestMapping("/orders-user")
+    public String ordersUser (Model model) {
+        return "orders-user";
+    }
 }

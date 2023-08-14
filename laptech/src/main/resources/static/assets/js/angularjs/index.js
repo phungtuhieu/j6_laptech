@@ -269,6 +269,7 @@ function index($scope, $http, $interval,$rootScope,$location) {
         $scope.user = userResponse.data;
         console.log("Dữ liệu user nè:", $scope.user);
         $scope.favoriteLikeUser($scope.user.username);
+        window.sessionStorage.setItem("user",JSON.stringify($scope.user));
         $scope.cart.loadCart();
       })
       .catch(function (error) {
@@ -488,7 +489,8 @@ function index($scope, $http, $interval,$rootScope,$location) {
       if(currentUsername !== null) {
         $http.delete(`${host}/cart/${id}`).then(resp => {
           index = this.items.findIndex(item => item.id == id);
-          this.items.splice(index,1);
+          item = this.items.splice(index,1);
+          $scope.toggleSelection(item[0]);
           $rootScope.$emit('countChanged', this.count);
            window.sessionStorage.setItem('countCart',this.count);
         }).catch(err => {
@@ -496,7 +498,8 @@ function index($scope, $http, $interval,$rootScope,$location) {
         })
       } else  {
         index = this.items.findIndex(item => item.product.id == id);
-        this.items.splice(index,1);
+        item = this.items.splice(index,1);
+        $scope.toggleSelection(item[0]);
         this.saveToLocalStorage();
       }
     
@@ -521,7 +524,7 @@ function index($scope, $http, $interval,$rootScope,$location) {
                 'Tất cả sản phẩm đã được xóa khỏi giỏ hàng.',
                 'success'
               )
-
+              $scope.cartSelected = []
               this.items= [];
               $rootScope.$emit('countChanged', this.count);
                window.sessionStorage.setItem('countCart',this.count);
@@ -529,6 +532,7 @@ function index($scope, $http, $interval,$rootScope,$location) {
               console.log("err-clear-cart-all",err);
             })
         } else {
+          $scope.cartSelected = []
           this.items= [];
           this.saveToLocalStorage();
           $scope.$applyAsync();
@@ -684,7 +688,13 @@ function index($scope, $http, $interval,$rootScope,$location) {
   $scope.statusChecked = (item) => {
     return $scope.cartSelected.indexOf(item) > -1;
   }
+  $scope.amoutItemSelected = () => {
+    return am = $scope.cartSelected.map(item => item.quantity * item.price).reduce((total,price) => total += price,0);
+  }
 
+  $scope.countItemSelected = () => {
+    return am = $scope.cartSelected.map(item => item.quantity).reduce((total,qty) => total += qty,0);
+  }
   $scope.toggleSelection = (item) => {
     var idx = $scope.cartSelected.indexOf(item);
     if(idx > -1) {
@@ -709,17 +719,32 @@ function index($scope, $http, $interval,$rootScope,$location) {
    }
   }
  
-
+ $scope.checkOrder = () => {
+    if(currentUsername == null) {
+      window.location.href = "/account/login"
+    } else {
+      if($scope.cartSelected.length <= 0) {
+        Swal.fire(
+          'Chưa có sản phẩm nào!',
+          `Vui lòng chọn sản phẩm để thanh toán!`,
+          'warning'
+        )
+        return;
+      }
+      window.sessionStorage.setItem("user",JSON.stringify( $scope.user));
+      window.sessionStorage.setItem("arrCartSelected",JSON.stringify( $scope.cartSelected));
+      window.location.href = "/client/cart/checkout"
+    }
+ }
  $scope.getUs();
   $scope.isIndex = $location.absUrl().includes('index');
-  if($scope.isIndex) {
+  $scope.isCategory= $location.absUrl().includes('ListCategory');
     $scope.notNull();
     $scope.load_all_product();
     $scope.load_all_image();
     $scope.load_all_price();
     $scope.load_all_brand();
     $scope.load_all_discountPrice();
-  }
 
 }
 

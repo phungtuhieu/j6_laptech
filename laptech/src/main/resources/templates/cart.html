@@ -31,7 +31,7 @@
                                                 </label>
                                             </div>
                                         </th>
-                                        <th class="width-thumbnail">Sản ph  ẩm</th>
+                                        <th class="width-thumbnail">Sản phẩm</th>
                                         <th class="width-name"></th>
                                         <th class="width-price"> Giá (VND)</th>
                                         <th class="width-quantity">Số lượng</th>
@@ -116,16 +116,16 @@
             <div class="col-lg-6 col-md-12 col-12">
                 <div class="grand-total-wrap mb-40">
                     <ul>
-                        <!-- <li>Tạm tính <h4>600.000 VND</h4> 
-                        </li> -->
-                        <!-- <li>Shipping <h4><span>Flat rate:</span>$5.00</h4>
-                        </li> -->
+                        <li>Số lượng sản phẩm:  <h4>{{countItemSelected()}}</h4> 
+                        </li>
+                      
                     </ul>
                     <div class="grand-total">
-                        <h4>Tổng cộng <span>{{cart.amount | currency:"":0}} VND</span></h4>
+                        <h4>Tổng cộng <span>{{amoutItemSelected() | currency:"":0}} VND</span></h4>
                     </div>
                     <div class="grand-total-btn">
-                        <a th:href="@{/client/cart/checkout}">Đặt hàng</a>
+                        <!-- th:href="@{/client/cart/checkout}" -->
+                        <a  ng-click="checkOrder()">Tiến hành đặt hàng</a>
                     </div>
                 </div>
         </div>

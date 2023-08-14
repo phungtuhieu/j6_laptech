@@ -140,11 +140,15 @@ public class CartRestController {
     @DeleteMapping("{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         if(!cartDao.existsById(id)) {
-             System.out.println("ssss");
             return ResponseEntity.notFound().build();
-           
         }
-       cartDao.deleteById(id);
+        cartDao.deleteById(id);
+        return ResponseEntity.ok().build() ;
+    }
+
+    @PostMapping("/delete-by-payment")
+    public ResponseEntity<Void> delAllByPayment(@RequestBody List<Cart> carts) {
+        cartDao.deleteAll(carts);
         return ResponseEntity.ok().build() ;
     }
    

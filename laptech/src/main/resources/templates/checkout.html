@@ -10,11 +10,11 @@
 </head>
 <body>
 
-  <div class="wrapp" ng-controller="checkout">
-    <div class="container checkout-area ">
+  <div class="wrapp " ng-controller="checkout">
+    <div class=" checkout-area">
         <div class="row">
-            <div class="woocommerce-info-top col-lg-12">
-                <div class="message-container">
+            <div class="woocommerce-info-top col-lg-12 text-center">
+                <!-- <div class="message-container">
                     Bạn đã có tài khoản ?
                     <a href="">Ấn vào để đăng nhập</a>
                 </div>
@@ -23,14 +23,15 @@
                     <a  data-bs-toggle="collapse" href="#coupon" role="button" aria-expanded="false" aria-controls="coupon">
                         Ấn vào đây để nhập mã
                     </a>
-                </div>
+                </div> -->
+                <h3 style="color:#3e97fd ;font-weight: 800;">THANH TOÁN</h3>
             </div>
             <div class="collapse" id="coupon">
                 <div class="card card-body">
                   Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
                 </div>
               </div>
-              <form action=""class="form-checkout">
+              <form class="form-checkout">
                 <div class="row">
                     <div class="customer-details col-lg-7">
                         <div class="card">
@@ -38,25 +39,29 @@
                                     <h3 class="checkout-title">THÔNG TIN THANH TOÁN</h3>
                                     <div class="mb-4 col-lg-12 form-group">
                                         <label for="" class="form-label">Họ và tên *</label>
-                                        <input type="text" class="form-control" id="">
+                                        <input type="text" class="form-control" ng-readonly="user.fullname != null" ng-model="user.fullname" id="">
+                                        <span ng-show="messageError.fullname != null" ng-cloak class="small text-danger">{{messageError.fullname }}</span>
                                     </div>
                                     <div class="mb-4 col-lg-12 form-group">
                                         <label for="" class="form-label">Email</label>
-                                        <input type="text" class="form-control" id="">
+                                        <input type="text" class="form-control" ng-readonly="user.email != null" ng-model="user.email" id="">
+                                        <span ng-show="messageError.email != null" ng-cloak class="small text-danger">{{messageError.email }}</span>
                                     </div>
                                     <div class="mb-4 col-lg-12 form-group">
                                         <label for="" class="form-label">Số điện thoại</label>
-                                        <input type="text" class="form-control" id="">
+                                        <input type="text" class="form-control" ng-readonly="user.phone != null" ng-model="user.phone" id="">
+                                        <span ng-show="messageError.phone != null" ng-cloak class="small text-danger">{{messageError.phone }}</span>
                                     </div>
                                     <div class="mb-4 col-lg-12 form-group">
                                         <label for="prod-desciption" class="form-label">Địa chỉ</label>
-                                        <textarea class="form-control" id="prod-desciption" rows="3"></textarea>
+                                        <textarea class="form-control" ng-model="user.address"  rows="3"></textarea>
+                                        <span ng-show="messageError.address != null" ng-cloak class="small text-danger">{{messageError.address }}</span>
                                     </div>
-                                    <h3 class="checkout-title">THÔNG TIN BỔ SUNG</h3>
+                                    <!-- <h3 class="checkout-title">THÔNG TIN BỔ SUNG</h3>
                                     <div class="mb-4 col-lg-12 form-group">
                                         <label for="prod-desciption" class="form-label">Ghi chú đơn hàng (tuỳ chọn)</label>
                                         <textarea class="form-control" id="prod-desciption" rows="3" placeholder="Ghi chú về đơn hàng, ví dụ: thời gian hay chỉ dẫn địa điểm giao hàng chi tiết hơn."></textarea>
-                                    </div>
+                                    </div> -->
                             
                             </div>
                         </div>
@@ -74,18 +79,18 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr class="row-table">
-                                                <td scope="row" class="">Laptop DELL Vostro 3520 V5I3614W1 (i3-1215U | 8GB RAM | 256GB SSD | Intel UHD Graphics | 15.6 Inch FullHD | Win 11+Office)  × 1</td>
-                                                <td class="pe-0">22.000.000đ</td>
+                                            <tr class="row-table" ng-repeat="cart in carts">
+                                                <td scope="row" class="">{{cart.product.name}}  × {{cart.quantity}}</td>
+                                                <td class="pe-0">{{(cart.price * cart.quantity )| currency:"":0 }} VND</td>
                                             </tr>
                                            
                                         </tbody>
                                         <tfoot>
                                             <tr class="cart-subtotal">
-                                                <th class="ps-0">Tạm tính</th>
+                                                <th class="ps-0">Tổng số lượng sản phấm:</th>
                                                 <td class="pe-0">
                                                     <span class="woocommerce-Price-amount amount">
-                                                        <bdi>22.539.000&nbsp; <span class="woocommerce-Price-currencySymbol">₫</span></bdi>
+                                                        <bdi><strong>{{countItemSelected()}}</strong> &nbsp; <span class="woocommerce-Price-currencySymbol"></span></bdi>
                                                     </span>
                                                 </td>
                                             </tr>
@@ -93,7 +98,9 @@
                                                 <th class="ps-0">Tổng</th>
                                                 <td class="pe-0">
                                                     <strong>
-                                                        <span class="woocommerce-Price-amount amount"><bdi>22.539.000&nbsp;<span class="woocommerce-Price-currencySymbol">₫</span></bdi>
+                                                        <span class="woocommerce-Price-amount amount " style="font-size: 18px;">
+                                                            <bdi>{{amoutItemSelected()  | currency:"":0}}&nbsp;<span class="woocommerce-Price-currencySymbol">VND</span>
+                                                            </bdi>
                                                     </span></strong> 
                                                 </td>
                                             </tr>
@@ -105,7 +112,7 @@
                                     <ul class="list-payment-method mb-4">
                                         <li class="wc_payment_method">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="payment-method" ng-model="paymentSelect"  ng-value="false" id="payment-method1">
+                                                <input class="form-check-input" type="radio" name="payment-method" ng-model="paymentMethod"  ng-value="false" id="payment-method1">
                                                 <label class="form-check-label" for="payment-method1"  >
                                                   Thanh toán khi nhận hàng
                                                 </label>
@@ -113,7 +120,7 @@
                                         </li>
                                         <li class="wc_payment_method">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="payment-method" ng-model="paymentSelect"  ng-value="true" id="payment-method2">
+                                                <input class="form-check-input" type="radio" name="payment-method" ng-model="paymentMethod"  ng-value="true" id="payment-method2">
                                                 <label class="form-check-label" for="payment-method2">
                                                   Thanh toán trực tuyến (VNPay)
                                                 </label>
@@ -121,7 +128,7 @@
                                               
                                         </li>
                                     </ul>
-                                    <div class="collapse my-3" ng-class="{'show' : paymentSelect}" id="onlinePayment">
+                                    <div class="collapse my-3" ng-class="{'show' : paymentMethod}" id="onlinePayment">
                                         <div class="card card-body">
                                             <div class="row mx-auto">
                                             <div class="form-check col-3 mx-1">
@@ -154,7 +161,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <button  class="btn btn-order">Thanh toán</button>
+                                <button ng-click="purchase()" class="btn btn-order">Đặt hàng</button>
                                 <div class="woocommerce-privacy-policy-text mt-3"><p>Bằng cách nhấp vào Đặt hàng, bạn đồng ý với 
                                     <a href="" class="woocommerce-terms-and-conditions-link" target="_blank">điều khoản và điều kiện</a> và <a href="" class="woocommerce-privacy-policy-link" target="_blank">chính sách riêng tư</a> của chúng tôi.</p>
                                 </div>
@@ -163,7 +170,7 @@
                     </div>
             </div>
         </form>
-         
+     
         </div>
     </div>
 </div>
