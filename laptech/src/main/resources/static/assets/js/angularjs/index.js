@@ -126,6 +126,20 @@ function index($scope, $http, $interval,$rootScope,$location) {
       });
   };
 
+  // $scope.load_all_productBrand = (name) => {
+  //   var url = `${host}/product/brand/${name}`;
+  //   $http({
+  //     method: "GET",
+  //     url: url,
+  //   })
+  //     .then((resp) => {
+  //       $scope.productBrands = resp.data;
+  //       console.log("Success1_productBrand", resp);
+  //     })
+  //     .catch((error) => {
+  //       console.log("Error_productBrand", error);
+  //     });
+  // };
   $scope.load_all_productBrand = (name) => {
     if(name == 'xemTatCa'){
       var url = `${host}/productItems`;
@@ -146,7 +160,6 @@ function index($scope, $http, $interval,$rootScope,$location) {
         console.log("Error_productBrand", error);
       });
   };
-
   $scope.imageOne = (productId) => {
     var url = `${host}/img/${productId}`;
     $http({

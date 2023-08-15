@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -53,7 +54,8 @@ public class ProductRestController {
     @GetMapping
     public ResponseEntity<Page<Product>> getAll(@RequestParam("pageNo") Optional<Integer> pageNo,
     @RequestParam("keyword") Optional<String> keyword){
-        Pageable pageable = PageRequest.of(pageNo.orElse(0), 5);
+        Sort sort  = Sort.by(Sort.Order.desc("createDate"));
+        Pageable pageable = PageRequest.of(pageNo.orElse(0), 5,sort);
          Page<Product> page = null;
         if(keyword.isPresent()) {
              page = dao.findByName(keyword.orElse(""),pageable);
