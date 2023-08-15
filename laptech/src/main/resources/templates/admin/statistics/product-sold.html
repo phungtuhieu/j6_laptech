@@ -117,18 +117,30 @@
                         <span class="pagination-info me-2">{{begin / 5 + 1}} of <span>{{pageCount}}</span></span>
                         <nav aria-label="Page navigation ">
                             <ul class="pagination mb-0">
-                                <li class="page-item"><a class="page-link" ng-click="first()" href="#"><i
+                                <li class="page-item"><a class="page-link" ng-click="first()" href=""><i
                                             class="fa-solid fa-backward-step"></i></a></li>
-                                <li class="page-item"><a class="page-link" ng-click="prev()" href="#"><i
+                                <li class="page-item"><a class="page-link" ng-click="prev()" href=""><i
                                             class="fa-solid fa-backward"></i></a></li>
-                                <li class="page-item"><a class="page-link" ng-click="next()" href="#"><i
+                                <li class="page-item"><a class="page-link" ng-click="next()" href=""><i
                                             class="fa-solid fa-forward"></i></a></li>
-                                <li class="page-item"><a class="page-link" ng-click="last()" href="#"><i
+                                <li class="page-item"><a class="page-link" ng-click="last()" href=""><i
                                             class="fa-solid fa-forward-step"></i></a></li>
                             </ul>
                         </nav>
                     </div>
                 </div>
+            </div>
+            <div class="mt-5" >
+                <div class="d-flex justify-content-between form-group">
+                    <h1 class="text-uppercase text-monospace fw-bold p-2 m-2">Thống kê đã bán [{{selectedYear}}]</h1>
+                    <select class="w-25 m-3 form-select" ng-model="selectedYear" ng-change="load_chart(selectedYear)">
+                        <!-- <option value="" ng-selected="!selectedYear" disabled>Chọn năm</option> -->
+                        <option ng-repeat="y in years" value="{{y}}">{{y}}</option>
+                    </select>
+                    
+                    
+                </div>
+                <canvas id="myChart"></canvas>
             </div>
     </div>
 </body>

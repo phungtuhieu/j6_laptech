@@ -12,7 +12,9 @@ import org.springframework.data.repository.query.Param;
 
 import com.laptech.model.Product;
 import com.laptech.model.ReportFavoriteProduct;
+import com.laptech.model.ReportFavoriteChart;
 import com.laptech.model.ReportProductSold;
+import com.laptech.model.ReportProductSoldChart;
 
 public interface ProductDAO extends JpaRepository<Product,Long>{
 
@@ -58,6 +60,29 @@ public interface ProductDAO extends JpaRepository<Product,Long>{
             + " ORDER BY COUNT(f) DESC")
     List<ReportFavoriteProduct> getFavoriteDate(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
+
+        @Query("SELECT new com.laptech.model.ReportFavoriteChart(COUNT(*), MONTH(f.likedDate))"
+        + " FROM Favorite f "
+        + " WHERE YEAR(f.likedDate) = :year"
+        + " GROUP BY MONTH(f.likedDate)")
+    List<ReportFavoriteChart> getFavoriteChart(@Param("year") Integer year);
+
+
+        @Query("SELECT YEAR(f.likedDate) FROM Favorite f GROUP BY YEAR(f.likedDate) ORDER BY YEAR(f.likedDate) DESC")
+        List<Integer> getFavoriteAllYear();
+
+
+        @Query("SELECT new com.laptech.model.ReportProductSoldChart(COUNT(*), MONTH(od.order.orderDate))"
+        + " FROM OrderDetail od "
+        + " WHERE YEAR(od.order.orderDate) = :year"
+        + " GROUP BY MONTH(od.order.orderDate)")
+    List<ReportProductSoldChart> getProductSoldChart(@Param("year") Integer year);
+
+    @Query("SELECT YEAR(od.order.orderDate)"
+        + " FROM OrderDetail od "
+        + " GROUP BY YEAR(od.order.orderDate) ORDER BY YEAR(od.order.orderDate)  ")
+    List<Integer> getAllProductSoldYear();
+        
 
 
     @Query("SELECT new com.laptech.model.ReportProductSold(p.name,o.orderDate , SUM(od.quantity), SUM(od.quantity * price.price)) "
