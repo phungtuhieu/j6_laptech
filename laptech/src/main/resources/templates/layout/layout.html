@@ -63,6 +63,9 @@
     <th:block th:if="${#ctx.springRequestContext.requestUri.contains('sign-up')}">
         <script th:src="@{/assets/js/angularjs/sign-up.js}"></script>
     </th:block>
+    <th:block th:if="${#ctx.springRequestContext.requestUri.contains('profile')}">
+        <script th:src="@{/assets/js/angularjs/profile.js}"></script>
+    </th:block>
 
     <th:block th:include="layout/library/script-links.html"></th:block>
 

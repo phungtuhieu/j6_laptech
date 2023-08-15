@@ -3,12 +3,16 @@ package com.laptech.controller;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.laptech.model.Account;
 import com.laptech.rest.AccountRestController;
+import com.laptech.service.RegistrationService;
 
 @Controller
 @RequestMapping("/account")
@@ -19,6 +23,13 @@ public class AccountController {
 
     @Autowired
     AccountRestController a;
+
+    private RegistrationService registrationService;
+
+    @Autowired
+    public AccountController(RegistrationService registrationService) {
+        this.registrationService = registrationService;
+    }
 
     @RequestMapping("/login")
     public String index(Model model) {
@@ -66,6 +77,14 @@ public class AccountController {
     @RequestMapping("/sign-up")
     public String signUp(Model model) {
         return "layout/sign-up";
+    }
+
+    @PostMapping("/sign-up")
+    public ResponseEntity<String> signUp(@RequestBody Account user) {
+        // Xử lý việc đăng ký và lưu thông tin người dùng vào cơ sở dữ liệu
+        registrationService.registerUser(user);
+
+        return ResponseEntity.ok("Đăng ký thành công! Vui lòng kiểm tra email để nhận mã xác minh.");
     }
 
     @RequestMapping("/change-password")

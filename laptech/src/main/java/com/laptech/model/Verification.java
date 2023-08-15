@@ -1,6 +1,5 @@
 package com.laptech.model;
 
-
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -16,6 +15,7 @@ import javax.persistence.TemporalType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 //   id BIGINT IDENTITY(1,1) NOT NULL,
 //     user_id NVARCHAR(50) NOT NULL,
 //     code NVARCHAR(8) NOT NULL,
@@ -34,14 +34,17 @@ public class Verification {
     Long id;
     String code;
     @Temporal(TemporalType.TIMESTAMP)
-    @Column( name = "create_at")
+    @Column(name = "create_at")
     Date createAt = new Date();
     @Temporal(TemporalType.TIMESTAMP)
-    @Column( name = "expiration_at")
+    @Column(name = "expiration_at")
     Date expirationAt = new Date();
     Boolean status;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     Account user;
+
+    public void setVerificationCode(String verificationCode) {
+    }
 }
