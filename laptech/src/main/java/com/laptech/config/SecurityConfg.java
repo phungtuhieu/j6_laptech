@@ -31,8 +31,8 @@ public class SecurityConfg extends WebSecurityConfigurerAdapter {
                 http.authorizeHttpRequests(requests -> requests
                                 .antMatchers("/admin/**/**").hasRole("ADMIN")
                                 //  .antMatchers("/client/favorite").hasRole("USER")
-                                .antMatchers("/client/index").permitAll());
-                // .antMatchers("/client/index").authenticated());
+                                 .antMatchers("/client/index").permitAll()
+                                 .antMatchers("/client/cart/orders-user","/client/cart/orders-user/details","/client/cart/checkout").authenticated());
                 http.exceptionHandling(handling -> handling
                                 .accessDeniedPage("/account/access/denied-errorPage"));
 
