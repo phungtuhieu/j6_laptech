@@ -155,12 +155,12 @@
                                                 <div class="mb-4 col-lg-3 form-group">
                                                     <label for="" class="form-label">Giá </label>
                                                     <input type="text" class="form-control" placeholder="Nhập giá (VND)" ng-model="p.price" id="">
-                                                    <span ng-show="messageError.price != null" ng-cloak class="small text-danger">{{messageError.price }}</span>
+                                                    
                                                 </div>
                                                 <div class="mb-4 col-lg-3 form-group">
                                                     <label for="" class="form-label">Ngày áp dụng</label>
                                                     <input type="date"   class="form-control"  ng-model="p.startDate"  id="">
-                                                    <span ng-show="messageError.createDate != null" ng-cloak class="small text-danger">{{messageError.createDate }}</span>
+                                                    
                                                 </div>
                                                 <input type="date"   class="form-control d-none"  ng-model="p.endDate"  id="">
                                                 <!-- <div class="mb-4 col-lg-3 form-group">
@@ -173,6 +173,8 @@
                                                 </div>
                                                 
                                             </div>
+                                            <span ng-show="messageError.price != null" ng-cloak class="small text-danger">{{messageError.price }}</span>
+                                            <span ng-show="messageError.createDate != null" ng-cloak class="small text-danger" style="margin-left: 100px;">{{messageError.createDate }}</span>
                                         </div>
                                         <div class="mb-4 col-lg-12" style="padding-left:  12px;" ng-if="isEdit && priceForms.length < 1">
                                             <a href=""class="btn btn-outline-secondary me-2"  ng-click="addPriceForm()" >

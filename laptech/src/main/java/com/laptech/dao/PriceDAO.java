@@ -17,10 +17,10 @@ import com.laptech.model.Product;
 public interface PriceDAO extends JpaRepository<Price,Long> {
     List<Price> findByProduct(Product product);
 
-    @Query(" SELECT p FROM Price p WHERE p.product  = ?1 AND CURRENT_TIMESTAMP  BETWEEN p.startDate AND p.endDate")
+    @Query(" SELECT p FROM Price p WHERE p.product  = ?1 AND CURRENT_TIMESTAMP  BETWEEN p.startDate  AND ISNULL(p.endDate,CURRENT_TIMESTAMP)")
     Price findByProductAndDateNowBetween(Product product);
 
-    @Query("SELECT pr FROM Price pr WHERE pr.product.status = 1 AND CURRENT_TIMESTAMP BETWEEN pr.startDate AND pr.endDate")
+    @Query("SELECT pr FROM Price pr WHERE pr.product.status = 1 AND CURRENT_TIMESTAMP BETWEEN pr.startDate AND ISNULL(pr.endDate,CURRENT_TIMESTAMP)")
     List<Price> findByPriceInDate();
 
 
@@ -45,7 +45,7 @@ public interface PriceDAO extends JpaRepository<Price,Long> {
         @Query("SELECT pr FROM Price pr " +
         "WHERE pr.product.status = 1 " +
         "AND (pr.product.name LIKE CONCAT('%', ?1, '%') OR pr.product.brand.name = ?1) " + 
-        "AND CURRENT_TIMESTAMP BETWEEN pr.startDate AND pr.endDate " +
+        "AND CURRENT_TIMESTAMP BETWEEN pr.startDate AND ISNULL(pr.endDate,CURRENT_TIMESTAMP)" +
         "AND pr.product.id NOT IN " +
         "(SELECT p.id FROM Product p JOIN p.prices pr JOIN pr.discountPrices dp " +
         "WHERE CURRENT_TIMESTAMP BETWEEN dp.discount.startDate AND dp.discount.endDate)")
@@ -67,12 +67,12 @@ public interface PriceDAO extends JpaRepository<Price,Long> {
         @Query("SELECT pr FROM Price pr " +
         "JOIN pr.product p " +
         "WHERE p.status = 1 " +
-        "AND CURRENT_TIMESTAMP BETWEEN pr.startDate AND pr.endDate " +
+        "AND CURRENT_TIMESTAMP BETWEEN pr.startDate AND  ISNULL(pr.endDate,CURRENT_TIMESTAMP) " +
         "AND p.id NOT IN (" +
         "   SELECT p.id FROM Price pr " +
         "   JOIN pr.product p " +
         "   WHERE p.status = 1 " +
-        "   AND CURRENT_TIMESTAMP BETWEEN pr.startDate AND pr.endDate " +
+        "   AND CURRENT_TIMESTAMP BETWEEN pr.startDate AND ISNULL(pr.endDate,CURRENT_TIMESTAMP) " +
         "   AND p.id IN (" +
         "       SELECT p.id FROM Product p " +
         "       JOIN p.prices pr " +
@@ -93,12 +93,12 @@ public interface PriceDAO extends JpaRepository<Price,Long> {
         @Query("SELECT pr FROM Price pr " +
         "JOIN pr.product p " +
         "WHERE p.status = 1 AND (p.name LIKE CONCAT('%', ?2, '%') OR p.brand.name = ?2) " +
-        "AND CURRENT_TIMESTAMP BETWEEN pr.startDate AND pr.endDate " +
+        "AND CURRENT_TIMESTAMP BETWEEN pr.startDate AND  ISNULL(pr.endDate,CURRENT_TIMESTAMP)" +
         "AND p.id NOT IN (" +
         "   SELECT p.id FROM Price pr " +
         "   JOIN pr.product p " +
         "   WHERE p.status = 1 " +
-        "   AND CURRENT_TIMESTAMP BETWEEN pr.startDate AND pr.endDate " +
+        "   AND CURRENT_TIMESTAMP BETWEEN pr.startDate AND  ISNULL(pr.endDate,CURRENT_TIMESTAMP)" +
         "   AND p.id IN (" +
         "       SELECT p.id FROM Product p " +
         "       JOIN p.prices pr " +

@@ -28,14 +28,14 @@ public interface ProductDAO extends JpaRepository<Product,Long>{
     Optional<Product> findById(Long id);
 
     
-    @Query("SELECT p FROM Product p JOIN p.prices price WHERE p.status = 1 AND p.id = price.product AND CURRENT_TIMESTAMP BETWEEN price.startDate AND price.endDate")
+    @Query("SELECT p FROM Product p JOIN p.prices price WHERE p.status = 1 AND p.id = price.product AND CURRENT_TIMESTAMP BETWEEN price.startDate AND  ISNULL(price.endDate, CURRENT_TIMESTAMP)")
     List<Product> findByProductInDateAndStatus();
 
     
 
 
 
-    @Query("SELECT p FROM Product p JOIN p.prices pr WHERE p.status = 1 AND CURRENT_TIMESTAMP BETWEEN pr.startDate AND pr.endDate  AND p.brand.name LIKE %:name%")
+    @Query("SELECT p FROM Product p JOIN p.prices pr WHERE p.status = 1 AND CURRENT_TIMESTAMP BETWEEN pr.startDate AND  ISNULL(pr.endDate, CURRENT_TIMESTAMP)  AND p.brand.name LIKE %:name%")
     List<Product> findByProductBrandName(@Param("name") String name);
 
     

@@ -328,20 +328,20 @@ function form ($scope, $http,$location,$filter) {
         clearError('price');
       }
     }
-    var today = new Date();
-    today.setHours(0, 0, 0, 0);
-    
-    // Loại bỏ phần giờ, phút và giây từ ngày tạo
-    var createDate = new Date($scope.priceForms[0].startDate)
-    createDate.setHours(0,0,0,0)
-    // var formatDate = function(date, format) {
-    //   return $filter('date')(date, format);
-    // };
-    if (  createDate < today) {
-      setError('createDate', 'Vui lòng chọn ngày lớn hơn ngày hiện tại');
-    } else {
-      clearError('createDate');
-    }
+  
+      if(!$scope.isEdit) {
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+          var createDate = new Date($scope.priceForms[0].startDate)
+          createDate.setHours(0,0,0,0)
+        if (createDate < today) {
+          setError('createDate', 'Vui lòng chọn ngày lớn hơn ngày hiện tại');
+        } else {
+          clearError('createDate');
+        }
+  
+      }
+     
       
     return isError ;
   }
@@ -583,13 +583,16 @@ function form ($scope, $http,$location,$filter) {
     if($scope.isEdit) {
       var price = {};
       price = $scope.listPriceProduct.find(price => price.endDate == null);
+      if(price == null) {
+        price = $scope.listPriceProduct[$scope.listPriceProduct.length - 1];
+      }
      if(new Date(listPrice[0].startDate) <=  new Date(price.startDate)) {
       alert('Sai') 
       return;
      }
      console.log(price) 
      if(price != null) {
-      price.endDate = new Date(listPrice[0].startDate);
+        price.endDate = new Date(listPrice[0].startDate);
         $http.put(getUrl(`/product/price/${price.id}`),price).then(resp => {
           console.log("Giá-", resp.data);
         }).catch(err => {
