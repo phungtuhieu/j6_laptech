@@ -11,7 +11,8 @@
 
   <!-- Main -->
   <main class=" mb-5 "  ng-controller="index">
-   
+    
+    <!-- {{user.username}} -->
   
     <!-- Start Slider -->
     <div id="slides-shop" class="cover-slides" >
@@ -450,10 +451,10 @@
         <div class="col-lg-12 p-3 mb-1 rounded-top " style=" background-color: #ffffff; ">
           <div class="row align-items-center">
             <div class="col-lg-6">
-              <div type="title" color="textTitle" class="title css-1x5ixzd">DÀNH CHO BẠN</div>
+              <div type="title" color="textTitle" class="title css-1x5ixzd">{{thuonghieu == 'xemTatCa' ? 'DÀNH CHO BẠN' : thuonghieu}}</div>
             </div>
             <div class="col-lg-6 d-flex justify-content-end">
-              <div><a href="/client/ListCategory" ng-click="brandName('xemTatCa')"> Xem tất cả <i class="fas fa-angle-right"></i></a></div>
+              <div><a href="#" ng-click="load_all_productBrand('xemTatCa')"> Xem tất cả <i class="fas fa-angle-right"></i></a></div>
             </div>
           </div>
         </div>

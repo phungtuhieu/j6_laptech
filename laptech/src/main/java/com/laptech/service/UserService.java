@@ -1,5 +1,6 @@
 package com.laptech.service;
 
+import java.text.Normalizer;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,6 +21,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
+import java.text.Normalizer;
+import java.util.regex.Pattern;
 
 import com.laptech.dao.UserDAO;
 import com.laptech.model.Account;
@@ -60,19 +63,77 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    @Autowired
+    UserDAO userDAO;
+
+    public static String formatName(String name) {
+        String normalized = Normalizer.normalize(name, Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        String formatted = pattern.matcher(normalized).replaceAll("").replaceAll(" ", "").toLowerCase();
+        return formatted;
+    }
+
+
+
+
+
+
+
+
     public void loginFormOauth2(OAuth2AuthenticationToken oauth2) {
         String name = oauth2.getPrincipal().getAttribute("name");
+        String picture = oauth2.getPrincipal().getAttribute("picture");
+        String givenName = oauth2.getPrincipal().getAttribute("given_name");
+        String familyName = oauth2.getPrincipal().getAttribute("family_name");
         String email = oauth2.getPrincipal().getAttribute("email");
-        String password = Long.toHexString(System.currentTimeMillis());
+        String sub = oauth2.getPrincipal().getAttribute("sub");
+        String provider = oauth2.getAuthorizedClientRegistrationId();
 
-        UserDetails user = User.withUsername(email)
-                .password(getPasswordEncoder().encode(password))
-                .roles("GUEST").build();
+        System.out.println("Google - Email: " + email);
+        System.out.println("Google - Name: " + name);
+        System.out.println("Google - Picture: " + picture);
+        System.out.println("Google - givenName: " + givenName);
+        System.out.println("Google - familyName: " + familyName);
+        System.out.println("Google - sub: " + sub);
+        System.out.println("Google - provider: " + provider);
 
-        Authentication auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+        Account account;
+                account = dao.findByEmail(email);
 
-        SecurityContextHolder.getContext().setAuthentication(auth);
+        if(account != null){
+            String password = account.getPassword();
+            String role = account.getAdmin() ? "ADMIN" : "USER";
+            UserDetails user = User.withUsername(account.getUsername())
+                    .password(getPasswordEncoder().encode(password))
+                    .roles(role).build();
+            Authentication auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(auth);
+        }else{
+            String formatUsername = formatName(givenName);
+            String password = Long.toHexString(System.currentTimeMillis());
+            String fullName = givenName;
+            account = new Account();
+            account.setUsername(formatUsername);
+            account.setPassword(password);
+            account.setFullname(fullName);
+            account.setEmail(email);
+            account.setAdmin(false);
+            account.setActive(true);
+            userDAO.save(account);
+            account = dao.findById(account.getUsername()).get();
+            String role = account.getAdmin() ? "ADMIN" : "USER";
+            UserDetails user = User.withUsername(account.getUsername())
+                    .password(getPasswordEncoder().encode(account.getPassword()))
+                    .roles(role).build();
+            Authentication auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(auth);
+             System.out.println("TẠO THÀNH CÔNG: "+formatUsername);
 
+        }
+
+
+        
+       
     }
 
 }
