@@ -103,22 +103,18 @@ function checkout($scope,$http) {
       isError = validationForm();
       if(!isError) {
         if($scope.paymentMethod === PAYMENT_METHOD.COD) {
-
+          ord.paymentMethod = PAYMENT_METHOD.COD;
         } else {
-            
+          ord.paymentMethod = PAYMENT_METHOD.ONLINE;
         }
         var url = `${host}/order`
         $http.post(url, ord).then(resp => {
-          Swal.fire(
-            'Đã thanh toán thành công!',
-            `Vui lòng chọn sản phẩm để thanh toán!`,
-            'success'
-          )
           $http.post(`${host}/cart/delete-by-payment`,angular.copy($scope.carts)).then(resp => {
             console.log("success-delete-cart",resp);
+            window.sessionStorage.setItem("isPaid",JSON.stringify(true));
             window.sessionStorage.removeItem("arrCartSelected");
             $scope.carts = [];
-            
+            window.location.href="/client/cart/orders-user"
           }).catch(err => {  
             console.log("err-delete-cart",err);
           })

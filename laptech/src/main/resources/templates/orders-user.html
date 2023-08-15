@@ -1,138 +1,367 @@
 <!DOCTYPE html>
-<html lang="en"xmlns="http://www.thymeleaf.org" th:replace="~{/layout/layout.html :: dynamic(~{::title},~{:: main})}">
+<html lang="en" xmlns="http://www.thymeleaf.org" th:replace="~{/layout/layout.html :: dynamic(~{::title},~{:: main})}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đơn hàng</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Giỏ hàng</title>
+   
+ 
 </head>
-<body>
+<body> 
 
-    <main ng-controller="">
-        <div class="container cart-area ">
-            <div class="row">
-                <div class="col-lg-12">
-                    <form action="" class="form-cart mx-auto">
-                        <div class="cart-table-content">
-                            <div class="table-responsive table-content " style="position: relative;">
-                                <div class=" loading-page"  ng-if="isLoading" ng-cloak>
-                                    <div class="spinner-border text-warning" role="status">
-                                        <span class="visually-hidden">Loading...</span>
-                                    </div>
-                                </div>
-                                <table class="table mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th class="width-thumbnail">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" ng-model="checkAll" ng-click="selectAll()" id="flexCheckDefault">
-                                                    <label class="form-check-label" for="flexCheckDefault">
-                                                    </label>
-                                                </div>
-                                            </th>
-                                            <th class="width-thumbnail">Sản phẩm</th>
-                                            <th class="width-name"></th>
-                                            <th class="width-price"> Giá (VND)</th>
-                                            <th class="width-quantity">Số lượng</th>
-                                            <th class="">Tạm tính  (VND)</th>
-                                            <th class="width-remove"></th>
-                                        </tr>
-                                       
-                                    </thead>
-                                    <tbody>
-                                       
-                                        <tr ng-repeat="item in cart.items" ng-cloak>
-                                            <td  class="product-thumbnail">
-                                             
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox"  ng-checked="statusChecked(item)" ng-model="cartSelected" ng-click="toggleSelection(item)"  id="prod{{item.product.id}}">
-                                                    <label class="form-check-label" for="prod{{item.product.id}}">
-                                                    </label>
-                                                </div>
-                                            </td>
-                                            <td  class="product-thumbnail">
-                                                <a href="product-details.html" class="">
-                                                    <img ng-src="{{urlImg(item.img)}}" alt="">
-                                                </a>
-                                            </td>
-                                            <td class="product-name">	
-                                                <h5>
-                                                    <a href="product-details.html">s</a>
-                                                </h5>
-                                            </td>
-                                            <td class="product-price"><span class="amount">s </span></td>
-                                            <td class="cart-quality">
-                                                <div class="product-quality">
-                                                    <input class="cart-plus-minus-box input-text qty text"  ng-change=" cart.updateToCart(item.product.id,item.quantity)" type="number" ng-model="item.quantity" value="1">
-                                            </td>
-                                            <td class="product-price">
-                                                <span class="amount">s</span>
-                                            </td>
-                                            <td class="product-remove"><a  href="">Xoá</a></td>
-                                        </tr>
-    
-                                    </tbody>
-                                   
-                                </table>
-                             
-                                <div ng-cloak class="d-flex justify-content-center py-5">
-                                    <span> Giỏ hàng của bạn còn trống</span>
-                                 </div>
+    <main class="d-flex justify-content-center" ng-controller="ordersUser" ng-cloak >
+      <div class="wrapp px-5 py-5">
+        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link " ng-class="{'active' : pageOrdComp.content.length === 0 }" id="completion-tab" data-bs-toggle="pill"   data-bs-target="#completion" type="button" role="tab" aria-controls="completion" aria-selected="true">ĐƠN HÀNG ĐÃ MUA</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="pending-tab" ng-class="{'active' : pageOrdComp.content.length > 0 }" data-bs-toggle="pill"   data-bs-target="#pending" type="button" role="tab" aria-controls="pending" aria-selected="false">ĐƠN HÀNG ĐANG XỬ LÍ</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="shipping-tab" data-bs-toggle="pill"   data-bs-target="#shipping" type="button" role="tab" aria-controls="shipping" aria-selected="false">ĐƠN HÀNG ĐANG GIAO</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="canceled-tab" data-bs-toggle="pill"   data-bs-target="#canceled" type="button" role="tab" aria-controls="canceled" aria-selected="false">ĐƠN HÀNG ĐÃ HỦY</button>
+            </li>
+          </ul>
+      <div class="tab-content" id="pills-tabContent">
+        <!-- ĐƠN ĐÃ MUA -->
+        <div class="tab-pane fade" ng-class="{'show active' : pageOrdComp.content.length == 0 }" id="completion" role="tabpanel" aria-labelledby="completion-tab">
+            <div class="card">
+                <div class="card-body page-body" > 
+                    <div class="table-top d-flex justify-content-between align-items-center">
+                        <div class="search-input">
+                            <div class="btn-searchset">
+                                <i class="fa-solid fa-magnifying-glass"></i>
                             </div>
-                            <div class="cart-shiping-update-wrapper">
-                                <div class="continure-clear-btn">
-                                    <div class="continure-btn">
-                                        <a th:href="@{/client/index}">Tiếp tục mua sắm</a>
-                                    </div>
-                                    <div class="clear-btn">
-                                        <a href="" ng-if="cart.items.length > 0" ><i class="fa-sharp fa-solid fa-xmark"></i> Xoá tất cả giỏ hàng</a>
-                                    </div>
-                                </div>
-                                <div class="update-price d-flex align-items-center">
-                                    <!-- <h5 class="mb-0">Tạm tính: 600.000 VND </h5> -->
-                                </div>
+                            <form class="d-flex">
+                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                            </form>
+                        </div>
+                        <div class="title-tab fw-bold">
+                           ĐƠN HÀNG ĐÃ MUA
+                        </div>
+                        
+                    </div>
+                    <div class="table-center">
+                        <div class="loading-page"  ng-if="isLoading">
+                            <div class="spinner-border text-warning "  role="status">
+                                <span class="visually-hidden">Loading...</span>
                             </div>
                         </div>
-                    </form>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                              <thead>
+                                <tr class="tb-header">
+                                  <th scope="col">ID </th>
+                                  <th scope="col">Phương thức thanh toán</th>
+                                  <th scope="col">Ngày tạo</th>
+                                  <th scope="col">Ngày giao</th>
+                                  <th scope="col">Ngày nhận</th>
+                                  <th scope="col">Trạng thái</th>
+                                  <th scope="col">Thao tác</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr class="" ng-repeat="o in pageOrdComp.content" >
+                                  <td scope="row">{{o.id}}</td>
+                                  <td>{{!o.paymentMethod ? 'Tiền mặt' : 'Online'}}</td>
+                                  <td>{{o.orderDate  | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                                  <td>{{o.deliveryDate  | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                                  <td>{{o.completionDate  | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                                  <td><span class="badge bg-success">{{o.status == 2 ?'Đã nhận': ''}}</span></td>
+                                  <td class="td-action ">
+                                     <div class="wordset">
+                                        <ul>
+                                            <li>
+                                                <a href=""  ng-click="viewOrderDetails(o.id)" title="Xem đơn hàng"  class="text-success-emphasis"><i class="fa-solid fa-eye"></i></a>
+                                            </li>
+                                            <!-- <li>
+                                                <a href="" ng-click="handleStatusOrder(o.id)" class="text-success"><i class="fa-sharp fa-solid fa-truck-fast"></i></a>
+                                            </li> -->
+                                            <!-- <li>
+                                                <a href="" class="text-danger"><i class="fa-sharp fa-solid fa-circle-xmark"></i></a>
+                                            </li> -->
+                                        </ul>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                            <div ng-if="pageOrdComp.content.length == 0" class="d-flex justify-content-center py-5">
+                                <span> Không có đơn hàng nào</span>
+                             </div>
+                          </div>
+                    </div>
+                    <div class="table-bottom d-flex justify-content-end align-items-center pt-4">
+                        <span class="pagination-info me-2">{{pageOrdComp.number + 1}} trên <span >{{pageOrdComp.totalPages}}</span></span>
+                        <nav aria-label="Page navigation " >
+                            <ul class="pagination mb-0">
+                              <li class="page-item"><a class="page-link" href=""  ng-class="{'disabled' : pageOrdComp.first}" ng-click="getPage(0,'completion')"><i class="fa-solid fa-backward-step"></i></a></li>
+                              <li class="page-item"><a class="page-link" href="" ng-class="{'disabled' :  pageOrdComp.number <= 0 ||  pageOrdComp.first}" ng-click="getPage(page.number - 1,'completion')"><i class="fa-solid fa-backward"></i></a></li>
+                              <li class="page-item"><a class="page-link" href="" ng-class="{'disabled' : pageOrdComp.number >= pageOrdComp.totalPages - 1 ||  pageOrdComp.last}" ng-click="getPage(pageOrdComp.number + 1,'completion')"><i class="fa-solid fa-forward"></i></a></li>
+                              <li class="page-item"><a class="page-link" href="" ng-class="{'disabled' : pageOrdComp.last}" ng-click="getPage(pageOrdComp.totalPages-1,'completion')"><i class="fa-solid fa-forward-step"></i></a></li>
+                            </ul>
+                          </nav>
+                    </div>
                 </div>
-               
             </div>
-            <div class="row">
-                <div class="col-lg-6 col-md-12 col-12">
-                    <!-- <div class="coupon-wrap mb-40">
-                        <h4>Mã giảm giá </h4>
-                        <div class="coupon-content common-form-style">
-                            <p>Nhập mã giảm giá của bạn. </p>
-                            <div class="input-style coupon-content-mrg">
-                                <input type="text" placeholder="Mã giảm giá">
+        </div>
+          <!-- /ĐƠN ĐÃ MUA -->
+
+          <!-- ĐƠN CHỜ GIAO -->
+        <div class="tab-pane fade" id="shipping" role="tabpanel" aria-labelledby="shipping-tab">
+            <div class="card">
+                <div class="card-body page-body" > 
+                    <div class="table-top d-flex justify-content-between align-items-center">
+                        <div class="search-input">
+                            <div class="btn-searchset">
+                                <i class="fa-solid fa-magnifying-glass"></i>
                             </div>
-                            <div class="common-btn-style">
-                                <a class="common-btn-padding-2" href="#">Áp dụng</a>
+                            <form class="d-flex">
+                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                            </form>
+                        </div>
+                        <div class="title-tab fw-bold">
+                           ĐƠN HÀNG ĐANG GIAO
+                        </div>
+                        
+                    </div>
+                    <div class="table-center">
+                        <div class="loading-page"  ng-if="isLoading">
+                            <div class="spinner-border text-warning "  role="status">
+                                <span class="visually-hidden">Loading...</span>
                             </div>
                         </div>
-                    </div> -->
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                              <thead>
+                                <tr class="tb-header">
+                                  <th scope="col">ID </th>
+                                  <th scope="col">Phương thức thanh toán</th>
+                                  <th scope="col">Ngày tạo</th>
+                                  <th scope="col">Ngày giao</th>
+                                  <th scope="col">Thanh toán</th>
+                                  <th scope="col">Trạng thái</th>
+                                  <th scope="col">Thao tác</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr class="" ng-repeat="o in pageOrdShipp.content" >
+                                  <td scope="row">{{o.id}}</td>
+                                  <td>{{!o.paymentMethod ? 'Tiền mặt' : 'Online'}}</td>
+                                  <td>{{o.orderDate  | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                                  <td>{{o.deliveryDate  | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                                  <td>{{o.paymentStatus ? 'Đã thanh toán' :'Chưa thanh toán'  }}</td>
+                                  <td><span class="badge bg-primary">{{o.status == 1 ?'Đang giao': ''}}</span></td>
+                                  <td class="td-action ">
+                                     <div class="wordset">
+                                        <ul>
+                                            <li>
+                                                <a href=""  ng-click="viewOrderDetails(o.id)"  title="Xem đơn hàng" class="text-success-emphasis"><i class="fa-solid fa-eye"></i></a>
+                                            </li>
+                                            <!-- <li>
+                                                <a href="" ng-click="handleStatusOrder(o.id)" class="text-success"><i class="fa-sharp fa-solid fa-truck-fast"></i></a>
+                                            </li> -->
+                                            <!-- <li>
+                                                <a href="" class="text-danger"><i class="fa-sharp fa-solid fa-circle-xmark"></i></a>
+                                            </li> -->
+                                        </ul>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                            <div ng-if="pageOrdShipp.content.length == 0" class="d-flex justify-content-center py-5">
+                                <span> Không có đơn hàng nào</span>
+                             </div>
+                          </div>
+                    </div>
+                    <div class="table-bottom d-flex justify-content-end align-items-center pt-4">
+                        <span class="pagination-info me-2">{{pageOrdShipp.number + 1}} trên <span >{{pageOrdShipp.totalPages}}</span></span>
+                        <nav aria-label="Page navigation " >
+                            <ul class="pagination mb-0">
+                              <li class="page-item"><a class="page-link" href=""  ng-class="{'disabled' : pageOrdShipp.first}" ng-click="getPage(0,'shipping')"><i class="fa-solid fa-backward-step"></i></a></li>
+                              <li class="page-item"><a class="page-link" href="" ng-class="{'disabled' :  pageOrdShipp.number <= 0 ||  pageOrdShipp.first}" ng-click="getPage(pageOrdShipp.number - 1,'shipping')"><i class="fa-solid fa-backward"></i></a></li>
+                              <li class="page-item"><a class="page-link" href="" ng-class="{'disabled' : pageOrdShipp.number >= pageOrdShipp.totalPages - 1 ||  pageOrdShipp.last}" ng-click="getPage(pageOrdShipp.number + 1,'shipping')"><i class="fa-solid fa-forward"></i></a></li>
+                              <li class="page-item"><a class="page-link" href="" ng-class="{'disabled' : pageOrdShipp.last}" ng-click="getPage(pageOrdShipp.totalPages-1,'shipping')"><i class="fa-solid fa-forward-step"></i></a></li>
+                            </ul>
+                          </nav>
+                    </div>
                 </div>
-                <div class="col-lg-6 col-md-12 col-12">
-                    <div class="grand-total-wrap mb-40">
-                        <ul>
-                            <li>Số lượng sản phẩm:  <h4>x</h4> 
-                            </li>
-                          
-                        </ul>
-                        <div class="grand-total">
-                            <h4>Tổng cộng <span>x VND</span></h4>
+            </div>
+        </div>
+         <!--/ ĐƠN CHỜ GIAO -->
+       
+          <!-- ĐƠN ĐÃ ĐANG XỬ LÍ-->
+        <div class="tab-pane fade" ng-class="{'show active' : pageOrdComp.content.length > 0 }" id="pending" role="tabpanel" aria-labelledby="pending-tab">
+          <div class="card">
+            <div class="card-body page-body" > 
+                <div class="table-top d-flex justify-content-between align-items-center">
+                    <div class="search-input">
+                        <div class="btn-searchset">
+                            <i class="fa-solid fa-magnifying-glass"></i>
                         </div>
-                        <div class="grand-total-btn">
-                            <!-- th:href="@{/client/cart/checkout}" -->
-                            <a  >Tiến hành đặt hàng</a>
+                        <form class="d-flex">
+                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        </form>
+                    </div>
+                    <div class="title-tab fw-bold">
+                       ĐƠN HÀNG ĐANG XỬ LÝ
+                    </div>
+                    
+                </div>
+                <div class="table-center">
+                    <div class="loading-page"  ng-if="isLoading">
+                        <div class="spinner-border text-warning "  role="status">
+                            <span class="visually-hidden">Loading...</span>
                         </div>
                     </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                          <thead>
+                            <tr class="tb-header">
+                              <th scope="col">ID </th>
+                              <th scope="col">Phương thức thanh toán</th>
+                              <th scope="col">Thanh toán</th>
+                              <th scope="col">Ngày tạo</th>
+                              <th scope="col">Trạng thái</th>
+                              <th scope="col">Thao tác</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr class="" ng-repeat="o in pageOrdPend.content" >
+                              <td scope="row">{{o.id}}</td>
+                              <td>{{!o.paymentMethod ? 'Tiền mặt' : 'Online'}}</td>
+                              <td>{{o.paymentStatus ? 'Đã thanh toán' : 'Chưa thanh toán'}}</td>
+                              <td>{{o.orderDate  | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                              <td><span class="badge bg-warning">{{o.status == 0 ?'Chờ xử lý': ''}}</span></td>
+                              <td class="td-action ">
+                                 <div class="wordset">
+                                    <ul>
+                                        <li>
+                                            <a href="" ng-click="viewOrderDetails(o.id)"   title="Xem đơn hàng" class="text-success-emphasis"><i class="fa-solid fa-eye"></i></a>
+                                        </li>
+                                        <li>
+                                            <a href="" ng-click="cancelOrder(o.id)" title="Hủy đơn" class="text-danger"><i class="fa-solid fa-circle-xmark"></i></i></a>
+                                        </li>
+                                        <!-- <li>
+                                            <a href="" class="text-danger"><i class="fa-sharp fa-solid fa-circle-xmark"></i></a>
+                                        </li> -->
+                                    </ul>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <div ng-if="pageOrdPend.content.length == 0" class="d-flex justify-content-center py-5">
+                            <span> Không có đơn hàng nào</span>
+                         </div>
+                      </div>
+                </div>
+                <div class="table-bottom d-flex justify-content-end align-items-center pt-4">
+                    <span class="pagination-info me-2">{{pageOrdPend.number + 1}} trên <span >{{pageOrdPend.totalPages}}</span></span>
+                    <nav aria-label="Page navigation " >
+                        <ul class="pagination mb-0">
+                          <li class="page-item"><a class="page-link" href=""  ng-class="{'disabled' : pageOrdPend.first}" ng-click="getPage(0,'pending')"><i class="fa-solid fa-backward-step"></i></a></li>
+                          <li class="page-item"><a class="page-link" href="" ng-class="{'disabled' :  pageOrdPend.number <= 0 ||  pageOrdPend.first}" ng-click="getPage(pageOrdPend.number - 1,'pending')"><i class="fa-solid fa-backward"></i></a></li>
+                          <li class="page-item"><a class="page-link" href="" ng-class="{'disabled' : pageOrdPend.number >= pageOrdPend.totalPages - 1 ||  pageOrdPend.last}" ng-click="getPage(pageOrdPend.number + 1,'pending')"><i class="fa-solid fa-forward"></i></a></li>
+                          <li class="page-item"><a class="page-link" href="" ng-class="{'disabled' : pageOrdPend.last}" ng-click="getPage(pageOrdPend.totalPages-1,'pending')"><i class="fa-solid fa-forward-step"></i></a></li>
+                        </ul>
+                      </nav>
+                </div>
             </div>
-            </div>  
         </div>
-    </main>
+        </div>
+        <!-- /ĐƠN ĐÃ ĐANG XỬ LÍ-->
+
+          <!-- ĐƠN ĐÃ HỦY -->
+        <div class="tab-pane fade" id="canceled" role="tabpanel" aria-labelledby="canceled-tab">
+          <div class="card">
+            <div class="card-body page-body" > 
+                <div class="table-top d-flex justify-content-between align-items-center">
+                    <div class="search-input">
+                        <div class="btn-searchset">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </div>
+                        <form class="d-flex">
+                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        </form>
+                    </div>
+                    <div class="title-tab fw-bold">
+                       ĐƠN HÀNG ĐÃ HỦY
+                    </div>
+                    
+                </div>
+                <div class="table-center">
+                    <div class="loading-page"  ng-if="isLoading">
+                        <div class="spinner-border text-warning "  role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                          <thead>
+                            <tr class="tb-header">
+                              <th scope="col">ID </th>
+                              <th scope="col">Phương thức thanh toán</th>
+                              <th scope="col">Ngày tạo</th>
+                              <th scope="col">Ngày hủy</th>
+                              <th scope="col">Lý do</th>
+                              <th scope="col">Trạng thái</th>
+                              <th scope="col">Thao tác</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr class="" ng-repeat="o in pageOrdCanc.content" >
+                              <td scope="row">{{o.id}}</td>
+                              <td>{{!o.paymentMethod ? 'Tiền mặt' : 'Online'}}</td>
+                              <td>{{o.orderDate  | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                              <td>{{o.cancellationDate  | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                              <td class="reduce-td cancellation-reason"  data-bs-toggle="tooltip" data-bs-placement="top" title="{{o.cancellationReason }}">{{o.cancellationReason }}</td>
+                              <td><span class="badge bg-danger">{{o.status == 3 ?'Đã hủy': ''}}</span></td>
+                              <td class="td-action ">
+                                 <div class="wordset">
+                                    <ul>
+                                        <li>
+                                            <a href="" ng-click="viewOrderDetails(o.id)"   title="Xem đơn hàng" class="text-success-emphasis"><i class="fa-solid fa-eye"></i></a>
+                                        </li>
+                                        <!-- <li>
+                                            <a href="" ng-click="handleStatusOrder(o.id)" class="text-success"><i class="fa-sharp fa-solid fa-truck-fast"></i></a>
+                                        </li> -->
+                                        <!-- <li>
+                                            <a href="" class="text-danger"><i class="fa-sharp fa-solid fa-circle-xmark"></i></a>
+                                        </li> -->
+                                    </ul>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <div ng-if="page.content.length == 0" class="d-flex justify-content-center py-5">
+                            <span> Không có đơn hàng nào</span>
+                         </div>
+                      </div>
+                </div>
+                <div class="table-bottom d-flex justify-content-end align-items-center pt-4">
+                    <span class="pagination-info me-2">{{pageOrdCanc.number + 1}} trên <span >{{pageOrdCanc.totalPages}}</span></span>
+                    <nav aria-label="Page navigation " >
+                        <ul class="pagination mb-0">
+                          <li class="page-item"><a class="page-link" href=""  ng-class="{'disabled' : pageOrdCanc.first}" ng-click="getPage(0,'canceled')"><i class="fa-solid fa-backward-step"></i></a></li>
+                          <li class="page-item"><a class="page-link" href="" ng-class="{'disabled' :  pageOrdCanc.number <= 0 ||  pageOrdCanc.first}" ng-click="getPage(pageOrdCanc.number - 1,'canceled')"><i class="fa-solid fa-backward"></i></a></li>
+                          <li class="page-item"><a class="page-link" href="" ng-class="{'disabled' : pageOrdCanc.number >= pageOrdCanc.totalPages - 1 ||  pageOrdCanc.last}" ng-click="getPage(pageOrdCanc.number + 1,'canceled')"><i class="fa-solid fa-forward"></i></a></li>
+                          <li class="page-item"><a class="page-link" href="" ng-class="{'disabled' : pageOrdCanc.last}" ng-click="getPage(pageOrdCanc.totalPages-1,'canceled')"><i class="fa-solid fa-forward-step"></i></a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        </div>
+        <!-- /ĐƠN ĐÃ HỦY -->
+      </div>
+    </div>
+</main>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -26,6 +26,9 @@
         <link rel="stylesheet" th:href="@{/assets/css/cart.css}">
         <link rel="stylesheet" th:href="@{/assets/css/checkout.css}">
     </th:block>
+    <th:block th:if="${#ctx.springRequestContext.requestUri.contains('orders-user')}">
+        <link rel="stylesheet" th:href="@{/assets/css/orders-order.css}">
+    </th:block>
 
     <th:block th:if="${#ctx.springRequestContext.requestUri.contains('cart')}">
         <link rel="stylesheet" th:href="@{/assets/css/cart.css}">
@@ -65,6 +68,9 @@
     </th:block>
     <th:block th:if="${#ctx.springRequestContext.requestUri.contains('checkout')}">
         <script th:src="@{/assets/js/angularjs/checkout.js}"></script>
+    </th:block>
+    <th:block th:if="${#ctx.springRequestContext.requestUri.contains('orders-user')}">
+        <script th:src="@{/assets/js/angularjs/orders-user.js}"></script>
     </th:block>
 
     <th:block th:include="layout/library/script-links.html"></th:block>

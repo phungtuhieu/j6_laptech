@@ -65,6 +65,9 @@
                   <li  ng-if="user.admin == true">
                     <a class="dropdown-item" th:href="@{/admin/index}">ADMIN</a>
                   </li>
+                  <li  >
+                    <a class="dropdown-item" th:href="@{/client/cart/orders-user}">Đơn hàng</a>
+                  </li>
                   <li>
                     <a class="dropdown-item" href="#" ng-if="user.fullname == null">Đăng nhập</a>
                   </li>
