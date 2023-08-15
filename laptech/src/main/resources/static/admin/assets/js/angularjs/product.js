@@ -378,7 +378,14 @@ function form ($scope, $http,$location,$filter) {
       $scope.form = resp.data;
        $scope.form.createDate = new Date($scope.form.createDate);
        if($scope.priceForms.length > 0) {
-        createPrice($scope.priceForms,$scope.form);
+        var isSuccess = createPrice($scope.priceForms,$scope.form);
+        if(isSuccess == false) {
+          Toast.fire({
+            icon: 'error',
+            title: 'Ngày bắt đầu của giá phải lớn hơn hoặc bằng ngày kết thúc trước đó'
+          })
+          return
+        }
        }
       if(listImgIdDeleted.length > 0) {
 		   deleteProdImg();
@@ -587,19 +594,18 @@ function form ($scope, $http,$location,$filter) {
         price = $scope.listPriceProduct[$scope.listPriceProduct.length - 1];
       }
      if(new Date(listPrice[0].startDate) <=  new Date(price.startDate)) {
-      alert('Sai') 
-      return;
-     }
-     console.log(price) 
-     if(price != null) {
-        price.endDate = new Date(listPrice[0].startDate);
-        $http.put(getUrl(`/product/price/${price.id}`),price).then(resp => {
-          console.log("Giá-", resp.data);
-        }).catch(err => {
-          console.log("Giá-", err);
-        })
-     }
-     
+      return false;
+     } 
+      console.log(price) 
+      if(price != null) {
+         price.endDate = new Date(listPrice[0].startDate);
+         $http.put(getUrl(`/product/price/${price.id}`),price).then(resp => {
+           console.log("Giá-", resp.data);
+           return true;
+         }).catch(err => {
+           console.log("Giá-", err);
+         })
+      }
     }
     
     $http.post(getUrl(`/product/price`),listPrice).then(resp => {
