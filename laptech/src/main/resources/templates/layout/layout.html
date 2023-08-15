@@ -73,6 +73,10 @@
         <script th:src="@{/assets/js/angularjs/orders-user.js}"></script>
     </th:block>
 
+    <th:block th:if="${#ctx.springRequestContext.requestUri.contains('profile')}">
+        <script th:src="@{/assets/js/angularjs/profile.js}"></script>
+    </th:block>
+
     <th:block th:include="layout/library/script-links.html"></th:block>
 
 
