@@ -93,7 +93,7 @@ public class ProductRestController {
             return ResponseEntity.notFound().build();
         } else {
             Product prod = dao.findById(id).get();
-            if(!prod.getOrderDetails().isEmpty()) {
+            if(!prod.getOrderDetails().isEmpty() || !prod.getCarts().isEmpty()) {
                  return new ResponseEntity<>(HttpStatus.CONFLICT);
             } else {
                 List<ProductImages> listPImg = pImgDao.findByProduct(prod);

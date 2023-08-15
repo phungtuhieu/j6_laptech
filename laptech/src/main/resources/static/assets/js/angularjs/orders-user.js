@@ -1,6 +1,6 @@
 app.controller("ordersUser", ordersUser)
 app.controller("orderDetails", orderDetails)
-
+let urlImage = "/files/images";
 const statusOrder = {
     PENDING : 0, 
     SHIPPING : 1,
@@ -200,11 +200,24 @@ function orderDetails($scope,$http) {
     $scope.backPage = () => {
         window.location.href = "/client/cart/orders-user"
     }
+    $scope.urlImg = (name) =>{
+        return `${urlImage}/${name}`;
+    }
+    $scope.productImgs = [];
+     
     var load_all = () => {
       url = `${host}/order/${orderId}/order-details`;
       $http.get(url).then(resp => {
         $scope.page = resp.data;
         $scope.isLoading = false;
+        $scope.page.content.forEach(item => {
+            $http.get(`${host}/cart/img/product/${item.product.id}`).then(resp => {
+                $scope.productImgs.push( resp.data.name) 
+               }).catch(err => {
+                 console.log("err-cart-img",err);
+            })
+            console.log("$scope.imageName",item.product);
+        })
         $scope.total = $scope.page.content.map(item =>  item.quantity * item.price)
                                           .reduce((total,qty)=> total+=qty,0);
         console.log(resp.data);

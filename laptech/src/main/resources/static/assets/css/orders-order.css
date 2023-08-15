@@ -1,6 +1,19 @@
 .wrapp {
     width: 86%;
 }
+
+.product-thumbnail .box-img img {
+    width: 80px;
+    height: 80px;
+}
+.table-details tbody td {
+   vertical-align: middle;
+}
+.product-thumbnail img {
+    height: 100%;
+    width:  100%;
+    object-fit: contain;
+}
 .reduce-td{
     vertical-align: middle;
     text-overflow: ellipsis;

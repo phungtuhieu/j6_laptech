@@ -112,6 +112,7 @@
                         <div class="mb-4 col-lg-3 form-group">
                             <label for="" class="form-label">Ngày tạo</label>
                             <input type="date" ng-model="form.createDate" readonly  class="form-control" id="">
+                           
                         </div>
                         <div class="mb-4 col-lg-12 form-group">
                             <label for="prod-desciption" class="form-label">Mô tả</label>
@@ -159,6 +160,7 @@
                                                 <div class="mb-4 col-lg-3 form-group">
                                                     <label for="" class="form-label">Ngày áp dụng</label>
                                                     <input type="date"   class="form-control"  ng-model="p.startDate"  id="">
+                                                    <span ng-show="messageError.createDate != null" ng-cloak class="small text-danger">{{messageError.createDate }}</span>
                                                 </div>
                                                 <input type="date"   class="form-control d-none"  ng-model="p.endDate"  id="">
                                                 <!-- <div class="mb-4 col-lg-3 form-group">

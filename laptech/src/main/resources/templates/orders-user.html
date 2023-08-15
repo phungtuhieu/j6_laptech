@@ -13,10 +13,10 @@
       <div class="wrapp px-5 py-5">
         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
             <li class="nav-item" role="presentation">
-              <button class="nav-link " ng-class="{'active' : pageOrdComp.content.length === 0 }" id="completion-tab" data-bs-toggle="pill"   data-bs-target="#completion" type="button" role="tab" aria-controls="completion" aria-selected="true">ĐƠN HÀNG ĐÃ MUA</button>
+              <button class="nav-link " id="completion-tab" data-bs-toggle="pill"   data-bs-target="#completion" type="button" role="tab" aria-controls="completion" aria-selected="true">ĐƠN HÀNG ĐÃ MUA</button>
             </li>
             <li class="nav-item" role="presentation">
-              <button class="nav-link" id="pending-tab" ng-class="{'active' : pageOrdComp.content.length > 0 }" data-bs-toggle="pill"   data-bs-target="#pending" type="button" role="tab" aria-controls="pending" aria-selected="false">ĐƠN HÀNG ĐANG XỬ LÍ</button>
+              <button class="nav-link" id="pending-tab" ng-class="{'active' : pageOrdPend.content.length > 0 }" data-bs-toggle="pill"   data-bs-target="#pending" type="button" role="tab" aria-controls="pending" aria-selected="false">ĐƠN HÀNG ĐANG XỬ LÍ</button>
             </li>
             <li class="nav-item" role="presentation">
               <button class="nav-link" id="shipping-tab" data-bs-toggle="pill"   data-bs-target="#shipping" type="button" role="tab" aria-controls="shipping" aria-selected="false">ĐƠN HÀNG ĐANG GIAO</button>
@@ -27,18 +27,18 @@
           </ul>
       <div class="tab-content" id="pills-tabContent">
         <!-- ĐƠN ĐÃ MUA -->
-        <div class="tab-pane fade" ng-class="{'show active' : pageOrdComp.content.length == 0 }" id="completion" role="tabpanel" aria-labelledby="completion-tab">
+        <div class="tab-pane fade" ng-class="{'show active' : pageOrdPend.content.length == 0 }" id="completion" role="tabpanel" aria-labelledby="completion-tab">
             <div class="card">
                 <div class="card-body page-body" > 
                     <div class="table-top d-flex justify-content-between align-items-center">
-                        <div class="search-input">
+                        <!-- <div class="search-input">
                             <div class="btn-searchset">
                                 <i class="fa-solid fa-magnifying-glass"></i>
                             </div>
                             <form class="d-flex">
                                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                             </form>
-                        </div>
+                        </div> -->
                         <div class="title-tab fw-bold">
                            ĐƠN HÀNG ĐÃ MUA
                         </div>
@@ -115,14 +115,14 @@
             <div class="card">
                 <div class="card-body page-body" > 
                     <div class="table-top d-flex justify-content-between align-items-center">
-                        <div class="search-input">
+                        <!-- <div class="search-input">
                             <div class="btn-searchset">
                                 <i class="fa-solid fa-magnifying-glass"></i>
                             </div>
                             <form class="d-flex">
                                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                             </form>
-                        </div>
+                        </div> -->
                         <div class="title-tab fw-bold">
                            ĐƠN HÀNG ĐANG GIAO
                         </div>
@@ -195,18 +195,18 @@
          <!--/ ĐƠN CHỜ GIAO -->
        
           <!-- ĐƠN ĐÃ ĐANG XỬ LÍ-->
-        <div class="tab-pane fade" ng-class="{'show active' : pageOrdComp.content.length > 0 }" id="pending" role="tabpanel" aria-labelledby="pending-tab">
+        <div class="tab-pane fade" ng-class="{'show active' : pageOrdPend.content.length > 0 }" id="pending" role="tabpanel" aria-labelledby="pending-tab">
           <div class="card">
             <div class="card-body page-body" > 
                 <div class="table-top d-flex justify-content-between align-items-center">
-                    <div class="search-input">
+                    <!-- <div class="search-input">
                         <div class="btn-searchset">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </div>
                         <form class="d-flex">
                             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                         </form>
-                    </div>
+                    </div> -->
                     <div class="title-tab fw-bold">
                        ĐƠN HÀNG ĐANG XỬ LÝ
                     </div>
@@ -281,14 +281,14 @@
           <div class="card">
             <div class="card-body page-body" > 
                 <div class="table-top d-flex justify-content-between align-items-center">
-                    <div class="search-input">
+                    <!-- <div class="search-input">
                         <div class="btn-searchset">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </div>
                         <form class="d-flex">
                             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                         </form>
-                    </div>
+                    </div> -->
                     <div class="title-tab fw-bold">
                        ĐƠN HÀNG ĐÃ HỦY
                     </div>
@@ -339,7 +339,7 @@
                             </tr>
                           </tbody>
                         </table>
-                        <div ng-if="page.content.length == 0" class="d-flex justify-content-center py-5">
+                        <div ng-if="pageOrdCanc.content.length == 0" class="d-flex justify-content-center py-5">
                             <span> Không có đơn hàng nào</span>
                          </div>
                       </div>

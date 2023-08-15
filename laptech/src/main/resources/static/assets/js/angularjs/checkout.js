@@ -98,9 +98,17 @@ function checkout($scope,$http) {
 
     $scope.purchase = () => {
       var ord = angular.copy(order);
-     
+      if($scope.carts.length <= 0) {
+        Swal.fire(
+          'Không thể thanh toán!',
+          `Chưa có sản phẩm nào để thanh toán!`,
+          'error'
+      );
+      return
+      } 
       var isError = false;
       isError = validationForm();
+
       if(!isError) {
         if($scope.paymentMethod === PAYMENT_METHOD.COD) {
           ord.paymentMethod = PAYMENT_METHOD.COD;

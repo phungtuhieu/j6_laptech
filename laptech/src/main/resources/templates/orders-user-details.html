@@ -15,12 +15,12 @@
           <div class="card-body page-body" > 
               <div class="table-top d-flex justify-content-between align-items-center">
                   <div class="search-input">
-                      <div class="btn-searchset">
+                      <!--<div class="btn-searchset">
                           <i class="fa-solid fa-magnifying-glass"></i>
                       </div>
                       <form class="d-flex">
                           <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                      </form>
+                      </form>-->
                   </div>
                   <div class="wordset">
                       <ul>
@@ -43,9 +43,10 @@
                       </div>
                   </div>
                   <div class="table-responsive">
-                      <table class="table table-hover">
+                      <table class="table table-hover table-details">
                         <thead>
                           <tr class="tb-header">
+                            <th scope="col"> </th>
                             <th scope="col">Tên sản phẩm </th>
                             <th scope="col">Giá</th>
                             <th scope="col">Số lượng</th>
@@ -55,6 +56,11 @@
                         </thead>
                         <tbody>
                           <tr class=""  ng-repeat="od in page.content">
+                            <td  class="product-thumbnail">
+                              <div class="box-img">
+                                 <img ng-src="{{urlImg(productImgs[$index])}}" alt=""> 
+                              </div>
+                             </td>
                             <td>{{od.product.name}}</td>
                             <td>{{od.price | currency:"":0  }}  </td>
                             <td>{{od.quantity}}</td>

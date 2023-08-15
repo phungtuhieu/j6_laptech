@@ -176,6 +176,7 @@ function form ($scope, $http,$location,$filter) {
     nameProd: null,
     quantity: null,
     price:null,
+    createDate : null,
     image:null
   };
   var isDeleteSuccess = window.localStorage.getItem("isDeleteSuccess");
@@ -327,7 +328,21 @@ function form ($scope, $http,$location,$filter) {
         clearError('price');
       }
     }
-   
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    // Loại bỏ phần giờ, phút và giây từ ngày tạo
+    var createDate = new Date($scope.priceForms[0].startDate)
+    createDate.setHours(0,0,0,0)
+    // var formatDate = function(date, format) {
+    //   return $filter('date')(date, format);
+    // };
+    if (  createDate < today) {
+      setError('createDate', 'Vui lòng chọn ngày lớn hơn ngày hiện tại');
+    } else {
+      clearError('createDate');
+    }
+      
     return isError ;
   }
   $scope.create = () => {
@@ -335,6 +350,7 @@ function form ($scope, $http,$location,$filter) {
     var item = angular.copy($scope.form);
     var isError = false;
     isError = validationForm();
+    console.log($scope.messageError.createDate);
     if(!isError) {
       $http.post(url,item).then(resp => {
         console.log("Success-save", resp);
