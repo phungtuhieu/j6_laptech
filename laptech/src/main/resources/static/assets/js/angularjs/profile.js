@@ -9,7 +9,7 @@ function formUpdate($scope, $http){
     console.log($scope.items)
 
     $scope.update =() => {
-        alert("thành công")
+        // alert("thành công")
         var item = angular.copy($scope.items);
         console.log(item)
         var url = `${host}/profile/${$scope.items.username}`;
@@ -25,7 +25,7 @@ function formUpdate($scope, $http){
             // $scope.items[index] = resp.data;
             // console.log("Success", resp);
 
-            alert("thành công")
+            // alert("thành công")
             // window.location.href = "/client/profile"
         })
         .catch((error) => {
