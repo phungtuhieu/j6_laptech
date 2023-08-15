@@ -7,7 +7,10 @@
 </head>
 <body>
 
+ 
     <main ng-controller="signup">
+       <!-- Thêm phần thông báo lỗi -->
+<div class="alert alert-danger" ng-show="errorOccurred">{{ errorMessage }}</div>
         <div class="container py-5  d-flex justify-content-center align-items-center" style="height: 90vh;">
             <div class="form-wrapper w-100  d-flex justify-content-center align-items-center">
                  <div class="card w-50">
@@ -41,18 +44,27 @@
                              <div class="form-group mb-3">
                                <input type="password" name="password" id="password2" tabindex="2" class="form-control" placeholder="Mật khẩu" ng-model="Data.password">
                              </div>
-                              <div class="form-group mb-3">
+                             <div class="form-group mb-3">
+                              <input type="password" name="password" id="password2" tabindex="2" class="form-control" placeholder="Nhập lại Mật khẩu" ng-model="Data.confirmPassword">
+                            </div>
+                            <div class="form-group mb-3" ng-show="showVerificationCode">
+                              <input type="text" name="verificationCode" id="verification-code" tabindex="2" class="form-control" placeholder="Nhập mã xác minh" ng-model="verificationCode">
+                          </div>
+
+                              <div class="form-group mb-3" ng-show="showVerificationCode">
                                <input type="hidden" name="admin" value="false" tabindex="2" placeholder="">
                              </div>
                              <div class="form-group mb-3">
                                <div class="row">
                                  <div class="col-sm-12 d-flex justify-content-center ">
-                                   <input  name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-register" value="Đăng ký ngay" ng-click="dangky()">
-                                 </div>
+                                  <!-- hiển thị nút đăng ký -->
+                                   <input name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-register" value="Đăng ký ngay" ng-show="!showVerificationCode" ng-click="dangky()">
+                            <!-- Nút đăng nhập (đã xác minh) -->
+                            <input name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-login" value="Đăng nhập" ng-show="showLoginButton" ng-click="dangnhap()">  
+                                  </div>
                                </div>
                              </div>
                            </form>
-                          
                          </div>
                          <div class=" d-flex justify-content-center">
                            <a th:href="@{/account/login}" class="text-black btn-back-home"> <i class="fa-solid fa-arrow-left"></i></a>

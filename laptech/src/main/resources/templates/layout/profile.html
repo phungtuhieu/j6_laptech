@@ -23,12 +23,17 @@
 
 <body>
 
-<main>
+<main ng-controller="update">
+<<<<<<< HEAD
     <div class="profile">
 
    
  <div class="container-xl px-4 mt-4" style="max-width: 1000px;">
     
+=======
+    <div class="profile">  
+ <div class="container-xl px-4 mt-4" style="max-width: 1000px;">  
+>>>>>>> 68feb28abd7dd1cd625b18840ee13fdc3ed6048f
     <div class="row">
         <div class="col-xl-4">
             <!-- Profile picture card-->
@@ -36,12 +41,10 @@
                 <div class="card-header">Ảnh đại diện</div>
                 <div class="card-body text-center">
                     <!-- Profile picture image-->
-                    <img class="img-account-profile rounded-circle mb-2" th:src="@{assets/image/hinhCN.jpg}" alt="">
-                    <!-- Profile picture help block-->
-                    <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
-                    <!-- Profile picture upload button-->
-                    
-                    <button class="btn btn" type="button" style="background-color: #232946; color: white;">Upload new image</button>
+<img class="img-account-profile rounded-circle mb-2" ng-src="{{ userUD.image }}" alt="">
+<!-- ... -->
+<input type="file" id="imageInput" ng-model="image" accept="image/*" style="display: none;">
+<button class="btn btn" type="button" style="background-color: #232946; color: white;" ng-click="uploadImage()">Upload new image</button>
                 </div>
             </div>
         </div>
@@ -54,32 +57,27 @@
                         <!-- Form Group (username)-->
                         <div class="mb-">
                             <label class="small mb-1" for="inputUsername">Họ và tên:</label>
-                            <input class="form-control" id="inputUsername" type="text" placeholder="nhập họ và tên">
+                            <input class="form-control" id="inputUsername" type="text" placeholder="nhập họ và tên" ng-model="items.fullname">
                         </div>
-                        <!-- Form Row-->
-                        <!-- <div class="row gx-3 mb-3"> -->
-                            <!-- Form Group (first name)-->
+                       
                             <div class="mb-3">
                                 <label class="small mb-1" for="email">Email:</label>
-                                <input class="form-control" id="email" type="text" placeholder="nhập email" >
+                                <input class="form-control" id="email" type="text" placeholder="nhập email" ng-model="items.email" >
                             </div>
-                            <!-- Form Group (last name)-->
-                       
-                        <!-- </div> -->
-                        <!-- Form Row        -->
+                        
                         <div class="row gx-3 mb-3">
                             <!-- Form Group (organization name)-->
                             <div class="col-md-6">
                                 <label class="small mb-1" for="phone">Số điện thoại:</label>
-                                <input class="form-control" id="phone" type="text" placeholder="nhập số điện thoại">
+                                <input class="form-control" id="phone" type="text" placeholder="nhập số điện thoại" ng-model="items.phone">
                             </div>
                             <!-- Form Group (location)-->
                             <div class="col-md-6">
                                 <label class="small mb-1" for="address">Địa chỉ:</label>
-                                <input class="form-control" id="address" type="text" placeholder="nhập địa chỉ" >
+                                <input class="form-control" id="address" type="text" placeholder="nhập địa chỉ" ng-model="items.address">
                             </div>
                         </div>                   
-                        <button class="btn btn" style="background-color: #232946; color: white;" type="button">Lưu</button>
+                        <button class="btn btn" style="background-color: #232946; color: white;" type="button" ng-click="update()">Lưu</button>
                         <button class="btn btn" style="background-color: #232946; color: white;" type="button">Trở về</button>
                     </form>
                 </div>
@@ -89,7 +87,5 @@
 </div>
 </div>
 </main>
- 
 </body>
-
 </html>
