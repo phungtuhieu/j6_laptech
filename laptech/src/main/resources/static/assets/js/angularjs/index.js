@@ -775,7 +775,6 @@ function listCategory($scope, $http) {
       });
       
   };
- 
 
  $scope.getUs();
   $scope.isIndex = $location.absUrl().includes('index');
