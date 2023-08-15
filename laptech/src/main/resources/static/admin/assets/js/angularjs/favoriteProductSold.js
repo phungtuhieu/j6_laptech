@@ -200,6 +200,8 @@ function list($scope, $http, $filter) {
 
     countMonth.forEach((month) => {
       var existingData = $scope.charts.find((item) => item.month === month);
+      // alert(existingData)
+      console.log(existingData)
       if (existingData) {
         newData.push(existingData);
       } else {

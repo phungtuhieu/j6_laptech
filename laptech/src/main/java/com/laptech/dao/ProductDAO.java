@@ -74,12 +74,13 @@ public interface ProductDAO extends JpaRepository<Product,Long>{
 
         @Query("SELECT new com.laptech.model.ReportProductSoldChart(COUNT(*), MONTH(od.order.orderDate))"
         + " FROM OrderDetail od "
-        + " WHERE YEAR(od.order.orderDate) = :year"
+        + " WHERE YEAR(od.order.orderDate) = :year AND od.order.status = '2' "
         + " GROUP BY MONTH(od.order.orderDate)")
     List<ReportProductSoldChart> getProductSoldChart(@Param("year") Integer year);
 
     @Query("SELECT YEAR(od.order.orderDate)"
         + " FROM OrderDetail od "
+        + " WHERE od.order.status = '2'"
         + " GROUP BY YEAR(od.order.orderDate) ORDER BY YEAR(od.order.orderDate)  ")
     List<Integer> getAllProductSoldYear();
         
@@ -90,7 +91,7 @@ public interface ProductDAO extends JpaRepository<Product,Long>{
     + " JOIN od.product p "
     + " JOIN od.order o "
     + " JOIN p.prices price "
-    + " WHERE o.status = 3 "
+    + " WHERE o.status = 2 "
     + " GROUP BY p.name,o.orderDate "
     + " ORDER BY o.orderDate  DESC")
 List<ReportProductSold> getProductSold();
@@ -100,7 +101,7 @@ List<ReportProductSold> getProductSold();
     + " JOIN od.product p "
     + " JOIN od.order o "
     + " JOIN p.prices price "
-    + " WHERE o.status = 3 AND "
+    + " WHERE o.status = 2 AND "
     + " p.name LIKE CONCAT('%', :name, '%') " 
     + " GROUP BY p.name,o.orderDate "
     + " ORDER BY o.orderDate  DESC")
@@ -111,7 +112,7 @@ List<ReportProductSold> getProductSoldName(@Param("name") String name);
     + " JOIN od.product p "
     + " JOIN od.order o "
     + " JOIN p.prices price "
-    + " WHERE o.status = 3 AND "
+    + " WHERE o.status = 2 AND "
     + "o.orderDate  BETWEEN :startDate AND :endDate"
     + " GROUP BY p.name,o.orderDate "
     + " ORDER BY o.orderDate  DESC")
