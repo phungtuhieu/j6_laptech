@@ -35,7 +35,7 @@ public interface PriceDAO extends JpaRepository<Price,Long> {
 
     @Query("SELECT pr FROM Price pr " +
        "WHERE pr.product.status = 1 " +
-       "AND CURRENT_TIMESTAMP BETWEEN pr.startDate AND pr.endDate " +
+       "AND CURRENT_TIMESTAMP BETWEEN pr.startDate AND ISNULL(pr.endDate,CURRENT_TIMESTAMP) " +
        "AND pr.product.id NOT IN " +
        "(SELECT p.id FROM Product p JOIN p.prices pr JOIN pr.discountPrices dp " +
        "WHERE CURRENT_TIMESTAMP BETWEEN dp.discount.startDate AND dp.discount.endDate)")
