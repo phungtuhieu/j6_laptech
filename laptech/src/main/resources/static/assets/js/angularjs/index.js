@@ -127,13 +127,19 @@ function index($scope, $http, $interval,$rootScope,$location) {
   };
 
   $scope.load_all_productBrand = (name) => {
-    var url = `${host}/product/brand/${name}`;
+    if(name == 'xemTatCa'){
+      var url = `${host}/productItems`;
+    }else{
+      var url = `${host}/product/brand/${name}`;
+    }
     $http({
       method: "GET",
       url: url,
     })
       .then((resp) => {
-        $scope.productBrands = resp.data;
+        $scope.items = resp.data;
+        $scope.thuonghieu = name;
+        $scope.updatePagination();
         console.log("Success1_productBrand", resp);
       })
       .catch((error) => {
