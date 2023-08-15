@@ -718,23 +718,28 @@ function index($scope, $http, $interval,$rootScope,$location) {
     return am = $scope.cartSelected.map(item => item.quantity).reduce((total,qty) => total += qty,0);
   }
   $scope.toggleSelection = (item) => {
-    var idx = $scope.cartSelected.indexOf(item);
-    if(idx > -1) {
-      $scope.cartSelected.splice(idx,1);
-    } else {
-      $scope.cartSelected.push(item);
+    if(item.product.status === 1){
+      var idx = $scope.cartSelected.indexOf(item);
+      if(idx > -1) {
+        $scope.cartSelected.splice(idx,1);
+      } else {
+        $scope.cartSelected.push(item);
+      }
     }
   } 
   $scope.selectAll = () => {
    if(!$scope.checkAll) {
     console.log("$scope.checkAll", $scope.checkAll);
     angular.forEach($scope.cart.items, (item) => {
+      if(item.product.status === 1){
         var idx = $scope.cartSelected.indexOf(item);
         if(idx <= -1){
           $scope.cartSelected.push(item)
         } else {
          
         }
+      }
+     
     })
    } else {
     $scope.cartSelected = [];

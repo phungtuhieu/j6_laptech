@@ -44,8 +44,7 @@
                                    
                                     <tr ng-repeat="item in cart.items" ng-cloak>
                                         <td  class="product-thumbnail">
-                                            {{item.select}}
-                                            <div class="form-check">
+                                            <div class="form-check" ng-if="item.product.status == 1">
                                                 <input class="form-check-input" type="checkbox"  ng-checked="statusChecked(item)" ng-model="cartSelected" ng-click="toggleSelection(item)"  id="prod{{item.product.id}}">
                                                 <label class="form-check-label" for="prod{{item.product.id}}">
                                                 </label>
@@ -56,7 +55,9 @@
                                                 <img ng-src="{{urlImg(item.img)}}" alt="">
                                             </a>
                                         </td>
-                                        <td class="product-name">	
+                                        <td class="product-name">
+                                            <span class="text-warning" >{{item.product.status == 3? 'Ngừng kinh doanh' :''}}</span>	
+                                            <span class="text-warning">{{item.product.status == 2? 'Hết hàng' :''}}</span>	
                                             <h5>
                                                 <a href="product-details.html">{{item.product.name}}</a>
                                             </h5>
