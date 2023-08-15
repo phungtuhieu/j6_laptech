@@ -1,29 +1,13 @@
 let host = "http://localhost:8081/api";
 var i =0;
+
+
 app.controller("update", formUpdate);
 function formUpdate($scope, $http){
 
     $scope.items = JSON.parse(window.sessionStorage.getItem("user"))
     console.log($scope.items)
 
-
-    // $scope.load = (username) => {
-    //     var url = `${host}/profile/${username}`;
-    //   $http({
-    //     method: "GET",
-    //     url: url,
-    //   })
-    //     .then((resp) => {
-    //       $scope.form = resp.data;
-    //       console.log("Success_edit", resp);
-    //     })
-    //     .catch((error) => {
-    //       console.log("Error_edit", error);
-    //     });
-    //     window.sessionStorage.removeItem("editUs");
-
-    //     // $scope.load();
-    // };
     $scope.update =() => {
         alert("thành công")
         var item = angular.copy($scope.items);
