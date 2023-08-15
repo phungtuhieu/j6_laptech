@@ -19,8 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.laptech.dao.CategoryDAO;
 import com.laptech.dao.ProductDAO;
+import com.laptech.model.ReportFavoriteChart;
 import com.laptech.model.ReportFavoriteProduct;
 import com.laptech.model.ReportProductSold;
+import com.laptech.model.ReportProductSoldChart;
 
 
 
@@ -51,6 +53,18 @@ public class ReportRestController {
     }
 
 
+    @GetMapping("/api/favoriteChart/{year}")
+    public ResponseEntity<List<ReportFavoriteChart>> getAllFavoriteChart(@PathVariable("year") Integer year){
+        return ResponseEntity.ok(dao.getFavoriteChart(year));
+    }
+
+    @GetMapping("/api/favoriteAllYear")
+     public ResponseEntity<List<Integer>> getAllYear(){
+        return ResponseEntity.ok(dao.getFavoriteAllYear());
+    }
+
+    // 
+
     @GetMapping("/api/ProductSold")
     public ResponseEntity<List<ReportProductSold>> getAllProductSold(){
         return ResponseEntity.ok(dao.getProductSold());
@@ -72,8 +86,14 @@ public class ReportRestController {
         return ResponseEntity.ok(favorites);
     }
    
+     @GetMapping("/api/productSoldChart/{year}")
+    public ResponseEntity<List<ReportProductSoldChart>> getAllProductSoldChart(@PathVariable("year") Integer year){
+        return ResponseEntity.ok(dao.getProductSoldChart(year));
+    }
 
-
-
+     @GetMapping("/api/productSoldAllYear")
+     public ResponseEntity<List<Integer>> getAllProductSoldYear(){
+        return ResponseEntity.ok(dao.getAllProductSoldYear());
+    }
     
 }

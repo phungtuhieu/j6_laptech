@@ -57,14 +57,13 @@ public class AccountController {
     @RequestMapping("/login/error")
     public String error(Model model) {
 
-        model.addAttribute("massage", "Sai thông tin đăng nhập");
+        model.addAttribute("message", "Sai thông tin đăng nhập");
 
         return "layout/login";
     }
 
     @RequestMapping("/access/denied-errorPage")
     public String denied(Model model) {
-        model.addAttribute("massage", "Bạn không có quyền truy cập");
         return "layout/errorPage";
     }
 

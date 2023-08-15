@@ -35,6 +35,10 @@
                         <div class="form-group mb-3">
                             <input type="password"  id="password" name="password" ng-model="password" tabindex="2" class="form-control" placeholder="Mật khẩu">
                         </div>
+
+                        <div class="form-group mb-3 text-danger text-center">
+                            [[${message}]]
+                        </div>
                         <!-- <div class="form-group mb-3 d-flex justify-content-center">
                             <div class="form-check">
                             <input class="form-check-input " type="checkbox" value="" id="remember">
@@ -54,9 +58,9 @@
                                       <div class="icon-container">
                                        
                                         <!-- Icon Facebook -->
-                                        <!-- <div class=" facebook-icon">
-                                          <a th:href="@{abc}"> <img th:src="@{/assets/image/Facebook.png}" alt=""></a> 
-                                        </div> -->
+                                        <div class=" facebook-icon">
+                                          <a th:href="@{/oauth2/authorization/facebook}"> <img th:src="@{/assets/image/Facebook.png}" alt=""></a> 
+                                        </div>
                                         <!-- Icon Google -->
                                         <div class=" google-icon">
                                             <a th:href="@{/oauth2/authorization/google}"> <img th:src="@{/assets/image/Google.png}" alt=""></a> 

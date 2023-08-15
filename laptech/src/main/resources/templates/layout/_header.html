@@ -39,7 +39,7 @@
           </div>
 
           <!-- {{user.username}} -->
-          
+
           <!-- <h1>{{user.username == null}}</h1>
           [[${#request.remoteUser}]] -->
           <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" >
@@ -56,6 +56,8 @@
 
               <!-- TH khi chưa đăng nhập  -->
 
+
+
               <!-- TH khi đăng nhập thành công -->
               <div class="d-flex align-items-center pe-5 fw-bold"  th:if="${#request.remoteUser != null}" >
               <!-- <div class="d-flex align-items-center pe-5 fw-bold"  ng:if="user.username !== null" > -->
@@ -63,9 +65,10 @@
               <div class="dropdown">
                 <a class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#"
                   id="navbarDropdownMenuAvatar" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
-                  <img  ng-cloak  ng-if="user.image != null && user.image !== undefined || user.image !== undefined" ng-src="{{urlImgHeader(user.image)}}" class="rounded-circle" style="width: 35px; height: 35px;"/>
-                  <!-- <img ng-if="user.image != null" ng-src="{{urlImgHeader(user.image)}}" class="rounded-circle" style="width: 35px; height: 35px;"
-                     /> -->
+                  <img  ng-cloak ng-hide="user.image.includes('https://')"  ng-if="user.image != null && user.image !== undefined || user.image !== undefined" ng-src="{{urlImgHeader(user.image)}}" class="rounded-circle" style="width: 35px; height: 35px;"/>
+                  <img ng-if="user.image != null && user.image.includes('https://')  " src="{{user.image}}" class="rounded-circle" style="width: 35px; height: 35px;"
+                     />
+                     
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">
                   <li>
