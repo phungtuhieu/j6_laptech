@@ -61,7 +61,7 @@
               <!-- TH khi đăng nhập thành công -->
               <div class="d-flex align-items-center pe-5 fw-bold"  th:if="${#request.remoteUser != null}" >
               <!-- <div class="d-flex align-items-center pe-5 fw-bold"  ng:if="user.username !== null" > -->
-              <div class="text-truncate me-3 " ng-cloak style="max-width: 170px; color: #ffffff;" ><a href="#" style="color: #ffffff;"  > {{user.fullname}} </a></div>
+              <div class="text-truncate me-3 " ng-cloak style="max-width: 170px; color: #ffffff;" ><span style="font-size: 14px;">Xin chào,</span> <a href="#" style="color: #ffffff;"  >{{ (user.fullname.substring(user.fullname.lastIndexOf(" ") + 1)).normalize('NFC') }} </a></div>
               <div class="dropdown">
                 <a class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#"
                   id="navbarDropdownMenuAvatar" role="button" data-mdb-toggle="dropdown" aria-expanded="false">

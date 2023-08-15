@@ -40,7 +40,8 @@ function list($scope, $http) {
         $scope.pageCount = Math.ceil($scope.items.length / 5);
         console.log("Success1", resp);
         $scope.isLoading = false;
-
+        $scope.betweenDate();
+        $scope.notBetweenDate();
       })
       .catch((error) => {
         console.log("Error", error);
@@ -123,14 +124,14 @@ function list($scope, $http) {
   };
 
   $scope.deleteDiscount = (discountId) => {
-    confirmationDialog(
-      "Xác nhận xóa?",
-      "Bạn có chắc chắn muốn xóa dữ liệu?",
-      "warning",
-      "Xóa",
-      "Hủy"
-    ).then((result) => {
-      if (result.isConfirmed) {
+    // confirmationDialog(
+    //   "Xác nhận xóa?",
+    //   "Bạn có chắc chắn muốn xóa dữ liệu?",
+    //   "warning",
+    //   "Xóa",
+    //   "Hủy"
+    // ).then((result) => {
+    //   if (result.isConfirmed) {
         var url = `${host}/discount-price-delete/${discountId}`;
         $http({
           method: "get",
@@ -155,8 +156,8 @@ function list($scope, $http) {
               width: 600,
             });
           });
-      }
-    });
+   //   }
+   // });
   };
   //
   $scope.search = (name) => {
@@ -207,9 +208,9 @@ function list($scope, $http) {
   };
 
   NotAndBetweenDate($scope,$http);
-  
   $scope.betweenDate();
   $scope.notBetweenDate();
+ 
   // thực hiện
   $scope.reset();
   $scope.load_all();
@@ -704,6 +705,8 @@ function formUpdate($scope, $http, $filter) {
                       .then((resp) => {
                         // window.location.href = "/admin/discount/list";
                         // window.sessionStorage.setItem("name", "update");
+                        $scope.betweenDate();
+                        $scope.notBetweenDate();
                       })
                       .catch((error) => {
                         console.log("Error_discountPrice", error);
@@ -768,14 +771,14 @@ function formUpdate($scope, $http, $filter) {
     });
   };
   $scope.deleteDiscount = (discountId) => {
-    confirmationDialog(
-      "Xác nhận xóa?",
-      "Bạn có chắc chắn muốn xóa dữ liệu?",
-      "warning",
-      "Xóa",
-      "Hủy"
-    ).then((result) => {
-      if (result.isConfirmed) {
+    // confirmationDialog(
+    //   "Xác nhận xóa?",
+    //   "Bạn có chắc chắn muốn xóa dữ liệu?",
+    //   "warning",
+    //   "Xóa",
+    //   "Hủy"
+    // ).then((result) => {
+    //   if (result.isConfirmed) {
         var url = `${host}/discount-price-delete/${discountId}`;
         $http({
           method: "get",
@@ -800,8 +803,8 @@ function formUpdate($scope, $http, $filter) {
               width: 600,
             });
           });
-      }
-    });
+     // }
+   // });
   };
 
 
