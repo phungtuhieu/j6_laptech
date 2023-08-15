@@ -37,28 +37,29 @@
                         </div>
                         <div class="mb-4 col-lg-4 form-group">
                             <label for="" class="form-label">Số điện thoại</label>
-                            <input type="text" ng-model="form.phone" class="form-control" id="">
-                            <span ng-show="showPhone"  class="text-danger">{{MessagePhone}}</span>
-
+                            <input type="text" ng-model="form.phone" ng-pattern="/^\d{10}$/" class="form-control" id="">
+                            <div ng-if="form.phone.$error.pattern" class="text-danger">Số điện thoại phải gồm 10 chữ số</div>
+                            <div ng-if="form.phone.$error.number" class="text-danger">Số điện thoại phải là số</div>
                         </div>
                         <div class="mb-4 col-lg-4 form-group">
                             <label for="" class="form-label">Email</label>
-                            <input type="text" ng-model="form.email" class="form-control" id="">
+                            <input type="text" ng-model="form.email" class="form-control" id="" disabled>
                             <span ng-show="showEmail"  class="text-danger">{{MessageEmail}}</span>
 
                         </div>
                         <div class="mb-4 col-lg-4 form-group">
                             <label for="product-name" class="form-label">Tên người dùng</label>
-                            <input type="text" ng-model="form.username" class="form-control" id="product-name">
+                            <input type="text" ng-model="form.username" class="form-control" id="product-name" disabled>
                             <span ng-show="showUsername"  class="text-danger">{{MessageUsername}}</span>
 
                         </div>
                         <div class="mb-4 col-lg-4 form-group">
                             <label for="product-name" class="form-label">Mật khẩu</label>
-                            <input type="password" ng-model="form.password" class="form-control" id="product-name">
+                            <input type="password" ng-model="form.password" class="form-control" id="product-name" disabled>
                             <span ng-show="showPassword"  class="text-danger">{{MessagePassword}}</span>
 
                         </div>
+                       
                         <div class="mb-4 col-lg-4 form-group">
                             <label for="" class="form-label">Trạng thái</label>
                             <select class="form-select" aria-label="Default select example" 
@@ -74,7 +75,7 @@
 
                         </div>
                         
-                       <!-- Giao diện upload hình ảnh -->
+                       <!-- Giao diện upload hình ảnh
                        <div class="mb-4 col-lg-12 form-group">
                         <label for="prod-desciption" class="form-label">Hình ảnh <span>[img-name]</span></label>
                         <div class="image-upload">
@@ -93,7 +94,7 @@
                             </label>
                         </div>
                       
-                    </div>
+                    </div> -->
                         
                         <!-- Hiển thị ảnh từ cơ sở dữ liệu (nếu đã tải lên) -->
                         <!-- <div class="mb-4 col-lg-12 form-group" ng-show="form.image">
