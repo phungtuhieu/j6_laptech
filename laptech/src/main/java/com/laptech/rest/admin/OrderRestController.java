@@ -79,7 +79,7 @@ public class OrderRestController {
             default:
             return ResponseEntity.badRequest().build();
         }
-        Pageable pageable = PageRequest.of(pageNo.orElse(0), 5);
+        Pageable pageable = PageRequest.of(pageNo.orElse(0), 5,sort);
         Page<Order> page = dao.findByStatusLike(statusOrder,pageable);
         return ResponseEntity.ok(page); 
     }
